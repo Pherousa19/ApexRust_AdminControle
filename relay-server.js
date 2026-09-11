@@ -67,6 +67,7 @@ function handleConnection(clientWs, req) {
 
   // Extract password from X-RCON-Password header (preferred) or URL path (fallback)
   let password = req.headers["x-rcon-password"];
+  const source = password ? "header" : "url";
   
   if (!password) {
     // Fallback to URL path (e.g., /password123)
@@ -80,6 +81,8 @@ function handleConnection(clientWs, req) {
     clientWs.close(1008, "No password");
     return;
   }
+
+  console.log(`📝 Using password from ${source}: ${password.substring(0, 4)}...${password.substring(password.length - 4)}`);
 
   // Connect to the actual RCON server
   const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
