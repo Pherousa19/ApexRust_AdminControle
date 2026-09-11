@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 /**
- * Advanced Multi-plexed Persistent RCON Pipeline 
- * 
- * Features:
- *  - Real-Time Two-Way Console Broadcasting
- *  - Direct REST Telemetry Passthrough (Removes AGENT_SECRET Polling)
- *  - High-Availability Auto-Reconnection Loop
+ * Advanced Multi-plexed Persistent RCON Pipeline
  */
 
 const http = require("http");
@@ -18,11 +13,10 @@ const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
 
 const rconPool = new Map();
 
-// Helper to safely execute a quick query command over the open pipe
 function executeQuickQuery(password, command) {
   return new Promise((resolve, reject) => {
     const pool = rconPool.get(password);
-    if (!pool || pool.ws.readyState !== WebSocket.OPEN) {
+    if (!pool || !pool.ws || pool.ws.readyState !== WebSocket.OPEN) {
       return reject(new Error("RCON backend pipeline is offline"));
     }
 
@@ -32,7 +26,6 @@ function executeQuickQuery(password, command) {
       reject(new Error("Query timed out"));
     }, 5000);
 
-    // Register a temporary intercept handler inside our routing engine
     pool.routingMap.set(id, {
       readyState: WebSocket.OPEN,
       send: (message) => {
@@ -45,17 +38,14 @@ function executeQuickQuery(password, command) {
   });
 }
 
-// REST Interface for direct telemetry pull
 const server = http.createServer(async (req, res) => {
-  const urlObj = new URL(req.url, `http://${req.headers.host}`);
-  
-  // 🔓 SECURITY EXEMPTION: Allow public health checks so Railway and your browser can access it freely
+  const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
   if (urlObj.pathname === "/health") {
     res.writeHead(200, { "content-type": "application/json" });
     return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
   }
 
-  // 🔒 SECURE PATH PROTECTION: Require authentication headers for all remaining routes
   const auth = req.headers.authorization || "";
   if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
     res.writeHead(401, { "content-type": "application/json" });
@@ -68,7 +58,8 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ error: "Missing x-rcon-password header" }));
   }
 
-  // Direct, non-polling data passthrough routes
+  maintainRconConnection(rconPassword);
+
   if (urlObj.pathname === "/api/serverinfo") {
     try {
       const data = await executeQuickQuery(rconPassword, "serverinfo");
@@ -91,7 +82,7 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  res.writeHead(404).end("Not found");
+  res.writeHead(404).end(JSON.stringify({ error: "Not found" }));
 });
 
 const wss = new WebSocket.Server({ noServer: true });
@@ -144,10 +135,9 @@ function maintainRconConnection(password) {
       const payload = JSON.parse(data.toString());
       const identifier = payload.Identifier;
 
-      // Route individual query replies directly to the calling Worker instance
       if (identifier !== undefined && poolEntry.routingMap.has(identifier)) {
         const targetClient = poolEntry.routingMap.get(identifier);
-        if (targetClient.readyState === WebSocket.OPEN) {
+        if (targetClient && targetClient.readyState === WebSocket.OPEN) {
           targetClient.send(data, { binary: isBinary });
         }
         poolEntry.routingMap.delete(identifier);
@@ -155,7 +145,6 @@ function maintainRconConnection(password) {
       }
     } catch (e) {}
 
-    // Broadcast Engine: Send console stream updates and chat logs out to ALL active web console clients
     for (const client of poolEntry.clients) {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data, { binary: isBinary });
@@ -165,7 +154,7 @@ function maintainRconConnection(password) {
 
   serverWs.on("close", (code) => {
     console.warn(`⏹️  [Pool] Connection dropped (${code}). Recovering pipe in 5s...`);
-    clearInterval(poolEntry.pingInterval); // FIX: Safely targets poolEntry variable scope instead of poolInterval
+    clearInterval(poolEntry.pingInterval);
     poolEntry.reconnectTimeout = setTimeout(() => maintainRconConnection(password), 5000);
   });
 
@@ -175,9 +164,9 @@ function maintainRconConnection(password) {
 function handleConnection(clientWs, req) {
   let password = req.headers["x-rcon-password"];
   if (!password) {
-    const pathWithoutQuery = req.url.split('?');
+    const pathWithoutQuery = req.url.split('?')[0];
     const passwordMatch = pathWithoutQuery.match(/^\/(.+)$/);
-    password = passwordMatch ? decodeURIComponent(passwordMatch) : null;
+    password = passwordMatch ? decodeURIComponent(passwordMatch[1]) : null;
   }
 
   if (!password) {
