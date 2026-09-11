@@ -32,12 +32,13 @@ export async function sendRconCommand(env, command, { timeoutMs = 8000 } = {}) {
 }
 
 async function sendRconViaRelay(env, command, timeoutMs) {
-  const url = `${env.RELAY_URL}/${env.RCON_PASSWORD}`;
+  const url = `${env.RELAY_URL}/`;
   
   const resp = await fetch(url, {
     headers: {
       Upgrade: "websocket",
-      Authorization: `Bearer ${env.RELAY_SECRET}`
+      Authorization: `Bearer ${env.RELAY_SECRET}`,
+      "X-RCON-Password": env.RCON_PASSWORD
     }
   });
 

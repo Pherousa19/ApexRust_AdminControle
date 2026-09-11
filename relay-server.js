@@ -65,12 +65,17 @@ function handleConnection(clientWs, req) {
 
   let serverWs = null;
 
-  // Extract password from URL path (e.g., /password123)
-  const passwordMatch = req.url.match(/^\/(.+)$/);
-  const password = passwordMatch ? passwordMatch[1] : null;
+  // Extract password from X-RCON-Password header (preferred) or URL path (fallback)
+  let password = req.headers["x-rcon-password"];
+  
+  if (!password) {
+    // Fallback to URL path (e.g., /password123)
+    const passwordMatch = req.url.match(/^\/(.+)$/);
+    password = passwordMatch ? passwordMatch[1] : null;
+  }
 
   if (!password) {
-    console.warn("❌ No password in URL path");
+    console.warn("❌ No password in header or URL path");
     clientWs.send(JSON.stringify({ error: "No password provided" }));
     clientWs.close(1008, "No password");
     return;
