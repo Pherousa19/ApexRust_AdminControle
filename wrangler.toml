@@ -42,8 +42,7 @@ RCON_PORT = "25676"
 # Railway relay URL (for Cloudflare-blocked RCON servers). If set along with
 # RELAY_SECRET, the Worker will route commands through this relay instead of
 # trying to connect directly. Leave blank to use direct RCON mode.
-# Example: RELAY_URL = "https://apex-relay-production.up.railway.app"
-RELAY_URL = ""
+RELAY_URL = "https://web-production-ad450.up.railway.app"
 STORE_NAME = "Apex Rust"
 STORE_URL = "https://apexrust.co.uk"
 CURRENCY = "gbp"
