@@ -1,9 +1,21 @@
 #!/usr/bin/env node
 /**
  * Smart Pooled RCON WebSocket relay for Cloudflare Workers.
- * 
- * Multiplexes commands using Rust RCON Identifiers to ensure
- * responses are routed back to the exact Worker that requested them.
+ *
+ * - Keeps one persistent backend RCON socket per password (pooled by
+ *   RCON password, not per-client), so concurrent Worker invocations
+ *   never open competing WebRCON connections to the game server.
+ * - Sends a JSON ping frame every 15s to keep the pipe alive through
+ *   Pterodactyl/firewall idle timeouts.
+ * - Self-heals: on backend disconnect, clears the old ping interval and
+ *   retries the connection every 5s until it's back.
+ * - Auto-wraps any raw command string a client sends (e.g. "playerlist")
+ *   into a valid {Identifier, Message, Name} WebRCON envelope before
+ *   forwarding it, and leaves already-valid envelopes untouched.
+ * - Multiplexes responses using the RCON Identifier so each reply routes
+ *   back to the exact client that requested it, falling back to
+ *   broadcasting un-identified messages (e.g. chat/console events) to
+ *   every client attached to that pool.
  */
 
 const http = require("http");
@@ -131,19 +143,34 @@ function handleConnection(clientWs, req) {
   const clientIdentifiers = new Set();
 
   clientWs.on("message", (data) => {
-    if (pool.ws && pool.ws.readyState === WebSocket.OPEN) {
-      try {
-        const payload = JSON.parse(data.toString());
+    if (!(pool.ws && pool.ws.readyState === WebSocket.OPEN)) return;
+
+    const raw = data.toString();
+    let outgoing;
+
+    try {
+      const payload = JSON.parse(raw);
+      if (payload && typeof payload === "object" && payload.Message !== undefined) {
+        // Already a valid WebRCON envelope ({Identifier, Message, Name}) - forward as-is
         if (payload.Identifier !== undefined) {
-          // Register this ID to route back to this worker
           pool.routingMap.set(payload.Identifier, clientWs);
           clientIdentifiers.add(payload.Identifier);
         }
-      } catch (e) {
-        // Bad payload format
+        outgoing = raw;
+      } else {
+        // Valid JSON, but not a WebRCON envelope (e.g. a bare string/number/array) - wrap it
+        throw new Error("not a WebRCON envelope");
       }
-      pool.ws.send(data);
+    } catch (e) {
+      // Raw command text (e.g. "playerlist") or malformed JSON - auto-wrap into
+      // a validated WebRCON envelope before forwarding to the Rust game server.
+      const identifier = Math.floor(Math.random() * 100000);
+      pool.routingMap.set(identifier, clientWs);
+      clientIdentifiers.add(identifier);
+      outgoing = JSON.stringify({ Identifier: identifier, Message: raw, Name: "WebRcon" });
     }
+
+    pool.ws.send(outgoing);
   });
 
   clientWs.on("close", () => {
