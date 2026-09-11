@@ -1,21 +1,11 @@
 #!/usr/bin/env node
 /**
- * Smart Pooled RCON WebSocket relay for Cloudflare Workers.
- *
- * - Keeps one persistent backend RCON socket per password (pooled by
- *   RCON password, not per-client), so concurrent Worker invocations
- *   never open competing WebRCON connections to the game server.
- * - Sends a JSON ping frame every 15s to keep the pipe alive through
- *   Pterodactyl/firewall idle timeouts.
- * - Self-heals: on backend disconnect, clears the old ping interval and
- *   retries the connection every 5s until it's back.
- * - Auto-wraps any raw command string a client sends (e.g. "playerlist")
- *   into a valid {Identifier, Message, Name} WebRCON envelope before
- *   forwarding it, and leaves already-valid envelopes untouched.
- * - Multiplexes responses using the RCON Identifier so each reply routes
- *   back to the exact client that requested it, falling back to
- *   broadcasting un-identified messages (e.g. chat/console events) to
- *   every client attached to that pool.
+ * Advanced Multi-plexed Persistent RCON Pipeline 
+ * 
+ * Features:
+ *  - Real-Time Two-Way Console Broadcasting
+ *  - Direct REST Telemetry Passthrough (Removes AGENT_SECRET Polling)
+ *  - High-Availability Auto-Reconnection Loop
  */
 
 const http = require("http");
@@ -28,12 +18,78 @@ const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
 
 const rconPool = new Map();
 
-const server = http.createServer((req, res) => {
-  if (req.url === "/health") {
-    res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ ok: true, uptime: process.uptime(), pools: rconPool.size }));
-    return;
+// Helper to safely execute a quick query command over the open pipe
+function executeQuickQuery(password, command) {
+  return new Promise((resolve, reject) => {
+    const pool = rconPool.get(password);
+    if (!pool || pool.ws.readyState !== WebSocket.OPEN) {
+      return reject(new Error("RCON backend pipeline is offline"));
+    }
+
+    const id = Math.floor(Math.random() * 100000);
+    const timer = setTimeout(() => {
+      pool.routingMap.delete(id);
+      reject(new Error("Query timed out"));
+    }, 5000);
+
+    // Register a temporary intercept handler inside our routing engine
+    pool.routingMap.set(id, {
+      readyState: WebSocket.OPEN,
+      send: (message) => {
+        clearTimeout(timer);
+        resolve(message);
+      }
+    });
+
+    pool.ws.send(JSON.stringify({ Identifier: id, Message: command, Name: "WebRcon" }));
+  });
+}
+
+// REST Interface for direct telemetry pull
+const server = http.createServer(async (req, res) => {
+  const urlObj = new URL(req.url, `http://${req.headers.host}`);
+  
+  // Security Authentication check for REST
+  const auth = req.headers.authorization || "";
+  if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
+    res.writeHead(401, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ error: "Unauthorized" }));
   }
+
+  const rconPassword = req.headers["x-rcon-password"];
+  if (!rconPassword) {
+    res.writeHead(400, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing x-rcon-password header" }));
+  }
+
+  if (urlObj.pathname === "/health") {
+    res.writeHead(200, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
+  }
+
+  // Direct, non-polling data passthrough routes
+  if (urlObj.pathname === "/api/serverinfo") {
+    try {
+      const data = await executeQuickQuery(rconPassword, "serverinfo");
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(data);
+    } catch (err) {
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
+  if (urlObj.pathname === "/api/playerlist") {
+    try {
+      const data = await executeQuickQuery(rconPassword, "playerlist");
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(data);
+    } catch (err) {
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
   res.writeHead(404).end("Not found");
 });
 
@@ -58,31 +114,25 @@ function maintainRconConnection(password) {
   }
 
   const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
-  console.log(`🔌 [Pool] Connecting to RCON at ${RCON_HOST}:${RCON_PORT}`);
+  console.log(`🔌 [Pool] Establishing permanent target link to ${RCON_HOST}:${RCON_PORT}`);
 
   const serverWs = new WebSocket(rconUrl);
   
   let poolEntry = rconPool.get(password);
   if (!poolEntry) {
-    poolEntry = { 
-      clients: new Set(), 
-      routingMap: new Map(), // Maps Identifier -> clientWs
-      pingInterval: null, 
-      reconnectTimeout: null 
-    };
+    poolEntry = { clients: new Set(), routingMap: new Map(), pingInterval: null, reconnectTimeout: null };
     rconPool.set(password, poolEntry);
   }
   
   poolEntry.ws = serverWs;
 
   serverWs.on("open", () => {
-    console.log(`✅ [Pool] Connected to RCON backend.`);
+    console.log(`✅ [Pool] Pipeline established.`);
     if (poolEntry.reconnectTimeout) clearTimeout(poolEntry.reconnectTimeout);
     
     clearInterval(poolEntry.pingInterval);
     poolEntry.pingInterval = setInterval(() => {
       if (serverWs.readyState === WebSocket.OPEN) {
-        // Rust expects a JSON format even for pings if using WebRCON
         serverWs.send(JSON.stringify({ Identifier: -1, Message: "ping", Name: "WebRcon" }));
       }
     }, 15000);
@@ -93,20 +143,18 @@ function maintainRconConnection(password) {
       const payload = JSON.parse(data.toString());
       const identifier = payload.Identifier;
 
-      // If this message matches a specific waiting Worker, send it only to them
+      // Route individual query replies directly to the calling Worker instance
       if (identifier !== undefined && poolEntry.routingMap.has(identifier)) {
         const targetClient = poolEntry.routingMap.get(identifier);
         if (targetClient.readyState === WebSocket.OPEN) {
           targetClient.send(data, { binary: isBinary });
         }
-        poolEntry.routingMap.delete(identifier); // Clear routing entry after delivery
+        poolEntry.routingMap.delete(identifier);
         return;
       }
-    } catch (e) {
-      // Not JSON or missing Identifier, fallback to broadcasting (chat messages, etc.)
-    }
+    } catch (e) {}
 
-    // Fallback: Broadcast global console events to all listening workers
+    // Broadcast Engine: Send console stream updates and chat logs out to ALL active web console clients
     for (const client of poolEntry.clients) {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data, { binary: isBinary });
@@ -115,7 +163,7 @@ function maintainRconConnection(password) {
   });
 
   serverWs.on("close", (code) => {
-    console.warn(`⏹️  [Pool] Target RCON disconnected (${code}). Reconnecting in 5s...`);
+    console.warn(`⏹️  [Pool] Connection dropped (${code}). Recovering pipe in 5s...`);
     clearInterval(poolEntry.pingInterval);
     poolEntry.reconnectTimeout = setTimeout(() => maintainRconConnection(password), 5000);
   });
@@ -126,9 +174,9 @@ function maintainRconConnection(password) {
 function handleConnection(clientWs, req) {
   let password = req.headers["x-rcon-password"];
   if (!password) {
-    const pathWithoutQuery = req.url.split('?')[0];
+    const pathWithoutQuery = req.url.split('?');
     const passwordMatch = pathWithoutQuery.match(/^\/(.+)$/);
-    password = passwordMatch ? decodeURIComponent(passwordMatch[1]) : null;
+    password = passwordMatch ? decodeURIComponent(passwordMatch) : null;
   }
 
   if (!password) {
@@ -139,43 +187,23 @@ function handleConnection(clientWs, req) {
   const pool = maintainRconConnection(password);
   pool.clients.add(clientWs);
 
-  // Track identifiers assigned to this specific client connection so we can clean them up if they disconnect
   const clientIdentifiers = new Set();
 
   clientWs.on("message", (data) => {
-    if (!(pool.ws && pool.ws.readyState === WebSocket.OPEN)) return;
-
-    const raw = data.toString();
-    let outgoing;
-
-    try {
-      const payload = JSON.parse(raw);
-      if (payload && typeof payload === "object" && payload.Message !== undefined) {
-        // Already a valid WebRCON envelope ({Identifier, Message, Name}) - forward as-is
+    if (pool.ws && pool.ws.readyState === WebSocket.OPEN) {
+      try {
+        const payload = JSON.parse(data.toString());
         if (payload.Identifier !== undefined) {
           pool.routingMap.set(payload.Identifier, clientWs);
           clientIdentifiers.add(payload.Identifier);
         }
-        outgoing = raw;
-      } else {
-        // Valid JSON, but not a WebRCON envelope (e.g. a bare string/number/array) - wrap it
-        throw new Error("not a WebRCON envelope");
-      }
-    } catch (e) {
-      // Raw command text (e.g. "playerlist") or malformed JSON - auto-wrap into
-      // a validated WebRCON envelope before forwarding to the Rust game server.
-      const identifier = Math.floor(Math.random() * 100000);
-      pool.routingMap.set(identifier, clientWs);
-      clientIdentifiers.add(identifier);
-      outgoing = JSON.stringify({ Identifier: identifier, Message: raw, Name: "WebRcon" });
+      } catch (e) {}
+      pool.ws.send(data);
     }
-
-    pool.ws.send(outgoing);
   });
 
   clientWs.on("close", () => {
     pool.clients.delete(clientWs);
-    // Clean up any pending routes for this closed client
     for (const id of clientIdentifiers) {
       pool.routingMap.delete(id);
     }
@@ -187,5 +215,5 @@ function handleConnection(clientWs, req) {
 }
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Smart RCON Relay active on port ${PORT}`);
+  console.log(`🚀 Smart Persistent Multi-plexing Relay active on port ${PORT}`);
 });
