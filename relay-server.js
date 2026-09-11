@@ -128,7 +128,7 @@ function maintainRconConnection(password) {
   poolEntry.ws = serverWs;
 
   serverWs.on("open", () => {
-    console.log(`✅ [Pool] Pipeline established.`);
+    console.log("✅ [Pool] Pipeline established.");
     if (poolEntry.reconnectTimeout) clearTimeout(poolEntry.reconnectTimeout);
     
     clearInterval(poolEntry.pingInterval);
@@ -165,7 +165,7 @@ function maintainRconConnection(password) {
 
   serverWs.on("close", (code) => {
     console.warn(`⏹️  [Pool] Connection dropped (${code}). Recovering pipe in 5s...`);
-    clearInterval(poolInterval);
+    clearInterval(poolEntry.pingInterval); // FIX: Safely targets poolEntry variable scope instead of poolInterval
     poolEntry.reconnectTimeout = setTimeout(() => maintainRconConnection(password), 5000);
   });
 
