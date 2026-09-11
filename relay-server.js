@@ -35,12 +35,20 @@ async function executeQuickQuery(password, command) {
       readyState: WebSocket.OPEN,
       send: (message) => {
         clearTimeout(timer);
-        resolve(message);
+        resolve(normalizeRconFrame(message));
       }
     });
 
     pool.ws.send(JSON.stringify({ Identifier: id, Message: command, Name: "WebRcon" }));
   });
+}
+
+function normalizeRconFrame(message) {
+  if (typeof message === "string") return message;
+  if (Buffer.isBuffer(message)) return message.toString("utf8");
+  if (message instanceof ArrayBuffer) return Buffer.from(message).toString("utf8");
+  if (ArrayBuffer.isView(message)) return Buffer.from(message.buffer, message.byteOffset, message.byteLength).toString("utf8");
+  return JSON.stringify(message);
 }
 
 const server = http.createServer(async (req, res) => {
