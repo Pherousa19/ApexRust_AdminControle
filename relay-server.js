@@ -5,6 +5,7 @@
 
 const http = require("http");
 const WebSocket = require("ws");
+const crypto = require("crypto");
 
 const PORT = process.env.PORT || 3000;
 const RCON_HOST = process.env.RCON_HOST || "51.254.16.223";
@@ -121,13 +122,31 @@ const wss = new WebSocket.Server({ noServer: true });
 
 server.on("upgrade", (req, socket, head) => {
   const auth = req.headers.authorization || "";
-  if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
+  const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+  let tokenPassword = null;
+  const token = urlObj.searchParams.get("token");
+  if (token) tokenPassword = verifyConsoleToken(token);
+
+  if ((!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) && !tokenPassword) {
     socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
     socket.destroy();
     return;
   }
+  if (tokenPassword) req.headers["x-rcon-password"] = tokenPassword;
   wss.handleUpgrade(req, socket, head, (ws) => handleConnection(ws, req));
 });
+
+function verifyConsoleToken(token) {
+  const [encodedPayload, encodedSignature] = token.split(".");
+  if (!encodedPayload || !encodedSignature) return null;
+  const payload = Buffer.from(encodedPayload, "base64url").toString("utf8");
+  const expected = crypto.createHmac("sha256", RELAY_SECRET).update(payload).digest("base64url");
+  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(encodedSignature))) return null;
+  const separator = payload.indexOf(".");
+  const expires = Number(payload.slice(0, separator));
+  if (!Number.isFinite(expires) || expires < Math.floor(Date.now() / 1000)) return null;
+  return payload.slice(separator + 1) || null;
+}
 
 function maintainRconConnection(password) {
   if (rconPool.has(password)) {
