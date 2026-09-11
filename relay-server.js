@@ -18,7 +18,8 @@ const http = require("http");
 const WebSocket = require("ws");
 
 const PORT = process.env.PORT || 3000;
-const RCON_HOST = process.env.RCON_HOST || "localhost";
+// These should come from Railway environment variables, but default to your known values
+const RCON_HOST = process.env.RCON_HOST || "51.254.16.223";
 const RCON_PORT = parseInt(process.env.RCON_PORT || "25676", 10);
 const RELAY_SECRET = process.env.RELAY_SECRET || "change-me-please";
 
