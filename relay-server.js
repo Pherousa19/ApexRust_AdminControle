@@ -188,19 +188,44 @@ function handleConnection(clientWs, req) {
 
   const pool = maintainRconConnection(password);
   pool.clients.add(clientWs);
+  const pendingMessages = [];
+  let flushing = false;
+
+  const flushMessages = async () => {
+    if (flushing) return;
+    flushing = true;
+    try {
+      await Promise.race([
+        pool.readyPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), 5000)),
+      ]);
+      while (pendingMessages.length && pool.ws?.readyState === WebSocket.OPEN) {
+        pool.ws.send(pendingMessages.shift());
+      }
+    } catch (err) {
+      console.warn(`[Pool] Client command queue failed: ${err.message}`);
+      pendingMessages.length = 0;
+    } finally {
+      flushing = false;
+    }
+  };
 
   const clientIdentifiers = new Set();
 
   clientWs.on("message", (data) => {
-    if (pool.ws && pool.ws.readyState === WebSocket.OPEN) {
-      try {
-        const payload = JSON.parse(data.toString());
-        if (payload.Identifier !== undefined) {
-          pool.routingMap.set(payload.Identifier, clientWs);
-          clientIdentifiers.add(payload.Identifier);
-        }
-      } catch (e) {}
+    try {
+      const payload = JSON.parse(data.toString());
+      if (payload.Identifier !== undefined) {
+        pool.routingMap.set(payload.Identifier, clientWs);
+        clientIdentifiers.add(payload.Identifier);
+      }
+    } catch (e) {}
+
+    if (pool.ws?.readyState === WebSocket.OPEN && !pendingMessages.length && !flushing) {
       pool.ws.send(data);
+    } else {
+      pendingMessages.push(data);
+      flushMessages();
     }
   });
 
