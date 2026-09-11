@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
   res.end("Not found");
 });
 
-const wss = new WebSocket.Server({ server, noServer: true });
+const wss = new WebSocket.Server({ noServer: true });
 
 // Handle WebSocket upgrade requests
 server.on("upgrade", (req, socket, head) => {
