@@ -1,0 +1,128 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 1,
+  "ItemCountMax": 6,
+  "Items": [
+    {
+      "ShortName": "apple",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "black.raspberries",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "blueberries",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "can.beans",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "can.tuna",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "chocolate",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "granolabar",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "pumpkin",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "smallwaterbottle",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.308,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "waterjug",
+      "AmountMin": 2,
+      "AmountMax": 4,
+      "SpawnChance": 0.077,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    }
+  ],
+  "Categories": {}
+}

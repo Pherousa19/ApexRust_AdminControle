@@ -1,0 +1,22 @@
+{
+  "Commands to open the UI": [
+    "loottable"
+  ],
+  "Use json loot configs from folder config/Loottable": false,
+  "Cover up free slots in containers": true,
+  "Disable loot refresh warning": false,
+  "Smelting options": {
+    "Adjust visual smelting progress indicator": true,
+    "Adjust visual smelting progress indicator for smelting speeds less than X (Values larger than 10 not recommended, can cause lag on the CLIENT)": 4.0,
+    "Show a warning when another plugin tries to override the smelting behavior": true
+  },
+  "Stacking options": {
+    "Allow stacking of items with different name": false,
+    "Allow stacking of items with different text": false,
+    "Allow stacking of damaged items with the same condition (vanilla only allows stacking when items have full condition)": false
+  },
+  "Loot generation options": {
+    "Include extra items in total item count": true,
+    "Maximum amount of iterations - higher values may lead to degraded performance, but more accurate results": 100
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 0,
+  "ItemCountMax": 0,
+  "Items": [],
+  "Categories": {
+    "0": {
+      "Chance": 0.0,
+      "AmountMin": 1,
+      "AmountMax": 1
+    }
+  }
+}

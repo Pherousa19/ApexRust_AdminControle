@@ -1,0 +1,140 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 1,
+  "ItemCountMax": 6,
+  "Items": [
+    {
+      "ShortName": "ladder.wooden.wall",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.167,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "antiradpills",
+      "AmountMin": 4,
+      "AmountMax": 8,
+      "SpawnChance": 0.167,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "largemedkit",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.167,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "dart.scatter",
+      "AmountMin": 5,
+      "AmountMax": 12,
+      "SpawnChance": 0.056,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "dart.radiation",
+      "AmountMin": 5,
+      "AmountMax": 12,
+      "SpawnChance": 0.056,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "dart.incapacitate",
+      "AmountMin": 3,
+      "AmountMax": 5,
+      "SpawnChance": 0.056,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "blowpipe",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.165,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 0.2,
+      "ConditionMax": 0.5,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "dart.wood",
+      "AmountMin": 10,
+      "AmountMax": 12,
+      "SpawnChance": 0.165,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "scrap",
+      "AmountMin": 5,
+      "AmountMax": 12,
+      "SpawnChance": 1.0,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 0.0,
+      "ConditionMax": 0.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "rope",
+      "AmountMin": 2,
+      "AmountMax": 4,
+      "SpawnChance": 0.167,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "syringe.medical",
+      "AmountMin": 2,
+      "AmountMax": 3,
+      "SpawnChance": 0.167,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    }
+  ],
+  "Categories": {}
+}

@@ -1,0 +1,621 @@
+{
+  "Currency Name": "Points",
+  "Playtime Points": 15.0,
+  "Playtime Interval Seconds": 1800,
+  "Shop Categories": [
+    {
+      "Name": "Attire",
+      "Items": [
+        {
+          "Display Name": "Boots",
+          "Shortname": "shoes.boots",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Coffee Can Helmet",
+          "Shortname": "coffeecan.helmet",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Diving Fins",
+          "Shortname": "diving.fins",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Diving Mask",
+          "Shortname": "diving.mask",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Diving Tank",
+          "Shortname": "diving.tank",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Hazmat Suit",
+          "Shortname": "hazmatsuit",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 60.0
+        },
+        {
+          "Display Name": "Hoodie",
+          "Shortname": "hoodie",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Jacket",
+          "Shortname": "jacket",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Burlap Gloves",
+          "Shortname": "burlap.gloves.new",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Ninja Suit",
+          "Shortname": "attire.ninja.suit",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Pants",
+          "Shortname": "pants",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Road Sign Jacket",
+          "Shortname": "roadsign.jacket",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Road Sign Kilt",
+          "Shortname": "roadsign.kilt",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Road Sign Gloves",
+          "Shortname": "roadsign.gloves",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Tactical Gloves",
+          "Shortname": "tactical.gloves",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Wetsuit",
+          "Shortname": "diving.wetsuit",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Wolf Headdress",
+          "Shortname": "hat.wolf",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        }
+      ]
+    },
+    {
+      "Name": "Misc",
+      "Items": [
+        {
+          "Display Name": "Bed",
+          "Shortname": "bed",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Furnace",
+          "Shortname": "furnace",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Large Furnace",
+          "Shortname": "furnace.large",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 240.0
+        },
+        {
+          "Display Name": "Large Wood Box",
+          "Shortname": "box.wooden.large",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Locker",
+          "Shortname": "locker",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Mixing Table",
+          "Shortname": "mixingtable",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Sleeping Bag",
+          "Shortname": "sleepingbag",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Small Oil Refinery",
+          "Shortname": "small.oil.refinery",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 240.0
+        }
+      ]
+    },
+    {
+      "Name": "Ammunition",
+      "Items": [
+        {
+          "Display Name": "Pistol Bullet",
+          "Shortname": "ammo.pistol",
+          "Skin ID": 0,
+          "Amount": 30,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Incendiary Pistol Bullet",
+          "Shortname": "ammo.pistol.fire",
+          "Skin ID": 0,
+          "Amount": 30,
+          "Price": 70.0
+        },
+        {
+          "Display Name": "5.56 Rifle Ammo",
+          "Shortname": "ammo.rifle",
+          "Skin ID": 0,
+          "Amount": 20,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Incendiary 5.56 Rifle Ammo",
+          "Shortname": "ammo.rifle.incendiary",
+          "Skin ID": 0,
+          "Amount": 20,
+          "Price": 70.0
+        },
+        {
+          "Display Name": "12 Gauge Buckshot",
+          "Shortname": "ammo.shotgun",
+          "Skin ID": 0,
+          "Amount": 8,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "12 Gauge Incendiary Shell",
+          "Shortname": "ammo.shotgun.fire",
+          "Skin ID": 0,
+          "Amount": 8,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Speargun Spear",
+          "Shortname": "speargun.spear",
+          "Skin ID": 0,
+          "Amount": 8,
+          "Price": 30.0
+        }
+      ]
+    },
+    {
+      "Name": "Weapon",
+      "Items": [
+        {
+          "Display Name": "Revolver",
+          "Shortname": "pistol.revolver",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 60.0
+        },
+        {
+          "Display Name": "Python Revolver",
+          "Shortname": "pistol.python",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 110.0
+        },
+        {
+          "Display Name": "Semi-Automatic Pistol",
+          "Shortname": "pistol.semiauto",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 110.0
+        },
+        {
+          "Display Name": "M92 Pistol",
+          "Shortname": "pistol.m92",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 140.0
+        },
+        {
+          "Display Name": "Semi-Automatic Rifle",
+          "Shortname": "rifle.semiauto",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 200.0
+        },
+        {
+          "Display Name": "M39 Rifle",
+          "Shortname": "rifle.m39",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 220.0
+        },
+        {
+          "Display Name": "Thompson",
+          "Shortname": "smg.thompson",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 170.0
+        },
+        {
+          "Display Name": "Custom SMG",
+          "Shortname": "smg.2",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 155.0
+        },
+        {
+          "Display Name": "Double Barrel Shotgun",
+          "Shortname": "shotgun.double",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 60.0
+        },
+        {
+          "Display Name": "Pump Shotgun",
+          "Shortname": "shotgun.pump",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 100.0
+        },
+        {
+          "Display Name": "Holosight",
+          "Shortname": "weapon.mod.holosight",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Weapon Lasersight",
+          "Shortname": "weapon.mod.lasersight",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Weapon flashlight",
+          "Shortname": "weapon.mod.flashlight",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Extended Magazine",
+          "Shortname": "weapon.mod.extendedmags",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Military Silencer",
+          "Shortname": "weapon.mod.silencer",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Assault Rifle",
+          "Shortname": "rifle.ak",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 400.0
+        },
+        {
+          "Display Name": "M249",
+          "Shortname": "lmg.m249",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 1500.0
+        },
+        {
+          "Display Name": "Speargun",
+          "Shortname": "speargun",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        }
+      ]
+    },
+    {
+      "Name": "Construction",
+      "Items": [
+        {
+          "Display Name": "Coffin",
+          "Shortname": "coffin.storage",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 100.0
+        },
+        {
+          "Display Name": "Garage Door",
+          "Shortname": "wall.frame.garagedoor",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 240.0
+        },
+        {
+          "Display Name": "High External Stone Gate",
+          "Shortname": "gates.external.high.stone",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 180.0
+        },
+        {
+          "Display Name": "High External Stone Wall",
+          "Shortname": "wall.external.high.stone",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "High External Wooden Gate",
+          "Shortname": "gates.external.high.wood",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 100.0
+        },
+        {
+          "Display Name": "High Ice Wall",
+          "Shortname": "wall.external.high.ice",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "High External Wooden Wall",
+          "Shortname": "wall.external.high",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Ladder Hatch",
+          "Shortname": "floor.ladder.hatch",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Metal Barricade",
+          "Shortname": "barricade.metal",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Metal horizontal embrasure",
+          "Shortname": "shutter.metal.embrasure.a",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Metal Vertical embrasure",
+          "Shortname": "shutter.metal.embrasure.b",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Sheet Metal Door",
+          "Shortname": "door.hinged.metal",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Sheet Metal Double Door",
+          "Shortname": "door.double.hinged.metal",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 25.0
+        },
+        {
+          "Display Name": "Strengthened Glass Window",
+          "Shortname": "wall.window.glass.reinforced",
+          "Skin ID": 0,
+          "Amount": 2,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Tool Cupboard",
+          "Shortname": "cupboard.tool",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 25.0
+        },
+        {
+          "Display Name": "Triangle Ladder Hatch",
+          "Shortname": "floor.triangle.ladder.hatch",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 50.0
+        },
+        {
+          "Display Name": "Wooden Barricade Cover",
+          "Shortname": "barricade.wood.cover",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 10.0
+        },
+        {
+          "Display Name": "Wooden Ladder",
+          "Shortname": "ladder.wooden.wall",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        }
+      ]
+    },
+    {
+      "Name": "Medical",
+      "Items": [
+        {
+          "Display Name": "Bandage",
+          "Shortname": "bandage",
+          "Skin ID": 0,
+          "Amount": 5,
+          "Price": 10.0
+        },
+        {
+          "Display Name": "Large Medkit",
+          "Shortname": "largemedkit",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Medical Syringe",
+          "Shortname": "syringe.medical",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 10.0
+        },
+        {
+          "Display Name": "Cooked Bear Meat",
+          "Shortname": "bearmeat.cooked",
+          "Skin ID": 0,
+          "Amount": 10,
+          "Price": 30.0
+        },
+        {
+          "Display Name": "Corn",
+          "Shortname": "corn",
+          "Skin ID": 0,
+          "Amount": 3,
+          "Price": 20.0
+        },
+        {
+          "Display Name": "Pumpkin",
+          "Shortname": "pumpkin",
+          "Skin ID": 0,
+          "Amount": 3,
+          "Price": 30.0
+        }
+      ]
+    },
+    {
+      "Name": "Resources",
+      "Items": [
+        {
+          "Display Name": "Low Grade Fuel",
+          "Shortname": "lowgradefuel",
+          "Skin ID": 0,
+          "Amount": 50,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Cloth",
+          "Shortname": "cloth",
+          "Skin ID": 0,
+          "Amount": 30,
+          "Price": 15.0
+        }
+      ]
+    },
+    {
+      "Name": "Tool",
+      "Items": [
+        {
+          "Display Name": "Chainsaw",
+          "Shortname": "chainsaw",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 120.0
+        },
+        {
+          "Display Name": "Jackhammer",
+          "Shortname": "jackhammer",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 120.0
+        },
+        {
+          "Display Name": "Salvaged Axe",
+          "Shortname": "axe.salvaged",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 60.0
+        },
+        {
+          "Display Name": "Salvaged Icepick",
+          "Shortname": "icepick.salvaged",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 60.0
+        },
+        {
+          "Display Name": "Hatchet",
+          "Shortname": "hatchet",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        },
+        {
+          "Display Name": "Pickaxe",
+          "Shortname": "pickaxe",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Price": 40.0
+        }
+      ]
+    }
+  ]
+}

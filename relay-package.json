@@ -1,0 +1,16 @@
+{
+  "name": "rcon-relay",
+  "version": "1.0.0",
+  "description": "RCON WebSocket relay for Cloudflare Workers",
+  "main": "relay-server.js",
+  "scripts": {
+    "start": "node relay-server.js",
+    "dev": "NODE_ENV=development node relay-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

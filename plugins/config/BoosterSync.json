@@ -1,0 +1,12 @@
+{
+  "Discord Bot Token": "YOUR_DISCORD_BOT_TOKEN_HERE",
+  "Discord Guild (Server) ID": "1518983938733768714",
+  "Server Booster Role ID": "1542624331866181833",
+  "Permission To Grant Boosters": "kits.nitrobooster",
+  "Permission To Grant Discord Members": "kits.discord",
+  "Poll Interval Seconds": 300,
+  "Chat Message On Grant": "Thanks for boosting! Your booster perks are now active.",
+  "Chat Message On Revoke": "Your Discord boost is no longer active, so your booster perks were removed.",
+  "Chat Message On Member Grant": "Thanks for joining our Discord! Your member perks are now active.",
+  "Chat Message On Member Revoke": "You're no longer in our Discord, so your member perks were removed."
+}

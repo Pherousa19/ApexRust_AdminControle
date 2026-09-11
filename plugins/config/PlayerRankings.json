@@ -1,0 +1,13 @@
+{
+  "A": {
+    "Oxide Group": "Regular",
+    "Playtime": 10.0
+  },
+  "B": {
+    "Oxide Group": "Pro",
+    "Playtime": 25.0
+  },
+  "Settings": {
+    "Ignore Admins": false
+  }
+}

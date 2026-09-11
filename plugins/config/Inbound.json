@@ -1,0 +1,65 @@
+{
+  "Notifications": {
+    "Chat Notifications": true,
+    "Popup Notifications": false
+  },
+  "Discord Messages": {
+    "Enabled": false,
+    "Webhook URL": "",
+    "Embedded Messages": true,
+    "Embed Color": 3447003,
+    "Embed Title": ":arrow_lower_right:  Inbound"
+  },
+  "UI Notify": {
+    "Enabled": false,
+    "Notification Type": 0
+  },
+  "Alerts": {
+    "Patrol Helicopter Alerts": true,
+    "Cargo Ship Alerts": true,
+    "Cargo Ship Harbor Alerts": true,
+    "Cargo Plane Alerts": false,
+    "CH47 Chinook Alerts": true,
+    "Bradley APC Alerts": true,
+    "Travelling Vendor Alerts": true,
+    "Deep Sea Alerts": true,
+    "Excavator Activated Alerts": true,
+    "Excavator Supply Request Alerts": false,
+    "Hackable Crate Alerts": false,
+    "Player Hacking Crate Alerts": false,
+    "Supply Signal Alerts": false,
+    "Supply Drop Alerts": false,
+    "Supply Drop Landed Alerts": false,
+    "Satellite Request Alerts": true,
+    "Satellite Launch Alerts": true,
+    "Satellite Crash Alerts": true
+  },
+  "Location": {
+    "Show Grid": true,
+    "Show 'Oil Rig' Labels": true,
+    "Show 'Cargo Ship' Label": true,
+    "Show 'Excavator' Label": true,
+    "Hide Unmarked Grids": true,
+    "Show Coordinates": false,
+    "Hide Y Coordinate": false,
+    "Hide Coordinate Decimals": false
+  },
+  "Misc": {
+    "Chat Icon (SteamID64)": 0,
+    "Hide Cargo Ship Crate Messages": false,
+    "Hide Oil Rig Crate & Chinook Messages": false,
+    "Show Supply Drop Player": false,
+    "Hide Player-Called Supply Drop Messages": false,
+    "Hide Random Supply Drop Messages": false
+  },
+  "Logging": {
+    "Log To Console": false,
+    "Log To File": false,
+    "Log All Events": false
+  },
+  "Version (Do not modify)": {
+    "Major": 0,
+    "Minor": 7,
+    "Patch": 1
+  }
+}

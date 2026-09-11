@@ -1,0 +1,198 @@
+{
+  "Season": 8,
+  "StartedUtc": "2026-09-04T11:06:30.2729500Z",
+  "History": [
+    {
+      "Season": 1,
+      "StartedUtc": "2026-08-16T21:34:43.7410230Z",
+      "EndedUtc": "2026-08-30T14:09:37.5897110Z",
+      "Reason": "automatic wipe/new save",
+      "Top": [
+        {
+          "Name": "Not notpigeon",
+          "XP": 6222.059999999974,
+          "Kills": 3,
+          "Rank": "Sergeant"
+        },
+        {
+          "Name": "notpigeon",
+          "XP": 3720.9199999999928,
+          "Kills": 1,
+          "Rank": "Corporal"
+        },
+        {
+          "Name": "Noobless19",
+          "XP": 2512.2399999999989,
+          "Kills": 3,
+          "Rank": "Corporal"
+        },
+        {
+          "Name": "not tony",
+          "XP": 1655.0799999999992,
+          "Kills": 4,
+          "Rank": "Private"
+        },
+        {
+          "Name": "Not Bruce",
+          "XP": 1477.7400000000002,
+          "Kills": 0,
+          "Rank": "Private"
+        },
+        {
+          "Name": "iMosley",
+          "XP": 365.50999999999982,
+          "Kills": 1,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "JustKarma",
+          "XP": 215.0,
+          "Kills": 2,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "The Clapping World",
+          "XP": 116.22000000000008,
+          "Kills": 1,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "ITZUKI-CHAN",
+          "XP": 16.079999999999906,
+          "Kills": 0,
+          "Rank": "Recruit"
+        }
+      ]
+    },
+    {
+      "Season": 2,
+      "StartedUtc": "2026-08-30T14:09:37.5921940Z",
+      "EndedUtc": "2026-08-30T17:10:54.5912880Z",
+      "Reason": "rcon/console command",
+      "Top": [
+        {
+          "Name": "Jsnxwy",
+          "XP": 663.4,
+          "Kills": 0,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "notpigeon",
+          "XP": 625.61999999999944,
+          "Kills": 0,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "Not notpigeon",
+          "XP": 260.1,
+          "Kills": 0,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "Sepehr",
+          "XP": 26.44,
+          "Kills": 0,
+          "Rank": "Recruit"
+        }
+      ]
+    },
+    {
+      "Season": 3,
+      "StartedUtc": "2026-08-30T17:10:54.5971210Z",
+      "EndedUtc": "2026-08-31T12:46:50.0256400Z",
+      "Reason": "rcon/console command",
+      "Top": [
+        {
+          "Name": "notpigeon",
+          "XP": 1850.2,
+          "Kills": 0,
+          "Rank": "Private"
+        }
+      ]
+    },
+    {
+      "Season": 4,
+      "StartedUtc": "2026-08-31T12:46:50.0263980Z",
+      "EndedUtc": "2026-09-03T18:10:06.7432900Z",
+      "Reason": "automatic wipe/new save",
+      "Top": [
+        {
+          "Name": "notpigeon",
+          "XP": 3258.1299999999997,
+          "Kills": 2,
+          "Rank": "Corporal"
+        },
+        {
+          "Name": "Not Bruce",
+          "XP": 2629.9,
+          "Kills": 0,
+          "Rank": "Corporal"
+        },
+        {
+          "Name": "Not notpigeon",
+          "XP": 1589.5,
+          "Kills": 1,
+          "Rank": "Private"
+        },
+        {
+          "Name": "not tony",
+          "XP": 1131.26,
+          "Kills": 1,
+          "Rank": "Private"
+        },
+        {
+          "Name": "The Burgermeister",
+          "XP": 40.400000000000006,
+          "Kills": 0,
+          "Rank": "Recruit"
+        }
+      ]
+    },
+    {
+      "Season": 5,
+      "StartedUtc": "2026-09-03T18:10:06.7462970Z",
+      "EndedUtc": "2026-09-03T18:30:17.1627480Z",
+      "Reason": "automatic wipe/new save",
+      "Top": []
+    },
+    {
+      "Season": 6,
+      "StartedUtc": "2026-09-03T18:30:17.1645690Z",
+      "EndedUtc": "2026-09-03T18:51:06.5660940Z",
+      "Reason": "automatic wipe/new save",
+      "Top": []
+    },
+    {
+      "Season": 7,
+      "StartedUtc": "2026-09-03T18:51:06.5682140Z",
+      "EndedUtc": "2026-09-04T11:06:30.2706670Z",
+      "Reason": "automatic wipe/new save",
+      "Top": [
+        {
+          "Name": "Not notpigeon",
+          "XP": 2206.9800000000023,
+          "Kills": 0,
+          "Rank": "Private"
+        },
+        {
+          "Name": "notpigeon",
+          "XP": 1605.0000000000027,
+          "Kills": 0,
+          "Rank": "Private"
+        },
+        {
+          "Name": "Not Bruce",
+          "XP": 585.19,
+          "Kills": 0,
+          "Rank": "Recruit"
+        },
+        {
+          "Name": "Noobless19",
+          "XP": 243.4199999999999,
+          "Kills": 0,
+          "Rank": "Recruit"
+        }
+      ]
+    }
+  ]
+}

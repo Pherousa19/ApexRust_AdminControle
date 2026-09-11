@@ -1,0 +1,49 @@
+{
+  "clans": {
+    "PPK": {
+      "Tag": "PPK",
+      "Description": "",
+      "OwnerID": "76561198781353971",
+      "CreationTime": 1788463363.0,
+      "LastOnlineTime": 1788716232.0,
+      "ClanMembers": {
+        "76561198781353971": {
+          "Name": "Not notpigeon",
+          "Role": 0
+        },
+        "76561199276389724": {
+          "Name": "notpigeon",
+          "Role": 2
+        }
+      },
+      "MemberInvites": {},
+      "Alliances": [],
+      "AllianceInvites": {},
+      "IncomingAlliances": [],
+      "TagColor": ""
+    },
+    "911": {
+      "Tag": "911",
+      "Description": "",
+      "OwnerID": "76561198816259280",
+      "CreationTime": 1788555422.0,
+      "LastOnlineTime": 1788605475.0,
+      "ClanMembers": {
+        "76561198816259280": {
+          "Name": "[911]Flamby",
+          "Role": 0
+        },
+        "76561198386434606": {
+          "Name": "Bobby-wan-kenobi",
+          "Role": 2
+        }
+      },
+      "MemberInvites": {},
+      "Alliances": [],
+      "AllianceInvites": {},
+      "IncomingAlliances": [],
+      "TagColor": ""
+    }
+  },
+  "playerInvites": {}
+}

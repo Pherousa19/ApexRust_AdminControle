@@ -1,0 +1,3858 @@
+{
+  "Work with Notify?": true,
+  "Enable Offline Image Mode": false,
+  "Cooldown between actions (in seconds)": 0.2,
+  "Pop Ups": [
+    {
+      "Enabled": true,
+      "ID": 401371728,
+      "Commands": [
+        "pop.server.rules"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_5035bb849a",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_3570504ad1",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_6332cad9c9",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerRules.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -450.0,
+          "OffsetMin (Y)": -175.0,
+          "OffsetMax (X)": 450.0,
+          "OffsetMax (Y)": 175.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerRules.Banner",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://www.image2url.com/r2/default/images/1788103151879-0664c7e6-9b7c-4140-a39e-71c7277284a6.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -4.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerRules.HeaderIcon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-icon-rules.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": -54.0,
+            "OffsetMax (X)": 438.0,
+            "OffsetMax (Y)": -26.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerRules.HeaderTitle",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER RULES"
+            ],
+            "Font Size": 32,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 90.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 448.0,
+            "OffsetMin (Y)": -62.5,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -17.5
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": 20.0,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerRules.Description",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Welcome to <color=#CF432D>{server_name}</color>! Before you start playing, we would like to remind you of our rules.",
+                "",
+                "1. <color=#CF432D>Respect for other players</color>: Please be polite and respectful when interacting with other members of the community.",
+                "2. <color=#CF432D>No cheats or exploits</color>: We strictly prohibit the use of any software or methods that give an unfair advantage to players.",
+                "3. <color=#CF432D>No insults or threats</color>: Any form of harassment, discrimination, or threats is not tolerated.",
+                "4. <color=#CF432D>No profanity</color>: Avoid using harsh language or obscene words in chat.",
+                "5. <color=#CF432D>Fair play</color>: Do not grief or kill other players without reason. Cooperation and fair play are encouraged.",
+                "6. <color=#CF432D>Non-interference</color>: Do not interfere with the progress of other players to complete their objectives.",
+                "7. <color=#CF432D>Privacy</color>: Do not disclose personal information or private details about other members of our community.",
+                "8. <color=#CF432D>Advertising of third-party resources is not allowed.</color> Please do not share links to other websites or resources without the permission of the administrators.",
+                "9. The administrators have the right to remove any content that does not comply with the rules of this server.",
+                "10. In case of any violation of the rules by a player, the administrators have the authority to block their account.",
+                "",
+                "Thank you for your cooperation and enjoy the game!"
+              ],
+              "Font Size": 14,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          ],
+          "Scroll Height": 350.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": 1200652361,
+      "Commands": [
+        "pop.server.commands"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_e13452d03a",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_412ceb542d",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_4961d97ecc",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerCommands.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -450.0,
+          "OffsetMin (Y)": -175.0,
+          "OffsetMax (X)": 450.0,
+          "OffsetMax (Y)": 175.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerCommands.Banner",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://www.image2url.com/r2/default/images/1788103071788-e6c1ee4c-bc13-44f9-9194-8b1c7f80f9fc.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -4.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerCommands.HeaderIcon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-icon-commands.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": -54.0,
+            "OffsetMax (X)": 438.0,
+            "OffsetMax (Y)": -26.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerCommands.HeaderTitle",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER COMMANDS"
+            ],
+            "Font Size": 32,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 90.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 448.0,
+            "OffsetMin (Y)": -62.5,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -17.5
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": 20.0,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerCommands.Description",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "<color=#CF432D>/info</color> – open this menu",
+                "<color=#CF432D>/online</color> – see how many players online",
+                "<color=#CF432D>/shop</color> – open in-game shop",
+                "<color=#CF432D>/kits</color> – open kits menu",
+                "<color=#CF432D>/clan</color> – open clans menu",
+                "<color=#CF432D>/bgrade wood</color> – sets building grade to wood",
+                "<color=#CF432D>/bgrade stone</color> – sets building grade to stone",
+                "<color=#CF432D>/bgrade metal</color> – sets building grade to metal",
+                "<color=#CF432D>/bgrade hqm</color> – sets building grade to high quality",
+                "<color=#CF432D>/remove</color> – opens the remove tool"
+              ],
+              "Font Size": 14,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          ],
+          "Scroll Height": 350.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": -1476491056,
+      "Commands": [
+        "pop.server.binds"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_1e4f81c33d",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_49ccdb230e",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_37f5299af0",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerBinds.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -450.0,
+          "OffsetMin (Y)": -175.0,
+          "OffsetMax (X)": 450.0,
+          "OffsetMax (Y)": 175.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerBinds.Banner",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://www.image2url.com/r2/default/images/1788103226509-b6d7223e-e05f-4202-8c74-f19356636a5c.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -4.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerBinds.HeaderIcon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-icon-binds.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": -54.0,
+            "OffsetMax (X)": 438.0,
+            "OffsetMax (Y)": -26.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerBinds.HeaderTitle",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER BINDS"
+            ],
+            "Font Size": 32,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 90.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 448.0,
+            "OffsetMin (Y)": -62.5,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -17.5
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": 20.0,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Description",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "To install binds, use the console (F1 key):"
+              ],
+              "Font Size": 13,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.1.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "OPEN GRAFFITI MENU"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -50.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -30.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.1.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -50.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -30.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.1.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY +spray"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -50.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -30.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.2.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "AUTO-RUN"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -75.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -55.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.2.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -75.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -55.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.2.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY forward;sprint"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -75.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -55.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.3.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "AUTO-ATTACK"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -100.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -80.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.3.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -100.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -80.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.3.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY attack"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -100.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -80.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.4.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "OPEN KITS MENU"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -125.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -105.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.4.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -125.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -105.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.4.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY chat.say /kits"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -125.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -105.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.5.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "TELEPORT TO HOME"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -150.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -130.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.5.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -150.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -130.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.5.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY chat.say /home {name}"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -150.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -130.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.6.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "ACCEPT TELEPORT REQUEST"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -175.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -155.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.6.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -175.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -155.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.6.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY chat.say /tpa"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -175.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -155.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.7.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "OPEN SKILLS"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -200.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -180.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.7.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -200.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -180.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.7.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "bind KEY chat.say /skills"
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -200.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -180.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.8.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "OPEN DAILY REWARDS"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -225.0,
+              "OffsetMax (X)": 188.0,
+              "OffsetMax (Y)": -205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerBinds.Bind.8.Value.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 30.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -225.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": false,
+              "Name": "PopUp.ServerBinds.Bind.8.Value.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 10,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 213.0,
+              "OffsetMin (Y)": -225.0,
+              "OffsetMax (X)": 363.0,
+              "OffsetMax (Y)": -205.0
+            }
+          ],
+          "Scroll Height": 350.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": 533659756,
+      "Commands": [
+        "pop.server.contacts"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_4950c3d653",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_eea4ca6c2b",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_a184eec2d9",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerContacts.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -450.0,
+          "OffsetMin (Y)": -175.0,
+          "OffsetMax (X)": 450.0,
+          "OffsetMax (Y)": 175.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerContacts.Banner",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://www.image2url.com/r2/default/images/1788103289821-297d6f6c-0f42-4d99-b9c5-06ddc9b5b59b.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -4.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerContacts.HeaderIcon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-icon-contacts.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": -54.0,
+            "OffsetMax (X)": 438.0,
+            "OffsetMax (Y)": -26.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerContacts.HeaderTitle",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER CONTACTS"
+            ],
+            "Font Size": 32,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 90.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 448.0,
+            "OffsetMin (Y)": -62.5,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -17.5
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": 20.0,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.Description",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Are your questions urgent or do you have any questions depending on your VIP, please contact us through our website or create a ticket in the discord"
+              ],
+              "Font Size": 14,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -250.0,
+              "OffsetMax (X)": 468.0,
+              "OffsetMax (Y)": 0.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 20.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 120.0,
+              "OffsetMax (Y)": -55.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788208602207-9f8143a5-1a44-47cb-b3b6-479db7413798.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 10.0,
+              "OffsetMin (Y)": -170.0,
+              "OffsetMax (X)": 110.0,
+              "OffsetMax (Y)": -70.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.Contact",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#CF432D",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 120.0,
+              "OffsetMax (Y)": -210.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.Contact.Label",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "STORE"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 120.0,
+              "OffsetMax (Y)": -210.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.URL.Panel",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#CF432D",
+                "Opacity (0 - 100)": 15.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -210.0,
+              "OffsetMax (X)": 120.0,
+              "OffsetMax (Y)": -185.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Website.URL.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "https://apexrust.co.uk/"
+              ],
+              "Font Size": 10,
+              "Font": 1,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 60.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -210.0,
+              "OffsetMax (X)": 120.0,
+              "OffsetMax (Y)": -185.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.Background",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#696969",
+                "Opacity (0 - 100)": 20.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 140.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 260.0,
+              "OffsetMax (Y)": -55.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788208640735-48ad4280-3e28-44e1-b8d0-223c9b17fe53.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 150.0,
+              "OffsetMin (Y)": -170.0,
+              "OffsetMax (X)": 250.0,
+              "OffsetMax (Y)": -70.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.Contact",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#CF432D",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 140.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 260.0,
+              "OffsetMax (Y)": -210.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.Contact.Label",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "DISCORD"
+              ],
+              "Font Size": 12,
+              "Font": 0,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 140.0,
+              "OffsetMin (Y)": -235.0,
+              "OffsetMax (X)": 260.0,
+              "OffsetMax (Y)": -210.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.URL.Panel",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#CF432D",
+                "Opacity (0 - 100)": 15.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 140.0,
+              "OffsetMin (Y)": -210.0,
+              "OffsetMax (X)": 260.0,
+              "OffsetMax (Y)": -185.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerContacts.QR.Discord.URL.Input",
+              "Type (Label/Panel/Button/Image)": "InputField",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "http://discord.apexrust.co.uk/"
+              ],
+              "Font Size": 10,
+              "Font": 1,
+              "Align": "MiddleCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 60.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 140.0,
+              "OffsetMin (Y)": -210.0,
+              "OffsetMax (X)": 260.0,
+              "OffsetMax (Y)": -185.0
+            }
+          ],
+          "Scroll Height": 350.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": -347758793,
+      "Commands": [
+        "pop.server.info"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_b82c88351e",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_081e5e06fc",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_3004f83d63",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerInfo.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -450.0,
+          "OffsetMin (Y)": -175.0,
+          "OffsetMax (X)": 450.0,
+          "OffsetMax (Y)": 175.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerInfo.Banner",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://apexrust.co.uk/images/serverinfo.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -4.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerInfo.HeaderIcon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-icon-info.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": -54.0,
+            "OffsetMax (X)": 438.0,
+            "OffsetMax (Y)": -26.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerInfo.HeaderTitle",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER INFO"
+            ],
+            "Font Size": 32,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 90.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 448.0,
+            "OffsetMin (Y)": -62.5,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -17.5
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "PopUp.ServerInfo.Hover",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#1E2022",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "assets/content/ui/UI.Background.Transparent.Linear.psd",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 4.0,
+            "OffsetMin (Y)": -346.0,
+            "OffsetMax (X)": 394.0,
+            "OffsetMax (Y)": -175.0
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 410.0,
+            "OffsetMin (Y)": 20.0,
+            "OffsetMax (X)": -22.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "PopUp.ServerInfo.Description",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "WIPE SCHEDULE: <color=#CF432D>Every 2 Weeks on a Thursday</color> @ <color=#CF432D>7pm</color> BST",
+                "",
+                "<size=18><color=#CF432D><b>SERVER INFO:</b></color></size>",
+                "– 2X GATHER RATES ON RESOURCES, COMPONENTS AND FOOD",
+                "– 2X STACK SIZE",
+                "– 2X CRAFTING SPEED",
+                "– 50% Upkeep",
+                "– FASTER SMELTING/RECYCLING SPEED",
+                "– LONG DAYS & SHORT NIGHTS",
+                "– DDoS PROTECTED",
+                "– ACTIVE ADMINS"
+              ],
+              "Font Size": 14,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          ],
+          "Scroll Height": 350.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": 1617278942,
+      "Commands": [
+        "pop.server.ttv"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_7e29f6838e",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_d7dcac5eb3",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_dd8146a4c0",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerInfo.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 95.0,
+          "OffsetMin (Y)": -640.0,
+          "OffsetMax (X)": 1185.0,
+          "OffsetMax (Y)": -60.0
+        },
+        "Content Elements": [],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 0.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Image_8b205818f8",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/FULLSCREEN_V4/blog_image.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": -2740.0,
+              "OffsetMax (X)": 1090.0,
+              "OffsetMax (Y)": 60.0
+            }
+          ],
+          "Scroll Height": 2800.0
+        }
+      }
+    },
+    {
+      "Enabled": true,
+      "ID": 564383917,
+      "Commands": [
+        "pop.rules"
+      ],
+      "Background": {
+        "Parent Layer (Overlay/Hud)": "Overlay",
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_1f49214007",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 90.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "assets/content/ui/ui.background.transparent.radial.psd",
+          "Material": "assets/content/ui/uibackgroundblur.mat",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Close after click?": true
+      },
+      "Close Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_eb3045d349",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 1.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": -49.0,
+          "OffsetMin (Y)": -49.0,
+          "OffsetMax (X)": -9.0,
+          "OffsetMax (Y)": -9.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_abe5e2f975",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/close.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": -10.0,
+          "OffsetMin (Y)": -10.0,
+          "OffsetMax (X)": 10.0,
+          "OffsetMax (Y)": 10.0
+        }
+      },
+      "Content": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "PopUp.ServerInfo.Background",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 226.0,
+          "OffsetMin (Y)": -600.0,
+          "OffsetMax (X)": 1054.0,
+          "OffsetMax (Y)": -120.0
+        },
+        "Content Elements": [
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "Popup.ServerBinds.Header.Background",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/FULLSCREEN_V4/rbg.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 0.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "Popup.ServerBinds.Header.Icon",
+            "Type (Label/Panel/Button/Image)": "Image",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/FULLSCREEN_V4/rulestitle.png",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 30.0,
+            "OffsetMin (Y)": -66.0,
+            "OffsetMax (X)": 76.0,
+            "OffsetMax (Y)": -20.0
+          },
+          {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "Popup.ServerBinds.Header.Title",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [
+              "SERVER RULES"
+            ],
+            "Font Size": 40,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 80.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 1.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 95.0,
+            "OffsetMin (Y)": -71.0,
+            "OffsetMax (X)": 695.0,
+            "OffsetMax (Y)": -21.0
+          }
+        ],
+        "Use scrolling?": true,
+        "Scroll Settings": {
+          "Scroll": {
+            "Scroll Type": "Vertical",
+            "Movement Type": "Clamped",
+            "Elasticity": 0.25,
+            "Deceleration Rate": 0.3,
+            "Scroll Sensitivity": 24.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 3.0,
+              "Handle Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Highlight Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Pressed Color": {
+                "HEX": "#D74933",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Track Sprite": null,
+              "Track Color": {
+                "HEX": "#373737",
+                "Opacity (0 - 100)": 100.0
+              }
+            },
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 1.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": -80.0
+          },
+          "Scroll Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Intro1",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "The game is constantly evolving, and it's impossible to cover every scenario in advance. If you encounter a situation that isn't outlined here, please contact the server moderation team for guidance."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -52.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -10.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Intro2",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Many offenses will receive a warning first; however, some warrant immediate bans. Players with a history of rule violations may be banned regardless of how long ago the offense occurred."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -102.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -60.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Intro3",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "If you've been banned and would like to appeal, please contact the moderation team through the official support channels."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -152.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -110.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Hacking.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "HACKING"
+              ],
+              "Font Size": 20,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -186.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -160.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Hacking.Description1",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Hacking is strictly prohibited and will result in an immediate ban."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -216.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -190.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Hacking.Description2",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "If you report a player for hacking, provide as much evidence as possible."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -246.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -220.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.BanEvasion.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "BAN EVASION & GAME BANS"
+              ],
+              "Font Size": 20,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -276.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -250.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.BanEvasion.Intro",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "You are not allowed to play on the server if:"
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -316.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -290.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.BanEvasion.List",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "• You have a game ban less than 8 months old.",
+                "• You are linked to multiple game bans.",
+                "• You have a non-game-related VAC or other game ban less than 6 months old."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -382.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -320.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.BanEvasion.Warning",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Players caught circumventing a server ban will have their new account(s) banned unless the original ban is reversed."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -416.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -390.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Association.Title",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "ASSOCIATION WHITH BANNED PLAYERS"
+              ],
+              "Font Size": 20,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -456.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -430.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Association.Rule1",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "If a player is banned for any reason, they are not allowed to evade that ban and play on a new account."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -486.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -460.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Association.Rule2",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Associating with banned players may result in a ban for individuals or an entire team depending on the circumstances."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -516.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -490.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Popup.ServerRules.Association.Rule3",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "Clear proof of helping banned players evade may result in a ban from all servers."
+              ],
+              "Font Size": 16,
+              "Font": 1,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 80.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 24.0,
+              "OffsetMin (Y)": -546.0,
+              "OffsetMax (X)": 784.0,
+              "OffsetMax (Y)": -520.0
+            }
+          ],
+          "Scroll Height": 600.0
+        }
+      }
+    }
+  ],
+  "Version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 25
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "Combat Logging Main": {
+    "Log Combat Damage (Will Override All)": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Combat Death (Will Override All)": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Healing Items": {
+      "Log to File": false,
+      "Log to Console": false
+    },
+    "Log Player Downed": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Show if Player is Sleeping in Log (Only for Attacking not Death)": true,
+    "Log Players Getting Attacked while Sleeping": true,
+    "Show Body Part Hit": true,
+    "Log Respawns": {
+      "Log to File": true,
+      "Log to Console": true
+    }
+  },
+  "Combat Hurt Logging": {
+    "Log Player Attacking Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Animal Attacking Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log NPC Attacking Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Player Attacking NPC": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Player Attacking Animal": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Entity Attacking Player": {
+      "Log to File": true,
+      "Log to Console": true
+    }
+  },
+  "Combat Death Logging": {
+    "Log Player killing Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Animal killing Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log NPC killing Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Player killing NPC": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Player killing Animal": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Entity killing Player": {
+      "Log to File": true,
+      "Log to Console": true
+    },
+    "Log Other Player Death": {
+      "Log to File": true,
+      "Log to Console": true
+    }
+  },
+  "Print Debug Info To Console (Dev)": false,
+  "Version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 6
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "Permission to use plugin (ex: shop.use)": "",
+  "Commands": [
+    "shop",
+    "shops"
+  ],
+  "Enable money transfers between players?": true,
+  "Allow money transfers to offline players?": false,
+  "Enable selling items?": true,
+  "Enable logging to the console?": true,
+  "Enable logging to the file?": true,
+  "Load images when logging into the server?": true,
+  "Work with Notify?": true,
+  "Enable Offline Image Mode": false,
+  "Work with LangAPI?": true,
+  "Can admins edit? (by flag)": false,
+  "Clear cart on currency change?": true,
+  "Block (NoEscape)": false,
+  "Wipe Block": false,
+  "Wipe Cooldown": 3600.0,
+  "Respawn Block": true,
+  "Respawn Cooldown": 60.0,
+  "Blocking the opening in duels?": false,
+  "Cooldown between actions (in seconds)": 0.1,
+  "Delay between loading images": 1.0,
+  "Economy": {
+    "Type (Plugin/Item)": "Plugin",
+    "Plugin name": "Economics",
+    "Balance add hook": "Deposit",
+    "Balance remove hook": "Withdraw",
+    "Balance show hook": "Balance",
+    "ShortName": "scrap",
+    "Display Name (empty - default)": "",
+    "Skin": 0,
+    "Title": {
+      "Message": "Economics",
+      "Use localized messages?": false,
+      "Localized messages": {
+        "en": "Economics",
+        "fr": "Economics"
+      }
+    },
+    "Balance": {
+      "Message": "${0}",
+      "Use localized messages?": false,
+      "Localized messages": {
+        "en": "${0}",
+        "fr": "${0}"
+      }
+    },
+    "Price": {
+      "Message": "${0}",
+      "Use localized messages?": false,
+      "Localized messages": {
+        "en": "${0}",
+        "fr": "${0}"
+      }
+    },
+    "Footer Items Price": {
+      "Message": "${0}",
+      "Use localized messages?": false,
+      "Localized messages": {
+        "en": "${0}",
+        "fr": "${0}"
+      }
+    }
+  },
+  "Additional Economics": [
+    {
+      "ID": 1,
+      "Enabled": true,
+      "Type (Plugin/Item)": "Plugin",
+      "Plugin name": "ServerRewards",
+      "Balance add hook": "AddPoints",
+      "Balance remove hook": "TakePoints",
+      "Balance show hook": "CheckPoints",
+      "ShortName": "scrap",
+      "Display Name (empty - default)": "",
+      "Skin": 0,
+      "Title": {
+        "Message": "Server Rewards",
+        "Use localized messages?": false,
+        "Localized messages": {
+          "en": "Server Rewards",
+          "fr": "Server Rewards"
+        }
+      },
+      "Balance": {
+        "Message": "{0} RP",
+        "Use localized messages?": false,
+        "Localized messages": {
+          "en": "{0} RP",
+          "fr": "{0} RP"
+        }
+      },
+      "Price": {
+        "Message": "{0} RP",
+        "Use localized messages?": false,
+        "Localized messages": {
+          "en": "{0} RP",
+          "fr": "{0} RP"
+        }
+      },
+      "Footer Items Price": {
+        "Message": "{0} RP",
+        "Use localized messages?": false,
+        "Localized messages": {
+          "en": "{0} RP",
+          "fr": "{0} RP"
+        }
+      }
+    }
+  ],
+  "NPC Shops (NPC ID - shop categories)": {
+    "1234567": {
+      "Permission": "",
+      "Allow Favorites": false,
+      "Categories (Titles) [* - all]": [
+        "Tool",
+        "Food"
+      ]
+    },
+    "7654321": {
+      "Permission": "",
+      "Allow Favorites": false,
+      "Categories (Titles) [* - all]": [
+        "Weapon",
+        "Ammunition"
+      ]
+    },
+    "4644687478": {
+      "Permission": "shop.usenpc",
+      "Allow Favorites": false,
+      "Categories (Titles) [* - all]": [
+        "*"
+      ]
+    }
+  },
+  "Interface": {
+    "Display type (Overlay/Hud)": "OverlayNonScaled",
+    "Number of digits after decimal point for rounding prices": 5,
+    "Color 1": {
+      "HEX": "#161617",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 2": {
+      "HEX": "#4B68FF",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 3": {
+      "HEX": "#0E0E10",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 5": {
+      "HEX": "#FF4B4B",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 7": {
+      "HEX": "#CD3838",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 8": {
+      "HEX": "#FFFFFF",
+      "Opacity (0 - 100)": 100.0
+    },
+    "Color 9": {
+      "HEX": "#4B68FF",
+      "Opacity (0 - 100)": 33.0
+    },
+    "Color 10": {
+      "HEX": "#4B68FF",
+      "Opacity (0 - 100)": 50.0
+    },
+    "Color 11": {
+      "HEX": "#161617",
+      "Opacity (0 - 100)": 95.0
+    },
+    "Color 12": {
+      "HEX": "#161617",
+      "Opacity (0 - 100)": 80.0
+    },
+    "Color 13": {
+      "HEX": "#0E0E10",
+      "Opacity (0 - 100)": 98.0
+    }
+  },
+  "Blocked skins for sell": {
+    "short name": [
+      52,
+      25
+    ],
+    "short name 2": [
+      52,
+      25
+    ]
+  },
+  "Auto-Wipe Settings": {
+    "Wipe Cooldowns?": true,
+    "Wipe Players?": true,
+    "Wipe Limits?": true,
+    "Wipe Dynamic Pricing?": false
+  },
+  "Custom Vending Machines (Entity ID - settings)": {},
+  "Settings available containers for selling item": {
+    "Enabled": true,
+    "Available Containers (main, belt, wear)": [
+      "main",
+      "belt"
+    ]
+  },
+  "Buy Again Settings": {
+    "Enabled": false,
+    "Permission (ex: shop.buyagain)": "",
+    "Image": "assets/icons/history_servers.png"
+  },
+  "Formatting Settings": {
+    "Buy Price Format": "G",
+    "Sell Price Format": "G",
+    "Shopping Bag Cost Format": "G",
+    "Balance Format": "G"
+  },
+  "Discount": {
+    "Enabled": true,
+    "Discount (%)": {
+      "shop.default": 0,
+      "shop.vip": 10
+    }
+  },
+  "Notifications": {
+    "General Notifications (message - settings notification)": {
+      "NoPermission": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "ErrorSyntax": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "VMNotFoundCategories": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "VMNotFound": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "VMExists": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "VMInstalled": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "NPCNotFound": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "NPCInstalled": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "BuyCooldownMessage": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "GiveItem": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "SellNotify": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "SuccessfulTransfer": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "MsgIsFavoriteItem": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "MsgAddedToFavoriteItem": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "MsgNoFavoriteItem": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "MsgRemovedFromFavoriteItem": {
+        "Type": 0,
+        "Show notify?": true
+      },
+      "BuyLimitReached": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "DailyBuyLimitReached": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "UIMsgShopInInitialization": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "NoILError": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "NoUseDuel": {
+        "Type": 1,
+        "Show notify?": true
+      },
+      "UIDLCItem": {
+        "Type": 1,
+        "Show notify?": true
+      }
+    }
+  },
+  "Discord Logging Settings": {
+    "Buy Settings": {
+      "Enabled": false,
+      "Discord Webhook URL": "",
+      "Color (Decimal format)": 3066993,
+      "Title": "Shop Purchase",
+      "Footer icon URL (for Buy/Sell item icon is used automatically)": "",
+      "Footer text. Variables Buy/Sell: {username}, {steamid}, {item}, {amount}, {price}. Transfer: {username}, {steamid}, {targetname}, {targetid}, {amount})": "{username} bought {item} x{amount} for {price}"
+    },
+    "Sell Settings": {
+      "Enabled": false,
+      "Discord Webhook URL": "",
+      "Color (Decimal format)": 15158332,
+      "Title": "Shop Sale",
+      "Footer icon URL (for Buy/Sell item icon is used automatically)": "",
+      "Footer text. Variables Buy/Sell: {username}, {steamid}, {item}, {amount}, {price}. Transfer: {username}, {steamid}, {targetname}, {targetid}, {amount})": "{username} sold {item} x{amount} for {price}"
+    },
+    "Transfer Settings": {
+      "Enabled": false,
+      "Discord Webhook URL": "",
+      "Color (Decimal format)": 3447003,
+      "Title": "Money Transfer",
+      "Footer icon URL (for Buy/Sell item icon is used automatically)": "",
+      "Footer text. Variables Buy/Sell: {username}, {steamid}, {item}, {amount}, {price}. Transfer: {username}, {steamid}, {targetname}, {targetid}, {amount})": "Transferred {amount} from {username} to {targetname}"
+    }
+  },
+  "Dynamic Pricing": {
+    "Enabled": false,
+    "Amount (items)": 10,
+    "Price Drop Per Item (0.0 - 1.0)": 0.02,
+    "Minimum Multiplier": 0.5,
+    "Category Boost Per Item (0.0 - 1.0)": 0.01,
+    "Maximum Multiplier": 1.5,
+    "Recovery Interval (seconds)": 600.0,
+    "Recovery Step": 5
+  },
+  "Version": {
+    "Major": 2,
+    "Minor": 4,
+    "Patch": 28
+  }
+}

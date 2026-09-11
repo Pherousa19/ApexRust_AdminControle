@@ -1,0 +1,219 @@
+{
+  "Players": {
+    "76561199276389724": {
+      "Balance": 100,
+      "LifetimeEarned": 100,
+      "LifetimeSpent": 0,
+      "PlaytimeMinutes": 20.0,
+      "HarvestProgress": {
+        "stones": 80,
+        "wood": 37,
+        "sulfur.ore": 300,
+        "metal.ore": 100,
+        "hq.metal.ore": 2
+      },
+      "Transactions": [
+        {
+          "UnixTime": 1787073779,
+          "Amount": 5,
+          "Balance": 5,
+          "Reason": "stones harvest"
+        },
+        {
+          "UnixTime": 1787075149,
+          "Amount": 5,
+          "Balance": 10,
+          "Reason": "metal.ore harvest"
+        },
+        {
+          "UnixTime": 1787075154,
+          "Amount": 5,
+          "Balance": 15,
+          "Reason": "stones harvest"
+        },
+        {
+          "UnixTime": 1787075155,
+          "Amount": 5,
+          "Balance": 20,
+          "Reason": "stones harvest"
+        },
+        {
+          "UnixTime": 1787076325,
+          "Amount": 5,
+          "Balance": 25,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076343,
+          "Amount": 5,
+          "Balance": 30,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076901,
+          "Amount": 5,
+          "Balance": 35,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076914,
+          "Amount": 5,
+          "Balance": 40,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076922,
+          "Amount": 5,
+          "Balance": 45,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076932,
+          "Amount": 5,
+          "Balance": 50,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076945,
+          "Amount": 5,
+          "Balance": 55,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787076971,
+          "Amount": 5,
+          "Balance": 60,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787077286,
+          "Amount": 30,
+          "Balance": 90,
+          "Reason": "Playtime reward"
+        },
+        {
+          "UnixTime": 1787077689,
+          "Amount": 5,
+          "Balance": 95,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787077699,
+          "Amount": 5,
+          "Balance": 100,
+          "Reason": "Player kill"
+        }
+      ]
+    },
+    "76561198414888989": {
+      "Balance": 75,
+      "LifetimeEarned": 75,
+      "LifetimeSpent": 0,
+      "PlaytimeMinutes": 10.0,
+      "HarvestProgress": {
+        "wood": 188,
+        "stones": 30
+      },
+      "Transactions": [
+        {
+          "UnixTime": 1787073661,
+          "Amount": 5,
+          "Balance": 5,
+          "Reason": "stones harvest"
+        },
+        {
+          "UnixTime": 1787073675,
+          "Amount": 5,
+          "Balance": 10,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787073694,
+          "Amount": 5,
+          "Balance": 15,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787073699,
+          "Amount": 5,
+          "Balance": 20,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787073721,
+          "Amount": 5,
+          "Balance": 25,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787073724,
+          "Amount": 5,
+          "Balance": 30,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787073728,
+          "Amount": 5,
+          "Balance": 35,
+          "Reason": "wood harvest"
+        },
+        {
+          "UnixTime": 1787074364,
+          "Amount": 5,
+          "Balance": 40,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787074425,
+          "Amount": 5,
+          "Balance": 45,
+          "Reason": "Player kill"
+        },
+        {
+          "UnixTime": 1787077346,
+          "Amount": 30,
+          "Balance": 75,
+          "Reason": "Playtime reward"
+        }
+      ]
+    },
+    "76561198781353971": {
+      "Balance": 5,
+      "LifetimeEarned": 5,
+      "LifetimeSpent": 0,
+      "PlaytimeMinutes": 44.0,
+      "HarvestProgress": {},
+      "Transactions": [
+        {
+          "UnixTime": 1787077545,
+          "Amount": 5,
+          "Balance": 5,
+          "Reason": "Player kill"
+        }
+      ]
+    },
+    "336": {
+      "Balance": 5,
+      "LifetimeEarned": 5,
+      "LifetimeSpent": 0,
+      "PlaytimeMinutes": 0.0,
+      "HarvestProgress": {},
+      "Transactions": [
+        {
+          "UnixTime": 1787096710,
+          "Amount": 5,
+          "Balance": 5,
+          "Reason": "Player kill"
+        }
+      ]
+    },
+    "76561198026034032": {
+      "Balance": 0,
+      "LifetimeEarned": 0,
+      "LifetimeSpent": 0,
+      "PlaytimeMinutes": 4.0,
+      "HarvestProgress": {},
+      "Transactions": []
+    }
+  }
+}

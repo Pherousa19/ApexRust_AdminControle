@@ -1,0 +1,203 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 2,
+  "ItemCountMax": 4,
+  "Items": [
+    {
+      "ShortName": "cctv.camera",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.263,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "targeting.computer",
+      "AmountMin": 2,
+      "AmountMax": 2,
+      "SpawnChance": 0.263,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "techparts",
+      "AmountMin": 2,
+      "AmountMax": 12,
+      "SpawnChance": 1.158,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "metal.refined",
+      "AmountMin": 2,
+      "AmountMax": 100,
+      "SpawnChance": 0.263,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "aiming.module.mlrs",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.053,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "scrap",
+      "AmountMin": 10,
+      "AmountMax": 20,
+      "SpawnChance": 1.0,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": [
+        {
+          "ShortName": "chainsaw",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        },
+        {
+          "ShortName": "jackhammer",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        },
+        {
+          "ShortName": "scrap",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        }
+      ]
+    },
+    {
+      "ShortName": "smgbody",
+      "AmountMin": 2,
+      "AmountMax": 4,
+      "SpawnChance": 1.0,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "metalpipe",
+      "AmountMin": 2,
+      "AmountMax": 6,
+      "SpawnChance": 1.0,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": [
+        {
+          "ShortName": "metalblade",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        },
+        {
+          "ShortName": "scrap",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        }
+      ]
+    },
+    {
+      "ShortName": "metalblade",
+      "AmountMin": 3,
+      "AmountMax": 8,
+      "SpawnChance": 1.0,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": [
+        {
+          "ShortName": "scrap",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        },
+        {
+          "ShortName": "scrap",
+          "AmountMin": 10,
+          "AmountMax": 20,
+          "SpawnChance": 1.0,
+          "SkinId": 0,
+          "CustomName": null,
+          "ConditionMin": 1.0,
+          "ConditionMax": 1.0,
+          "Category": -1,
+          "AdditionalItems": []
+        }
+      ]
+    }
+  ],
+  "Categories": {}
+}

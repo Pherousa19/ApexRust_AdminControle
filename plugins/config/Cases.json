@@ -1,0 +1,223 @@
+{
+  "Broadcast Wins Enabled": true,
+  "Broadcast Minimum Tier": "Rare",
+  "Opening Suspense Seconds": 1.8,
+  "Cases": [
+    {
+      "Id": "weapon_case",
+      "Display Name": "Weapon Case",
+      "Icon Url": "",
+      "Accent Color": "0.82 0.13 0.10 1",
+      "Loot": [
+        {
+          "Display Name": "Semi-Automatic Pistol",
+          "Shortname": "pistol.semiauto",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 40.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "Hand Made Shotgun",
+          "Shortname": "shotgun.waterpipe",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 35.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "SAR",
+          "Shortname": "rifle.sar",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 15.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "MP5A4",
+          "Shortname": "smg.mp5",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 12.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "AK47",
+          "Shortname": "rifle.ak",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 6.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "Bolt Action Rifle",
+          "Shortname": "rifle.bolt",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 4.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "M249",
+          "Shortname": "lmg.m249",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 2.0,
+          "Tier": "Mythical"
+        },
+        {
+          "Display Name": "Rocket Launcher",
+          "Shortname": "rocket.launcher",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 0.5,
+          "Tier": "Legendary"
+        }
+      ]
+    },
+    {
+      "Id": "ammo_case",
+      "Display Name": "Ammo Case",
+      "Icon Url": "",
+      "Accent Color": "0.90 0.45 0.10 1",
+      "Loot": [
+        {
+          "Display Name": "Pistol Bullet",
+          "Shortname": "ammo.pistol",
+          "Skin ID": 0,
+          "Amount": 60,
+          "Weight": 40.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "5.56 Rifle Ammo",
+          "Shortname": "ammo.rifle",
+          "Skin ID": 0,
+          "Amount": 30,
+          "Weight": 35.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "Handmade Shell",
+          "Shortname": "ammo.shotgun",
+          "Skin ID": 0,
+          "Amount": 20,
+          "Weight": 15.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "HV 5.56 Rifle Ammo",
+          "Shortname": "ammo.rifle.hv",
+          "Skin ID": 0,
+          "Amount": 20,
+          "Weight": 12.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "Explosive 5.56 Rifle Ammo",
+          "Shortname": "ammo.rifle.explosive",
+          "Skin ID": 0,
+          "Amount": 10,
+          "Weight": 6.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "40mm HE Grenade",
+          "Shortname": "ammo.grenadelauncher.he",
+          "Skin ID": 0,
+          "Amount": 4,
+          "Weight": 4.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "Rocket",
+          "Shortname": "ammo.rocket.basic",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 2.0,
+          "Tier": "Mythical"
+        },
+        {
+          "Display Name": "High Velocity Rocket",
+          "Shortname": "ammo.rocket.hv",
+          "Skin ID": 0,
+          "Amount": 2,
+          "Weight": 0.5,
+          "Tier": "Epic"
+        }
+      ]
+    },
+    {
+      "Id": "misc_case",
+      "Display Name": "Misc Case",
+      "Icon Url": "",
+      "Accent Color": "0.20 0.45 0.85 1",
+      "Loot": [
+        {
+          "Display Name": "Scrap",
+          "Shortname": "scrap",
+          "Skin ID": 0,
+          "Amount": 50,
+          "Weight": 40.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "Wood",
+          "Shortname": "wood",
+          "Skin ID": 0,
+          "Amount": 500,
+          "Weight": 35.0,
+          "Tier": "Common"
+        },
+        {
+          "Display Name": "Metal Fragments",
+          "Shortname": "metal.fragments",
+          "Skin ID": 0,
+          "Amount": 300,
+          "Weight": 15.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "Low Grade Fuel",
+          "Shortname": "lowgradefuel",
+          "Skin ID": 0,
+          "Amount": 50,
+          "Weight": 12.0,
+          "Tier": "Uncommon"
+        },
+        {
+          "Display Name": "High Quality Metal",
+          "Shortname": "metal.refined",
+          "Skin ID": 0,
+          "Amount": 25,
+          "Weight": 6.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "Sulfur",
+          "Shortname": "sulfur",
+          "Skin ID": 0,
+          "Amount": 200,
+          "Weight": 4.0,
+          "Tier": "Rare"
+        },
+        {
+          "Display Name": "Tech Trash",
+          "Shortname": "techparts",
+          "Skin ID": 0,
+          "Amount": 10,
+          "Weight": 2.0,
+          "Tier": "Epic"
+        },
+        {
+          "Display Name": "Supply Signal",
+          "Shortname": "supply.signal",
+          "Skin ID": 0,
+          "Amount": 1,
+          "Weight": 0.5,
+          "Tier": "Mythical"
+        }
+      ]
+    }
+  ]
+}

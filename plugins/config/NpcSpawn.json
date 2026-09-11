@@ -1,0 +1,262 @@
+{
+  "Delay after plugin startup before random positions are generated in biomes": 5.0,
+  "Weapons with custom NPC parameters": {
+    "rifle.bolt": {
+      "Effective Range": 150.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.5
+    },
+    "rifle.l96": {
+      "Effective Range": 150.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.5
+    },
+    "multiplegrenadelauncher": {
+      "Effective Range": 20.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.5
+    },
+    "smg.thompson": {
+      "Effective Range": 20.0,
+      "Minimum Attack Duration": 0.4,
+      "Maximum Attack Duration": 0.4,
+      "Weapon Damage Multiplier": 0.2
+    },
+    "smg.2": {
+      "Effective Range": 20.0,
+      "Minimum Attack Duration": 0.4,
+      "Maximum Attack Duration": 0.4,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "t1_smg": {
+      "Effective Range": 20.0,
+      "Minimum Attack Duration": 0.4,
+      "Maximum Attack Duration": 0.4,
+      "Weapon Damage Multiplier": 0.4
+    },
+    "blunderbuss": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.3,
+      "Maximum Attack Duration": 1.0,
+      "Weapon Damage Multiplier": 0.15
+    },
+    "shotgun.double": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.3,
+      "Maximum Attack Duration": 1.0,
+      "Weapon Damage Multiplier": 0.15
+    },
+    "shotgun.pump": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.3,
+      "Maximum Attack Duration": 1.0,
+      "Weapon Damage Multiplier": 0.15
+    },
+    "shotgun.waterpipe": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.15
+    },
+    "revolver.hc": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.0,
+      "Maximum Attack Duration": 0.46,
+      "Weapon Damage Multiplier": 0.18
+    },
+    "pistol.python": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.0,
+      "Maximum Attack Duration": 0.46,
+      "Weapon Damage Multiplier": 0.21
+    },
+    "pistol.prototype17": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.0,
+      "Maximum Attack Duration": 0.46,
+      "Weapon Damage Multiplier": 0.28
+    },
+    "pistol.semiauto": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.0,
+      "Maximum Attack Duration": 0.46,
+      "Weapon Damage Multiplier": 0.28
+    },
+    "speargun": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "bow.compound": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "crossbow": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "legacy bow": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "bow.hunting": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "minicrossbow": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "pistol.nailgun": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": 0.0,
+      "Maximum Attack Duration": 0.46,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "blowpipe": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "pistol.eoka": {
+      "Effective Range": 10.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    },
+    "snowballgun": {
+      "Effective Range": 5.0,
+      "Minimum Attack Duration": 2.0,
+      "Maximum Attack Duration": 2.0,
+      "Weapon Damage Multiplier": 0.2
+    },
+    "crossbowbowless": {
+      "Effective Range": 15.0,
+      "Minimum Attack Duration": -1.0,
+      "Maximum Attack Duration": -1.0,
+      "Weapon Damage Multiplier": 0.25
+    }
+  },
+  "NPC Weapons by Distance Category": {
+    "0": [
+      "bone.club",
+      "knife.bone",
+      "knife.butcher",
+      "candycaneclub",
+      "knife.combat",
+      "longsword",
+      "mace",
+      "machete",
+      "paddle",
+      "pitchfork",
+      "salvaged.cleaver",
+      "salvaged.sword",
+      "spear.stone",
+      "spear.wooden",
+      "chainsaw",
+      "hatchet",
+      "jackhammer",
+      "pickaxe",
+      "axe.salvaged",
+      "hammer.salvaged",
+      "icepick.salvaged",
+      "stonehatchet",
+      "stone.pickaxe",
+      "torch",
+      "sickle",
+      "rock",
+      "snowball",
+      "mace.baseballbat",
+      "concretepickaxe",
+      "concretehatchet",
+      "lumberjack.hatchet",
+      "lumberjack.pickaxe",
+      "diverhatchet",
+      "diverpickaxe",
+      "divertorch",
+      "knife.skinning",
+      "vampire.stake",
+      "shovel",
+      "spear.cny",
+      "frontier_hatchet",
+      "boomerang",
+      "krieg.chainsword",
+      "industrial.torch"
+    ],
+    "1": [
+      "speargun",
+      "bow.compound",
+      "crossbow",
+      "bow.hunting",
+      "shotgun.double",
+      "pistol.eoka",
+      "flamethrower",
+      "pistol.m92",
+      "pistol.nailgun",
+      "multiplegrenadelauncher",
+      "shotgun.pump",
+      "pistol.python",
+      "pistol.revolver",
+      "pistol.semiauto",
+      "pistol.prototype17",
+      "snowballgun",
+      "shotgun.spas12",
+      "shotgun.waterpipe",
+      "shotgun.m4",
+      "legacy bow",
+      "military flamethrower",
+      "blunderbuss",
+      "minicrossbow",
+      "blowpipe",
+      "krieg.shotgun",
+      "crossbowbowless"
+    ],
+    "2": [
+      "smg.2",
+      "smg.mp5",
+      "rifle.semiauto",
+      "smg.thompson",
+      "rifle.sks",
+      "revolver.hc",
+      "t1_smg",
+      "paintballgun"
+    ],
+    "3": [
+      "rifle.ak",
+      "rifle.lr300",
+      "lmg.m249",
+      "rifle.m39",
+      "hmlmg",
+      "rifle.ak.ice",
+      "rifle.ak.diver",
+      "minigun",
+      "rifle.ak.med",
+      "rifle.lr300.space",
+      "m16a2"
+    ],
+    "4": [
+      "rifle.bolt",
+      "rifle.l96"
+    ]
+  },
+  "Configuration version": {
+    "Major": 3,
+    "Minor": 4,
+    "Patch": 0
+  }
+}

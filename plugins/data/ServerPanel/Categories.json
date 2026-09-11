@@ -1,0 +1,374 @@
+{
+  "Categories": [
+    {
+      "ID": -1110343980,
+      "Enabled": true,
+      "Permission": "",
+      "Visible": true,
+      "Title": "HOME",
+      "Icon": "",
+      "Chat Button": false,
+      "Show Pages?": false,
+      "Commands": [
+        "menu",
+        "help",
+        "info",
+        "rules",
+        "commands",
+        "binds",
+        "contacts"
+      ],
+      "Pages": [
+        {
+          "Title": "",
+          "Icon": null,
+          "Commands": [],
+          "Type (Plugin/UI)": "UI",
+          "Plugin Name": "",
+          "Plugin Hook": "",
+          "UI Elements": [
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerInfo.Banner.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 75.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://apexrust.co.uk/images/serverinfo.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -600.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": -206.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerInfo.Banner.Button",
+              "Type (Label/Panel/Button/Image)": "Button",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Command ({user} - user steamid)": "pop.server.info",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -600.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": -206.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerCommands.Banner.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 75.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788103071788-e6c1ee4c-bc13-44f9-9194-8b1c7f80f9fc.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -186.0,
+              "OffsetMin (Y)": 25.0,
+              "OffsetMax (X)": 178.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerCommands.Banner.Button",
+              "Type (Label/Panel/Button/Image)": "Button",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Command ({user} - user steamid)": "pop.server.commands",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -186.0,
+              "OffsetMin (Y)": 25.0,
+              "OffsetMax (X)": 178.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServeBinds.Banner.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788103226509-b6d7223e-e05f-4202-8c74-f19356636a5c.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -186.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": 178.0,
+              "OffsetMax (Y)": -4.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServeBinds.Banner.Button",
+              "Type (Label/Panel/Button/Image)": "Button",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Command ({user} - user steamid)": "pop.server.binds",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": -186.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": 178.0,
+              "OffsetMax (Y)": -4.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServeRules.Banner.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788103151879-0664c7e6-9b7c-4140-a39e-71c7277284a6.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": 207.0,
+              "OffsetMin (Y)": 25.0,
+              "OffsetMax (X)": 571.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServeRules.Banner.Button",
+              "Type (Label/Panel/Button/Image)": "Button",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Command ({user} - user steamid)": "pop.server.rules",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": 207.0,
+              "OffsetMin (Y)": 25.0,
+              "OffsetMax (X)": 571.0,
+              "OffsetMax (Y)": 205.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerContacts.Banner.Image",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://www.image2url.com/r2/default/images/1788103289821-297d6f6c-0f42-4d99-b9c5-06ddc9b5b59b.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": 207.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": 571.0,
+              "OffsetMax (Y)": -4.0
+            },
+            {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "ServerContacts.Banner.Button",
+              "Type (Label/Panel/Button/Image)": "Button",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [
+                ""
+              ],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Command ({user} - user steamid)": "pop.server.contacts",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.5,
+              "AnchorMin (Y)": 0.5,
+              "AnchorMax (X)": 0.5,
+              "AnchorMax (Y)": 0.5,
+              "OffsetMin (X)": 207.0,
+              "OffsetMin (Y)": -184.0,
+              "OffsetMax (X)": 571.0,
+              "OffsetMax (Y)": -4.0
+            }
+          ],
+          "Use Auto-Resize?": false,
+          "Localizations": {}
+        }
+      ],
+      "Use Auto-Resize?": true,
+      "Localizations": {
+        "en": {
+          "Text": "HOME",
+          "Width": 100.0
+        }
+      }
+    }
+  ]
+}

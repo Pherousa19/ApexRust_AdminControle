@@ -1,0 +1,32 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 1,
+  "ItemCountMax": 6,
+  "Items": [
+    {
+      "ShortName": "crude.oil",
+      "AmountMin": 30,
+      "AmountMax": 40,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "lowgradefuel",
+      "AmountMin": 10,
+      "AmountMax": 20,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    }
+  ],
+  "Categories": {}
+}

@@ -1,0 +1,222 @@
+[
+    {
+        "plugin_id": "discord-status",
+        "provider": "umod",
+        "version_id": "discord-status",
+        "plugin_name": "Discord Status",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5d20e5b64e078.png",
+        "plugin_author": "DevGonzi",
+        "file_name": "DiscordStatus.cs",
+        "installed_at": "2026-08-16T13:52:17+00:00"
+    },
+    {
+        "plugin_id": "combat-logger",
+        "provider": "umod",
+        "version_id": "combat-logger",
+        "plugin_name": "Combat Logger",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5ba971e266c91.png",
+        "plugin_author": "RocketMyrr",
+        "file_name": "CombatLogger.cs",
+        "installed_at": "2026-08-16T13:56:53+00:00"
+    },
+    {
+        "plugin_id": "team-chat",
+        "provider": "umod",
+        "version_id": "team-chat",
+        "plugin_name": "Team Chat",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5d0e2db2e9084.png",
+        "plugin_author": "Waggy",
+        "file_name": "TeamChat.cs",
+        "installed_at": "2026-08-16T13:57:57+00:00"
+    },
+    {
+        "plugin_id": "hackable-crate-time-editor",
+        "provider": "umod",
+        "version_id": "hackable-crate-time-editor",
+        "plugin_name": "Hackable Crate Time Editor",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/644865dac23e1.png",
+        "plugin_author": "Cltdj",
+        "file_name": "LockedCrateTimer.cs",
+        "installed_at": "2026-08-16T14:24:28+00:00"
+    },
+    {
+        "plugin_id": "coptor-tracker",
+        "provider": "umod",
+        "version_id": "coptor-tracker",
+        "plugin_name": "Coptor Tracker",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b6789e44c210.jpg",
+        "plugin_author": "k1lly0u",
+        "file_name": "CoptorTracker.cs",
+        "installed_at": "2026-08-16T17:16:16+00:00"
+    },
+    {
+        "plugin_id": "player-activity",
+        "provider": "umod",
+        "version_id": "player-activity",
+        "plugin_name": "Player Activity",
+        "plugin_icon": "",
+        "plugin_author": "RayMods",
+        "file_name": "PlayerActivity.cs",
+        "installed_at": "2026-08-16T17:16:20+00:00"
+    },
+    {
+        "plugin_id": "gather-manager",
+        "provider": "umod",
+        "version_id": "gather-manager",
+        "plugin_name": "Gather Manager",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b57e1dd5389c.png",
+        "plugin_author": "Ryan",
+        "file_name": "GatherManager.cs",
+        "installed_at": "2026-08-19T12:49:47+00:00"
+    },
+    {
+        "plugin_id": "no-give-notices",
+        "provider": "umod",
+        "version_id": "no-give-notices",
+        "plugin_name": "No Give Notices",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5ddb370600424.png",
+        "plugin_author": "MrBlue",
+        "file_name": "NoGiveNotices.cs",
+        "installed_at": "2026-08-19T17:19:34+00:00"
+    },
+    {
+        "plugin_id": "clan-team",
+        "provider": "umod",
+        "version_id": "clan-team",
+        "plugin_name": "Clan Team",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5cb37f4f99ed4.png",
+        "plugin_author": "Chepzz",
+        "file_name": "ClanTeam.cs",
+        "installed_at": "2026-08-19T17:34:51+00:00"
+    },
+    {
+        "plugin_id": "inbound",
+        "provider": "umod",
+        "version_id": "inbound",
+        "plugin_name": "Inbound",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5ebfd1cc12e14.jpg",
+        "plugin_author": "Substrata",
+        "file_name": "Inbound.cs",
+        "installed_at": "2026-08-19T18:03:21+00:00"
+    },
+    {
+        "plugin_id": "player-dlc-api",
+        "provider": "umod",
+        "version_id": "player-dlc-api",
+        "plugin_name": "Player DLC API",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/6879cc322d19f.png",
+        "plugin_author": "k1lly0u",
+        "file_name": "PlayerDLCAPI.cs",
+        "installed_at": "2026-08-21T21:41:31+00:00"
+    },
+    {
+        "plugin_id": "time-of-day",
+        "provider": "umod",
+        "version_id": "time-of-day",
+        "plugin_name": "Time Of Day",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b678992c9078.jpg",
+        "plugin_author": "misticos",
+        "file_name": "TimeOfDay.cs",
+        "installed_at": "2026-08-23T16:22:59+00:00"
+    },
+    {
+        "plugin_id": "crafting-controller",
+        "provider": "umod",
+        "version_id": "crafting-controller",
+        "plugin_name": "Crafting Controller",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b6772171d3dc.jpg",
+        "plugin_author": "Whispers88",
+        "file_name": "CraftingController.cs",
+        "installed_at": "2026-08-23T20:18:15+00:00"
+    },
+    {
+        "plugin_id": "image-library",
+        "provider": "umod",
+        "version_id": "image-library",
+        "plugin_name": "Image Library",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b5b288d7e21d.png",
+        "plugin_author": "k1lly0u",
+        "file_name": "ImageLibrary.cs",
+        "installed_at": "2026-08-24T20:56:45+00:00"
+    },
+    {
+        "plugin_id": "automatic-authorization",
+        "provider": "umod",
+        "version_id": "automatic-authorization",
+        "plugin_name": "Automatic Authorization",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5db022c268a84.jpg",
+        "plugin_author": "AdsDev",
+        "file_name": "AutomaticAuthorization.cs",
+        "installed_at": "2026-08-31T16:17:56+00:00"
+    },
+    {
+        "plugin_id": "turret-limits",
+        "provider": "umod",
+        "version_id": "turret-limits",
+        "plugin_name": "Turret Limits",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5caa4a5c43d29.png",
+        "plugin_author": "Whispers88",
+        "file_name": "TurretLimits.cs",
+        "installed_at": "2026-08-31T16:22:36+00:00"
+    },
+    {
+        "plugin_id": "backpack-button",
+        "provider": "umod",
+        "version_id": "backpack-button",
+        "plugin_name": "Backpack Button",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/63e4cf748aed9.png",
+        "plugin_author": "WhiteThunder",
+        "file_name": "BackpackButton.cs",
+        "installed_at": "2026-08-31T16:23:00+00:00"
+    },
+    {
+        "plugin_id": "backpacks",
+        "provider": "umod",
+        "version_id": "backpacks",
+        "plugin_name": "Backpacks",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b8b28ea9b4fd.png",
+        "plugin_author": "WhiteThunder",
+        "file_name": "Backpacks.cs",
+        "installed_at": "2026-09-04T12:43:44+00:00"
+    },
+    {
+        "plugin_id": "vanish",
+        "provider": "umod",
+        "version_id": "vanish",
+        "plugin_name": "Vanish",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5e2c4da074770.png",
+        "plugin_author": "Whispers88",
+        "file_name": "Vanish.cs",
+        "installed_at": "2026-09-04T12:59:02+00:00"
+    },
+    {
+        "plugin_id": "admin-radar",
+        "provider": "umod",
+        "version_id": "admin-radar",
+        "plugin_name": "Admin Radar",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5b7e1bc17d769.png",
+        "plugin_author": "nivex",
+        "file_name": "AdminRadar.cs",
+        "installed_at": "2026-09-04T12:59:06+00:00"
+    },
+    {
+        "plugin_id": "remover-tool",
+        "provider": "umod",
+        "version_id": "remover-tool",
+        "plugin_name": "Remover Tool",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5f69e0b028169.png",
+        "plugin_author": "Tryhard",
+        "file_name": "RemoverTool.cs",
+        "installed_at": "2026-09-04T13:23:16+00:00"
+    },
+    {
+        "plugin_id": "automated-events",
+        "provider": "umod",
+        "version_id": "automated-events",
+        "plugin_name": "Automated Events",
+        "plugin_icon": "https://assets.umod.org/images/icons/plugin/5e87c6d549b71.png",
+        "plugin_author": "",
+        "file_name": "AutomatedEvents.cs",
+        "installed_at": "2026-09-04T22:13:53+00:00"
+    }
+]

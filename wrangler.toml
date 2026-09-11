@@ -1,0 +1,153 @@
+name = "apex-rust-store"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Serves everything in /public directly (images, favicon, css).
+# Anything under /images/* in the seed data should live in public/images/.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# D1 database — create with:
+#   npx wrangler d1 create apex-rust-store
+# then paste the database_id it prints below.
+[[d1_databases]]
+binding = "DB"
+database_name = "apex-rust-store"
+database_id = "e8198041-ba65-4fb9-a20d-083c07475a25"
+
+# Secrets (never put these here — set with `npx wrangler secret put NAME`):
+#   STRIPE_SECRET_KEY       sk_live_... or sk_test_...
+#   STRIPE_WEBHOOK_SECRET   whsec_... (from the Stripe webhook endpoint config)
+#   RCON_PASSWORD           your Rust server's RCON password
+#   ADMIN_PASSWORD          password for the /admin panel
+#   ADMIN_SESSION_SECRET    long random string, signs the admin login cookie
+#                           (generate one with: openssl rand -hex 32)
+#   PLAYER_SESSION_SECRET   long random string — signs both the player
+#                           session cookie AND the Discord-link state
+#                           param (see discord-auth.js). Already required
+#                           for Steam login; nothing new to set if that's
+#                           already configured.
+#   DISCORD_CLIENT_SECRET   from your Discord app's OAuth2 page
+#   DISCORD_BOT_TOKEN       from your Discord app's Bot page — needs
+#                           "Server Members Intent" enabled, and the bot
+#                           invited to your guild. See src/discord-auth.js
+#                           for full step-by-step setup.
+#
+# Plain (non-secret) config below — safe to edit directly:
+[vars]
+RCON_HOST = "51.254.16.223"
+RCON_PORT = "25676"
+# Railway relay URL (for Cloudflare-blocked RCON servers). If set along with
+# RELAY_SECRET, the Worker will route commands through this relay instead of
+# trying to connect directly. Leave blank to use direct RCON mode.
+# Example: RELAY_URL = "https://apex-relay-production.up.railway.app"
+RELAY_URL = ""
+STORE_NAME = "Apex Rust"
+STORE_URL = "https://apexrust.co.uk"
+CURRENCY = "gbp"
+SUPPORT_EMAIL = "admin@apexrust.co.uk"
+DISCORD_URL = "https://discord.gg/9bBryVW"
+# Shown as a "Rankings" link in the site nav/footer, linking out to the
+# rustrankings-web Worker (script name "rustrankings-web" - this is the one
+# your Cloudflare Git integration actually auto-deploys to; a separate
+# "apex-rust-rankings" Worker exists from an earlier manual deploy but isn't
+# kept in sync, so don't point this at that one). Set this to whatever that
+# Worker is actually reachable at — either its raw
+# https://rustrankings-web.<your-subdomain>.workers.dev URL, or a custom
+# domain/route if you've attached one. Leave blank ("") to hide the link.
+RANKINGS_URL = "https://apexrust.co.uk/leaderboard"
+# The homepage IS the connect experience now (see renderHome) — these feed
+# its "Connect to Server" button and info card. SERVER_CONNECT_IP is the
+# raw IP:port for the steam:// deep link; SERVER_CONNECT_HOSTNAME is the
+# friendlier host:port shown for manually typing `connect ...` into the
+# in-game F1 console if the button doesn't fire (some browsers block
+# steam:// links without a prompt).
+SERVER_CONNECT_IP = "51.254.16.223:25597"
+SERVER_CONNECT_HOSTNAME = "play.apexrust.co.uk:25597"
+
+# Discord account linking + role-based perks (src/discord-auth.js,
+# src/discord-perks.js). Leave DISCORD_CLIENT_ID blank to hide the "Link
+# Discord" button entirely — nothing else in the store depends on it.
+DISCORD_CLIENT_ID = "1218649409110282321"
+DISCORD_GUILD_ID = "1518983938733768714"
+
+# Purchase -> Discord role (the reverse direction from the perks above): any
+# subscription/kit purchase grants this one shared role (e.g. a
+# "VIP"/"Donator" badge) to the player's linked Discord account, and
+# revokes it on cancellation or grace-period suspension. Leave blank to
+# disable — nothing else depends on it. Needs DISCORD_BOT_TOKEN too, and
+# the bot's own role positioned ABOVE this role in your server's role
+# list, or Discord will reject the grant.
+DISCORD_VIP_ROLE_ID = "1544384855196962897"
+
+# Support ticket <-> Discord sync (src/discord-tickets.js,
+# src/discord-interactions.js). DISCORD_PUBLIC_KEY is public — safe to
+# commit, it's not a secret. DISCORD_TICKETS_CHANNEL_ID is the channel new
+# tickets post into. Leave either blank to disable — tickets keep working
+# on the site either way, they just won't mirror to Discord.
+DISCORD_PUBLIC_KEY = "9ef09964254a9180d9054c1aae0e7747cdce451a1a06d9a1dc7feea4e2577300"
+DISCORD_TICKETS_CHANNEL_ID = "1544385751519723601"
+
+# Pings this on every NEW ticket only (never on replies/status changes, to
+# avoid pinging on every back-and-forth message) — set to a role mention
+# like "<@&123456789012345678>" (Server Settings -> Roles -> right-click
+# your staff/owner role -> Copy Role ID, then wrap it in <@&...>) or a
+# user mention like "<@123456789012345678>". Leave blank for no ping at
+# all — the embed still posts either way. If a role mention doesn't
+# actually ping, that role needs "Allow anyone to @mention this role"
+# enabled (Roles -> that role -> right-click/edit), or the bot needs
+# "Mention @everyone, @here, and All Roles" permission.
+DISCORD_TICKET_PING = "@here"
+
+[[services]]
+# Same binding rustrankings-web already uses to reach the leaderboard
+# Worker directly (bypassing the public-fetch-to-another-Worker block
+# Cloudflare enforces). Reused here so the homepage shows the exact same
+# live player count/map as the rankings site and the connect page,
+# instead of three different numbers from three different sources.
+binding = "LEADERBOARD_API"
+service = "apex-rust-leaderboard"
+
+# Optional — order confirmation/renewal/failed-payment emails (src/email.js).
+# Leave RESEND_API_KEY unset (or don't add EMAIL_FROM) to skip emails
+# entirely; the store works the same either way, it just won't send mail.
+#   RESEND_API_KEY        secret — wrangler secret put RESEND_API_KEY
+# EMAIL_FROM = "Apex Rust <orders@apexrust.co.uk>"  # must be on your Resend-verified domain
+
+# Optional — past-due subscription grace period (src/index.js
+# onInvoicePaymentFailed). After this many consecutive failed renewal
+# charges, in-game access is revoked locally rather than waiting for
+# Stripe's own subscription-cancellation timing (which depends on your
+# Stripe Dashboard's "Manage failed payments" settings and can take over a
+# week). Access is restored automatically the moment a payment succeeds.
+# GRACE_PERIOD_MAX_FAILURES = "3"
+
+# Optional — chargeback auto-ban (src/index.js onChargeback). Defaults to
+# banning via Rust's built-in `ban {steamid} <reason>` console command.
+# Set to "false" to disable auto-banning and just review chargebacks
+# manually in Admin > Bans instead.
+# CHARGEBACK_AUTO_BAN = "false"
+# CHARGEBACK_BAN_COMMAND = "ban {steamid} \"Chargeback - payment disputed\""
+# CHARGEBACK_UNBAN_COMMAND = "unban {steamid}"
+
+# Retries any RCON commands that failed on first attempt (server restarting,
+# brief network blip, etc). Every 2 minutes is plenty for a donation store.
+[triggers]
+crons = ["*/2 * * * *"]
+
+# Unifying the three sites under one domain (apexrust.co.uk/, /leaderboard,
+# /connect instead of three separate hosts): add this Worker's route in the
+# Cloudflare dashboard under Workers & Pages -> apex-rust-store -> Settings
+# -> Domains & Routes -> Add -> Route:
+#   apexrust.co.uk/*          (this store owns everything not claimed by a
+#                              more specific pattern below)
+# Then add these on rustrankings-web and apex-rust-connect respectively,
+# same zone (apexrust.co.uk), each on ITS OWN Worker's Domains & Routes page:
+#   apexrust.co.uk/leaderboard*
+#   apexrust.co.uk/connect*
+# Cloudflare resolves overlapping routes on one zone by most-specific-match,
+# so the two narrower patterns above safely take priority over this store's
+# broader apexrust.co.uk/* — no conflict, no code change needed on this end
+# beyond what's already here (RANKINGS_URL already points at /leaderboard).

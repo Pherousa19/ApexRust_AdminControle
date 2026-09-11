@@ -1,0 +1,236 @@
+{
+  "Chat commands": [
+    "apanel"
+  ],
+  "Panel title": "APEX RUST",
+  "Panel subtitle": "ADMIN PANEL",
+  "Work with Notify?": true,
+  "Tell the target player when they are punished?": true,
+  "Interface colours": {
+    "Backdrop dim": "#0A0A0A",
+    "Backdrop opacity (0-100)": 65.0,
+    "Panel background": "#171717",
+    "Surface": "#1E1E1E",
+    "Surface (raised)": "#272727",
+    "Accent": "#E1613C",
+    "Text on accent": "#141414",
+    "Text": "#E8E4DE",
+    "Text (muted)": "#8A857D",
+    "Info": "#3E7CB1",
+    "Good": "#4F965F",
+    "Warn": "#D8952C",
+    "Bad": "#BF3B30"
+  },
+  "Action card icons": {
+    "Use PNG icons on action cards?": true,
+    "Icon folder (relative to oxide/data, ignored if a base URL is set)": "RustHavenAdmin/icons",
+    "Icon base URL (leave empty to load from the folder above)": "",
+    "Icon size in pixels on an action card": 26
+  },
+  "Log to server console?": true,
+  "Log to file (oxide/logs)?": true,
+  "Audit entries kept for the in-game Logs tab": 300,
+  "Discord webhook URL for audit log (empty = off)": "",
+  "Discord: only send these actions (empty = send all)": [
+    "ban",
+    "kick",
+    "kill",
+    "strip",
+    "jail",
+    "mute",
+    "nuke",
+    "mlrs"
+  ],
+  "Mute duration presets in minutes (0 = permanent)": [
+    5,
+    30,
+    120,
+    1440,
+    0
+  ],
+  "Default kick reason": "Kicked by an administrator",
+  "Broadcast prefix": "<color=#E1613C>[SERVER]</color>",
+  "Toilet prefab (leave empty to auto-detect)": "",
+  "Mountable seat prefab (leave empty to auto-detect)": "",
+  "MLRS rocket prefab (leave empty to auto-detect)": "",
+  "Shark prefab (leave empty to auto-detect)": "",
+  "Bear prefab (leave empty to auto-detect)": "",
+  "Wolf prefab (leave empty to auto-detect)": "",
+  "Lightning strike effect prefab (leave empty to auto-detect)": "",
+  "Nuke / explosive prefab (leave empty to auto-detect)": "",
+  "Firework prefab (leave empty to auto-detect)": "",
+  "Locked crate prefab (leave empty to auto-detect)": "",
+  "Supply drop prefab (leave empty to auto-detect)": "",
+  "Minicopter prefab (leave empty to auto-detect)": "",
+  "Patrol helicopter prefab (leave empty to auto-detect)": "",
+  "Heli crash crate prefab (leave empty to auto-detect)": "",
+  "Jail cell wall prefab (leave empty to auto-detect)": "",
+  "Toilet seat height offset": 0.45,
+  "Spawned prop lifetime seconds (0 = never auto-remove)": 300.0,
+  "MLRS rocket count": 20,
+  "MLRS seconds between rockets": 0.4,
+  "MLRS scatter radius in metres": 6.0,
+  "MLRS launch height in metres": 120.0,
+  "MLRS rocket speed": 100.0,
+  "Shark count per attack": 4,
+  "Shark spawn spread metres": 4.0,
+  "Bear/wolf swarm count": 5,
+  "Bear/wolf swarm spread metres": 5.0,
+  "Smite damage": 60.0,
+  "Smite knock-up metres": 1.5,
+  "Slap damage": 10.0,
+  "Slap distance metres": 4.0,
+  "Slap height metres": 2.0,
+  "Blind duration seconds": 5.0,
+  "Firework count": 6,
+  "Firework spread metres": 8.0,
+  "Supply drop spawn height metres (above the admin)": 150.0,
+  "Supply drop horizontal scatter metres": 5.0,
+  "Heli crash spawn height metres (above the crash site)": 40.0,
+  "Heli crash site distance in front of the admin (metres)": 15.0,
+  "Heli crash seconds in the air before it goes down": 4.0,
+  "Heli crash removes any second helicopter that spawns alongside it": true,
+  "Queued messages kept per offline player": 10,
+  "Maximum recipients for one MAIL OFFLINE (0 = no limit)": 500,
+  "Discord direct messages": {
+    "Send admin messages to Discord as well?": false,
+    "Discord bot token": "",
+    "Message format ({server}, {admin}, {message})": "**{server}**\nMessage from **{admin}**:\n{message}",
+    "Linking plugin to read Steam -> Discord links from (empty = use rha.link only)": "",
+    "Method to call on that plugin": "GetDiscordIdFromSteamId"
+  },
+  "Heli crash keeps the helicopter still instead of letting its AI fly it": true,
+  "Heli crash watches for a replacement helicopter for this many seconds": 20.0,
+  "Heli crash EXTRA loot crates on top of the vanilla drop": 4,
+  "Heli crash crate horizontal scatter metres": 6.0,
+  "Jail cell interior size metres": 3.0,
+  "Jail cell wall tiers stacked (height)": 2,
+  "Jail cell tier height metres (vertical spacing between stacked wall tiers)": 5.5,
+  "Jail cell wall rotation offset degrees (nudge by 90 if the cell renders with gaps)": 0.0,
+  "Jail position (set with the SET JAIL HERE button, or rha.setjail)": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "Kits": [
+    {
+      "Kit name": "Starter",
+      "Permission (empty = any admin with the player tab)": "",
+      "Items": [
+        {
+          "Item shortname": "rifle.ak",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "belt"
+        },
+        {
+          "Item shortname": "ammo.rifle",
+          "Amount": 120,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "main"
+        },
+        {
+          "Item shortname": "syringe.medical",
+          "Amount": 4,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "belt"
+        },
+        {
+          "Item shortname": "bandage",
+          "Amount": 4,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "main"
+        }
+      ]
+    },
+    {
+      "Kit name": "AK Full Metal",
+      "Permission (empty = any admin with the player tab)": "",
+      "Items": [
+        {
+          "Item shortname": "rifle.ak",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "belt"
+        },
+        {
+          "Item shortname": "ammo.rifle",
+          "Amount": 256,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "main"
+        },
+        {
+          "Item shortname": "weapon.mod.holosight",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "main"
+        },
+        {
+          "Item shortname": "metal.facemask",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "metal.plate.torso",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "roadsign.kilt",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "roadsign.gloves",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "hoodie",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "pants",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "shoes.boots",
+          "Amount": 1,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "wear"
+        },
+        {
+          "Item shortname": "largemedkit",
+          "Amount": 4,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "belt"
+        },
+        {
+          "Item shortname": "syringe.medical",
+          "Amount": 6,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "belt"
+        },
+        {
+          "Item shortname": "bandage",
+          "Amount": 6,
+          "Skin ID": 0,
+          "Container (main / belt / wear)": "main"
+        }
+      ]
+    }
+  ],
+  "Version": {
+    "Major": 3,
+    "Minor": 6,
+    "Patch": 0
+  }
+}

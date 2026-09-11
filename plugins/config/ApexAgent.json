@@ -1,0 +1,7 @@
+{
+  "Worker URL (e.g. https://apex-rust-store.weaky19.workers.dev)": "https://apexrust.co.uk",
+  "Agent Secret (must match the AGENT_SECRET set on the Worker via wrangler secret put)": "Lockoff123.",
+  "Delivery poll interval (seconds)": 15.0,
+  "Status/state report interval (seconds)": 60.0,
+  "Player-card query poll interval (seconds)": 5.0
+}

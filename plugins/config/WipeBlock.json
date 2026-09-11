@@ -1,0 +1,8 @@
+{
+  "Automatically arm on wipe (OnNewSave)": true,
+  "Duration Hours": 24.0,
+  "Block Mode (AllDamage or ExplosiveOnly)": "AllDamage",
+  "Admins bypass the block": true,
+  "Broadcast start/end/reminders in chat": true,
+  "Reminder Interval Minutes": 60.0
+}

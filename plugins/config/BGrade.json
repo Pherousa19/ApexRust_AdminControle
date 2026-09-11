@@ -1,0 +1,75 @@
+{
+  "Chat commands": [
+    "bgrade",
+    "grade",
+    "bg"
+  ],
+  "Take resources for the upgrade (false = always free)": true,
+  "Only auto-upgrade blocks that are still twig": true,
+  "Require building privilege at the placement": true,
+  "Do not auto-upgrade while raid blocked (NoEscape)": false,
+  "Do not auto-upgrade while combat blocked (NoEscape)": false,
+  "Remember the selected grade between sessions": true,
+  "Reset the selected grade on disconnect": false,
+  "Reset every selected grade on wipe": true,
+  "Play the vanilla upgrade effect": true,
+  "Seconds between repeated warning messages": 5.0,
+  "Never auto-upgrade these prefab short names": [],
+  "Grades": [
+    {
+      "Grade (1 = Wood, 2 = Stone, 3 = Metal, 4 = HQM)": 1,
+      "Enabled": true,
+      "Permission (empty = no extra permission)": "bgrade.wood",
+      "Upgrade effect prefab": "assets/bundled/prefabs/fx/build/promote_wood.prefab"
+    },
+    {
+      "Grade (1 = Wood, 2 = Stone, 3 = Metal, 4 = HQM)": 2,
+      "Enabled": true,
+      "Permission (empty = no extra permission)": "bgrade.stone",
+      "Upgrade effect prefab": "assets/bundled/prefabs/fx/build/promote_stone.prefab"
+    },
+    {
+      "Grade (1 = Wood, 2 = Stone, 3 = Metal, 4 = HQM)": 3,
+      "Enabled": true,
+      "Permission (empty = no extra permission)": "bgrade.metal",
+      "Upgrade effect prefab": "assets/bundled/prefabs/fx/build/promote_metal.prefab"
+    },
+    {
+      "Grade (1 = Wood, 2 = Stone, 3 = Metal, 4 = HQM)": 4,
+      "Enabled": true,
+      "Permission (empty = no extra permission)": "bgrade.hqm",
+      "Upgrade effect prefab": "assets/bundled/prefabs/fx/build/promote_toptier.prefab"
+    }
+  ],
+  "Building skins players may pick (name -> skin id, 0 = default)": {
+    "default": 0,
+    "adobe": 10220,
+    "brick": 10223,
+    "brutalist": 10225,
+    "container": 10221,
+    "frontier": 10232
+  },
+  "Use Notify / UINotify for messages": true,
+  "Interface": {
+    "Open the selection menu when the command is used without arguments": true,
+    "Show the HUD indicator while a grade is selected": true,
+    "HUD indicator anchor min": "0.5 0",
+    "HUD indicator anchor max": "0.5 0",
+    "HUD indicator offset min": "-452 18",
+    "HUD indicator offset max": "-262 46",
+    "Background color": "#0E0E10",
+    "Background transparency": 98.0,
+    "Panel color": "#161617",
+    "Panel transparency": 100.0,
+    "Accent color": "#4B68FF",
+    "Accent transparency": 100.0,
+    "Text color": "#FFFFFF",
+    "Secondary text color": "#8D8D8D",
+    "Close button color": "#CD4632"
+  },
+  "Version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  }
+}

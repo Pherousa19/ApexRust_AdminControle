@@ -1,0 +1,69 @@
+{
+  "Work with Notify?": true,
+  "Enable Offline Image Mode": false,
+  "Cooldown between actions (in seconds)": 0.2,
+  "Economy Header Fields": [
+    {
+      "Enabled": true,
+      "Economy Settings": {
+        "Type (Plugin/Item)": "Plugin",
+        "Plugin name": "Economics",
+        "Balance add hook": "Deposit",
+        "Balance remove hook": "Withdraw",
+        "Balance show hook": "Balance",
+        "ShortName": "",
+        "Display Name (empty - default)": "",
+        "Skin": 0,
+        "Lang Key (for Title)": "Economy.Economics.Title",
+        "Lang Key (for Balance)": "Economy.Economics.Balance"
+      },
+      "Update key (MUST BE UNIQUE)": "{economy_economics}"
+    },
+    {
+      "Enabled": true,
+      "Economy Settings": {
+        "Type (Plugin/Item)": "Plugin",
+        "Plugin name": "ServerRewards",
+        "Balance add hook": "AddPoints",
+        "Balance remove hook": "TakePoints",
+        "Balance show hook": "CheckPoints",
+        "ShortName": "",
+        "Display Name (empty - default)": "",
+        "Skin": 0,
+        "Lang Key (for Title)": "Economy.ServerRewards.Title",
+        "Lang Key (for Balance)": "Economy.ServerRewards.Balance"
+      },
+      "Update key (MUST BE UNIQUE)": "{economy_server_rewards}"
+    },
+    {
+      "Enabled": true,
+      "Economy Settings": {
+        "Type (Plugin/Item)": "Plugin",
+        "Plugin name": "BankSystem",
+        "Balance add hook": "API_BankSystemDeposit",
+        "Balance remove hook": "API_BankSystemWithdraw",
+        "Balance show hook": "API_BankSystemBalance",
+        "ShortName": "",
+        "Display Name (empty - default)": "",
+        "Skin": 0,
+        "Lang Key (for Title)": "Economy.BankSystem.Title",
+        "Lang Key (for Balance)": "Economy.BankSystem.Balance"
+      },
+      "Update key (MUST BE UNIQUE)": "{economy_bank_system}"
+    }
+  ],
+  "Block Settings": {
+    "Block the opening during a building block?": false,
+    "Block the opening during a raid block?": false,
+    "Block the opening during a combat block?": false
+  },
+  "Auto-Open Settings": {
+    "Show menu every time player connects to server?": false
+  },
+  "Wipe Time Format": "yyyy-MM-dd HH:mm:ss",
+  "Version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 25
+  }
+}

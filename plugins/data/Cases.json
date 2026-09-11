@@ -1,0 +1,171 @@
+{
+  "Inventory": {
+    "76561198026034032": {
+      "weapon_case": 0
+    },
+    "76561198781353971": {
+      "weapon_case": 0
+    },
+    "76561198414888989": {
+      "misc_case": 0
+    },
+    "76561199174555041": {
+      "weapon_case": 2
+    }
+  },
+  "History": {
+    "76561198026034032": [
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352189
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352186
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352183
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352180
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352176
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352170
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352166
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352163
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352159
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787351988
+      }
+    ],
+    "76561198781353971": [
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352176
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Bolt Action Rifle",
+        "Tier": "Rare",
+        "Amount": 1,
+        "Time": 1787352171
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352168
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "MP5A4",
+        "Tier": "Uncommon",
+        "Amount": 1,
+        "Time": 1787352165
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "MP5A4",
+        "Tier": "Uncommon",
+        "Amount": 1,
+        "Time": 1787352160
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352157
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352153
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352150
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Semi-Automatic Pistol",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352146
+      },
+      {
+        "CaseId": "weapon_case",
+        "ItemName": "Hand Made Shotgun",
+        "Tier": "Common",
+        "Amount": 1,
+        "Time": 1787352142
+      }
+    ],
+    "76561198414888989": [
+      {
+        "CaseId": "misc_case",
+        "ItemName": "Low Grade Fuel",
+        "Tier": "Uncommon",
+        "Amount": 50,
+        "Time": 1788890043
+      }
+    ]
+  }
+}

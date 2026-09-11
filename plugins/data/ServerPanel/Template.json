@@ -1,0 +1,1974 @@
+{
+  "Use an expert mod?": false,
+  "UI Settings": {
+    "ID (DONT CHANGE)": "t1",
+    "Background": {
+      "Parent (Overlay/Hud)": "OverlayNonScaled",
+      "Background": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_e3599cc3e0",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#000000",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": true,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 1.0,
+        "AnchorMax (Y)": 1.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": 0.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      },
+      "Close after click?": false
+    },
+    "Content": {
+      "Background": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_44c7f11d22",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#000000",
+          "Opacity (0 - 100)": 0.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.5,
+        "AnchorMin (Y)": 0.5,
+        "AnchorMax (X)": 0.5,
+        "AnchorMax (Y)": 0.5,
+        "OffsetMin (X)": -640.0,
+        "OffsetMin (Y)": -360.0,
+        "OffsetMax (X)": 640.0,
+        "OffsetMax (Y)": 195.0
+      },
+      "Pagination": {
+        "Type": "MultipleButtons",
+        "Text Pagination Settings": {
+          "Button Back": {
+            "Background": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Title": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          },
+          "Button Next": {
+            "Background": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Title": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          },
+          "Label Settings": {
+            "Enabled?": false,
+            "Visible": true,
+            "Name": "",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 0,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 0.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 0.0
+          }
+        },
+        "Multiple Buttons Settings": {
+          "Margin": 5.0,
+          "Sorting Type": 1,
+          "Page Title": {
+            "Width": 35.0,
+            "Height": 25.0,
+            "Background Color": {
+              "HEX": "#000000",
+              "Opacity (0 - 100)": 0.0
+            },
+            "Title": {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Label_e704f99d49",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [
+                "{page}"
+              ],
+              "Font Size": 16,
+              "Font": 0,
+              "Align": "UpperCenter",
+              "Text Color": {
+                "HEX": "#E2DBD3",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          },
+          "Selected Line": {
+            "Enabled?": true,
+            "Visible": true,
+            "Name": "Panel_36566d7ade",
+            "Type (Label/Panel/Button/Image)": "Panel",
+            "Color": {
+              "HEX": "#CF432D",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 14,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 1.0,
+            "AnchorMax (Y)": 0.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 2.0
+          },
+          "Button Back": {
+            "Background": {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Panel_47d24c41d2",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": -29.0,
+              "OffsetMin (Y)": 8.0,
+              "OffsetMax (X)": -21.0,
+              "OffsetMax (Y)": 20.0
+            },
+            "Title": {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Image_d59df0256e",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-button-back.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          },
+          "Button Next": {
+            "Background": {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Panel_3286026b12",
+              "Type (Label/Panel/Button/Image)": "Panel",
+              "Color": {
+                "HEX": "#000000",
+                "Opacity (0 - 100)": 0.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 1.0,
+              "AnchorMin (Y)": 1.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 21.0,
+              "OffsetMin (Y)": 8.0,
+              "OffsetMax (X)": 29.0,
+              "OffsetMax (Y)": 20.0
+            },
+            "Title": {
+              "Enabled?": true,
+              "Visible": true,
+              "Name": "Image_27a6a1955b",
+              "Type (Label/Panel/Button/Image)": "Image",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 14,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-button-next.png",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 1.0,
+              "AnchorMax (Y)": 1.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            }
+          },
+          "AnchorMin (X)": 0.5,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.5,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": -28.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": -28.0
+        },
+        "Sub Categories Settings": {
+          "Background": {
+            "Enabled?": false,
+            "Visible": true,
+            "Name": "",
+            "Type (Label/Panel/Button/Image)": "Label",
+            "Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Text": [],
+            "Font Size": 0,
+            "Font": 0,
+            "Align": "UpperLeft",
+            "Text Color": {
+              "HEX": "#FFFFFF",
+              "Opacity (0 - 100)": 100.0
+            },
+            "Command ({user} - user steamid)": "",
+            "Image": "",
+            "Cursor Enabled": false,
+            "Keyboard Enabled": false,
+            "Sprite": "",
+            "Material": "",
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 0.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 0.0
+          },
+          "Scroll Settings": {
+            "Scroll Type": "Horizontal",
+            "Movement Type": "Unrestricted",
+            "Elasticity": 0.0,
+            "Deceleration Rate": 0.0,
+            "Scroll Sensitivity": 0.0,
+            "Scrollbar Settings": {
+              "Invert": false,
+              "Auto Hide": false,
+              "Handle Sprite": null,
+              "Size": 0.0,
+              "Handle Color": null,
+              "Highlight Color": null,
+              "Pressed Color": null,
+              "Track Sprite": null,
+              "Track Color": null
+            },
+            "Scroll Size": 0.0,
+            "AnchorMin (X)": 0.0,
+            "AnchorMin (Y)": 0.0,
+            "AnchorMax (X)": 0.0,
+            "AnchorMax (Y)": 0.0,
+            "OffsetMin (X)": 0.0,
+            "OffsetMin (Y)": 0.0,
+            "OffsetMax (X)": 0.0,
+            "OffsetMax (Y)": 0.0
+          },
+          "Sub Category Button": {
+            "Width": 0.0,
+            "Margin": 0.0,
+            "Background": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Title": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": null
+          },
+          "Sub Category Selected Button": {
+            "Width": 0.0,
+            "Margin": 0.0,
+            "Background": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Title": {
+              "Enabled?": false,
+              "Visible": true,
+              "Name": "",
+              "Type (Label/Panel/Button/Image)": "Label",
+              "Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Text": [],
+              "Font Size": 0,
+              "Font": 0,
+              "Align": "UpperLeft",
+              "Text Color": {
+                "HEX": "#FFFFFF",
+                "Opacity (0 - 100)": 100.0
+              },
+              "Command ({user} - user steamid)": "",
+              "Image": "",
+              "Cursor Enabled": false,
+              "Keyboard Enabled": false,
+              "Sprite": "",
+              "Material": "",
+              "AnchorMin (X)": 0.0,
+              "AnchorMin (Y)": 0.0,
+              "AnchorMax (X)": 0.0,
+              "AnchorMax (Y)": 0.0,
+              "OffsetMin (X)": 0.0,
+              "OffsetMin (Y)": 0.0,
+              "OffsetMax (X)": 0.0,
+              "OffsetMax (Y)": 0.0
+            },
+            "Use Icon": false,
+            "Icon": null
+          },
+          "Edit Page Button": null,
+          "Auto-Resize Settings": {
+            "Padding": 10,
+            "Space Between Icon and Text": 5
+          },
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        }
+      },
+      "Edit Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_48abebc43c",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.0,
+          "OffsetMin (X)": 40.0,
+          "OffsetMin (Y)": 10.0,
+          "OffsetMax (X)": 140.0,
+          "OffsetMax (Y)": 36.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_3bb6bcab77",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "EDIT CONTENT"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_c9dd32f511",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/level_metal.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        },
+        "Description Background": null,
+        "Description Title": null
+      }
+    },
+    "Header": {
+      "Background": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_f0191d8f90",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#000000",
+          "Opacity (0 - 100)": 0.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.5,
+        "AnchorMin (Y)": 0.5,
+        "AnchorMax (X)": 0.5,
+        "AnchorMax (Y)": 0.5,
+        "OffsetMin (X)": -600.0,
+        "OffsetMin (Y)": 268.0,
+        "OffsetMax (X)": 564.0,
+        "OffsetMax (Y)": 320.0
+      },
+      "Show line?": false,
+      "Line": {
+        "Enabled?": false,
+        "Visible": true,
+        "Name": "",
+        "Type (Label/Panel/Button/Image)": "Label",
+        "Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 0,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 0.0,
+        "AnchorMax (Y)": 0.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": 0.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      },
+      "Edit Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_1c1b4e9bb0",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 104.0,
+          "OffsetMin (Y)": 4.0,
+          "OffsetMax (X)": 204.0,
+          "OffsetMax (Y)": 30.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_5fae891754",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "EDIT HEADER"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_afa7dcd5e1",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/level_metal.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        },
+        "Description Background": null,
+        "Description Title": null
+      },
+      "Edit PopUps Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_12929ffce6",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 208.0,
+          "OffsetMin (Y)": 4.0,
+          "OffsetMax (X)": 308.0,
+          "OffsetMax (Y)": 30.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_e94abd082e",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "EDIT POPUPS"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_1c103603b3",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/level_metal.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        },
+        "Description Background": null,
+        "Description Title": null
+      },
+      "Edit Pages Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_2cfea5aa8e",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 312.0,
+          "OffsetMin (Y)": 4.0,
+          "OffsetMax (X)": 412.0,
+          "OffsetMax (Y)": 30.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_0be16b376b",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "EDIT PAGES"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_37a32f83c5",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/level_metal.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        },
+        "Description Background": null,
+        "Description Title": null
+      }
+    },
+    "Categories": {
+      "Background": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_8da55a3172",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#000000",
+          "Opacity (0 - 100)": 0.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.5,
+        "AnchorMin (Y)": 0.5,
+        "AnchorMax (X)": 0.5,
+        "AnchorMax (Y)": 0.5,
+        "OffsetMin (X)": -600.0,
+        "OffsetMin (Y)": 195.0,
+        "OffsetMax (X)": 600.0,
+        "OffsetMax (Y)": 250.0
+      },
+      "Use scrolling?": true,
+      "Categories Scroll": {
+        "Scroll Type": "Horizontal",
+        "Movement Type": "Clamped",
+        "Elasticity": 0.25,
+        "Deceleration Rate": 0.3,
+        "Scroll Sensitivity": 24.0,
+        "Scrollbar Settings": {
+          "Invert": true,
+          "Auto Hide": true,
+          "Handle Sprite": "assets/content/ui/ui.background.tile.psd",
+          "Size": 3.0,
+          "Handle Color": {
+            "HEX": "#CE412B",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Highlight Color": {
+            "HEX": "#CE412B",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Pressed Color": {
+            "HEX": "#CE412B",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Track Sprite": "assets/content/ui/ui.background.tile.psd",
+          "Track Color": {
+            "HEX": "#2C2F31",
+            "Opacity (0 - 100)": 100.0
+          }
+        },
+        "Scroll Size": 1200.0,
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 1.0,
+        "AnchorMax (X)": 1.0,
+        "AnchorMax (Y)": 1.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": -38.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      },
+      "Categories Indent": 0.0,
+      "Category Width": 150.0,
+      "Category Height": 30.0,
+      "Categories Margin": 0.0,
+      "Show selected element?": true,
+      "Selected Element": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_86b12fd362",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#D74933",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 1.0,
+        "AnchorMax (Y)": 0.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": -5.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": -2.0
+      },
+      "Category Title": {
+        "Enabled": true,
+        "Font Size": 24,
+        "Font": "robotocondensed-bold.ttf",
+        "Align": "UpperCenter",
+        "Text Color": {
+          "HEX": "#E2DBD3",
+          "Opacity (0 - 100)": 90.0
+        },
+        "Selected Text Color": {
+          "HEX": "#CF432D",
+          "Opacity (0 - 100)": 90.0
+        },
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_7868407f2f",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Selected Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_bc24725332",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Show icon?": false,
+        "Icon": {
+          "Enabled?": false,
+          "Visible": true,
+          "Name": "",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 0,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Show outline?": false,
+        "Selected Outline": {
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Size": 0.0,
+          "Sprite": "",
+          "Material": ""
+        },
+        "Outline": {
+          "Color": {
+            "HEX": "#000000",
+            "Opacity (0 - 100)": 0.0
+          },
+          "Size": 0.0,
+          "Sprite": "",
+          "Material": ""
+        },
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 1.0,
+        "AnchorMax (Y)": 1.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": 0.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      },
+      "Use adaptive width for localization?": false,
+      "Show line?": false,
+      "Line": {
+        "Enabled?": false,
+        "Visible": true,
+        "Name": "",
+        "Type (Label/Panel/Button/Image)": "Label",
+        "Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 0,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 0.0,
+        "AnchorMax (Y)": 0.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": 0.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      },
+      "Admin Mode Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_5bef73b4cd",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#222222",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 74.0,
+          "OffsetMax (X)": 100.0,
+          "OffsetMax (Y)": 100.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_0aa18de3f8",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "ADMIN MODE"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 60.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Use Icon": true,
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_f73bac1de6",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 60.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/gear.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        }
+      },
+      "Admin Mode Selected Button": {
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_48c6e5a1c3",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 1.0,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": 74.0,
+          "OffsetMax (X)": 100.0,
+          "OffsetMax (Y)": 100.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_7ee174b9af",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "ADMIN MODE"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Use Icon": true,
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_31068e3003",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/gear.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        }
+      },
+      "Edit Category Button": {
+        "Width": 101.0,
+        "Background": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Panel_5f2707614b",
+          "Type (Label/Panel/Button/Image)": "Panel",
+          "Color": {
+            "HEX": "#175782",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 0.0,
+          "OffsetMin (Y)": -14.0,
+          "OffsetMax (X)": 101.0,
+          "OffsetMax (Y)": 14.0
+        },
+        "Title": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Label_8d328394da",
+          "Type (Label/Panel/Button/Image)": "Label",
+          "Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [
+            "EDIT CATEGORY"
+          ],
+          "Font Size": 10,
+          "Font": 0,
+          "Align": "MiddleLeft",
+          "Text Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.0,
+          "AnchorMax (X)": 1.0,
+          "AnchorMax (Y)": 1.0,
+          "OffsetMin (X)": 27.0,
+          "OffsetMin (Y)": 0.0,
+          "OffsetMax (X)": 0.0,
+          "OffsetMax (Y)": 0.0
+        },
+        "Use Icon": true,
+        "Icon": {
+          "Enabled?": true,
+          "Visible": true,
+          "Name": "Image_4ad300a4f2",
+          "Type (Label/Panel/Button/Image)": "Image",
+          "Color": {
+            "HEX": "#68C2FF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Text": [],
+          "Font Size": 14,
+          "Font": 0,
+          "Align": "UpperLeft",
+          "Text Color": {
+            "HEX": "#FFFFFF",
+            "Opacity (0 - 100)": 100.0
+          },
+          "Command ({user} - user steamid)": "",
+          "Image": "assets/icons/level_metal.png",
+          "Cursor Enabled": false,
+          "Keyboard Enabled": false,
+          "Sprite": "",
+          "Material": "",
+          "AnchorMin (X)": 0.0,
+          "AnchorMin (Y)": 0.5,
+          "AnchorMax (X)": 0.0,
+          "AnchorMax (Y)": 0.5,
+          "OffsetMin (X)": 10.0,
+          "OffsetMin (Y)": -6.0,
+          "OffsetMax (X)": 22.0,
+          "OffsetMax (Y)": 6.0
+        }
+      },
+      "Auto-Resize Settings": {
+        "Padding": 10,
+        "Space Between Icon and Text": 5
+      }
+    },
+    "Close Button": {
+      "Background": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Panel_07b207f9c7",
+        "Type (Label/Panel/Button/Image)": "Panel",
+        "Color": {
+          "HEX": "#CF432D",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.5,
+        "AnchorMin (Y)": 0.5,
+        "AnchorMax (X)": 0.5,
+        "AnchorMax (Y)": 0.5,
+        "OffsetMin (X)": 600.0,
+        "OffsetMin (Y)": 320.0,
+        "OffsetMax (X)": 640.0,
+        "OffsetMax (Y)": 360.0
+      },
+      "Title": {
+        "Enabled?": true,
+        "Visible": true,
+        "Name": "Image_e2a5da369d",
+        "Type (Label/Panel/Button/Image)": "Image",
+        "Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 14,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "assets/icons/close.png",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.5,
+        "AnchorMin (Y)": 0.5,
+        "AnchorMax (X)": 0.5,
+        "AnchorMax (Y)": 0.5,
+        "OffsetMin (X)": -9.0,
+        "OffsetMin (Y)": -9.0,
+        "OffsetMax (X)": 9.0,
+        "OffsetMax (Y)": 9.0
+      },
+      "Use Icon": false,
+      "Icon": {
+        "Enabled?": false,
+        "Visible": true,
+        "Name": "",
+        "Type (Label/Panel/Button/Image)": "Label",
+        "Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Text": [],
+        "Font Size": 0,
+        "Font": 0,
+        "Align": "UpperLeft",
+        "Text Color": {
+          "HEX": "#FFFFFF",
+          "Opacity (0 - 100)": 100.0
+        },
+        "Command ({user} - user steamid)": "",
+        "Image": "",
+        "Cursor Enabled": false,
+        "Keyboard Enabled": false,
+        "Sprite": "",
+        "Material": "",
+        "AnchorMin (X)": 0.0,
+        "AnchorMin (Y)": 0.0,
+        "AnchorMax (X)": 0.0,
+        "AnchorMax (Y)": 0.0,
+        "OffsetMin (X)": 0.0,
+        "OffsetMin (Y)": 0.0,
+        "OffsetMax (X)": 0.0,
+        "OffsetMax (Y)": 0.0
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "Enabled": true,
+  "ItemCountMin": 1,
+  "ItemCountMax": 1,
+  "Items": [
+    {
+      "ShortName": "metal.fragments",
+      "AmountMin": 75,
+      "AmountMax": 100,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "metal.refined",
+      "AmountMin": 5,
+      "AmountMax": 8,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "ammo.pistol",
+      "AmountMin": 18,
+      "AmountMax": 22,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "ammo.rifle",
+      "AmountMin": 18,
+      "AmountMax": 22,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "rifle.semiauto",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "pistol.semiauto",
+      "AmountMin": 1,
+      "AmountMax": 1,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "ammo.rocket.hv",
+      "AmountMin": 2,
+      "AmountMax": 3,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    },
+    {
+      "ShortName": "scrap",
+      "AmountMin": 30,
+      "AmountMax": 50,
+      "SpawnChance": 0.5,
+      "SkinId": 0,
+      "CustomName": null,
+      "ConditionMin": 1.0,
+      "ConditionMax": 1.0,
+      "Category": -1,
+      "AdditionalItems": []
+    }
+  ],
+  "Categories": {}
+}

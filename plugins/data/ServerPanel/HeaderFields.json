@@ -1,0 +1,519 @@
+{
+  "Fields": [
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Logo",
+      "Type (Label/Panel/Button/Image)": "Image",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [],
+      "Font Size": 14,
+      "Font": 0,
+      "Align": "UpperLeft",
+      "Text Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "https://gitlab.com/TheMevent/PluginsStorage/raw/main/Images/ServerPanel/serverpanel-template-1-logo.png",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 0.0,
+      "OffsetMin (Y)": -19.0,
+      "OffsetMax (X)": 146.0,
+      "OffsetMax (Y)": 19.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Line.1",
+      "Type (Label/Panel/Button/Image)": "Panel",
+      "Color": {
+        "HEX": "#373737",
+        "Opacity (0 - 100)": 50.0
+      },
+      "Text": [],
+      "Font Size": 14,
+      "Font": 0,
+      "Align": "UpperLeft",
+      "Text Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 171.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 173.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.{server_name}",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "Apex Rust"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 173.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 353.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Line.2",
+      "Type (Label/Panel/Button/Image)": "Panel",
+      "Color": {
+        "HEX": "#373737",
+        "Opacity (0 - 100)": 50.0
+      },
+      "Text": [],
+      "Font Size": 14,
+      "Font": 0,
+      "Align": "UpperLeft",
+      "Text Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 352.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 354.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.ONLINE: {online_players} / {max_players}",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "ONLINE: {online_players} / {max_players}"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 357.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 537.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Line.3",
+      "Type (Label/Panel/Button/Image)": "Panel",
+      "Color": {
+        "HEX": "#373737",
+        "Opacity (0 - 100)": 50.0
+      },
+      "Text": [],
+      "Font Size": 14,
+      "Font": 0,
+      "Align": "UpperLeft",
+      "Text Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 536.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 538.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.K: {player_kills}  / D: {player_deaths}",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "K: {player_kills}  / D: {player_deaths}"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 541.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 721.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Line.4",
+      "Type (Label/Panel/Button/Image)": "Panel",
+      "Color": {
+        "HEX": "#373737",
+        "Opacity (0 - 100)": 50.0
+      },
+      "Text": [],
+      "Font Size": 14,
+      "Font": 0,
+      "Align": "UpperLeft",
+      "Text Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 720.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 722.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.Balance",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "BALANCE:"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleRight",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 725.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 805.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.RP.Title",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "RP"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#EACD32",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 825.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 845.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.RP.Value",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "{economy_server_rewards}"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 850.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 910.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.USD.Title",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "USD"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#5870E9",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 920.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 950.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.USD.Value",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "{economy_economics}"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 955.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 1015.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.BANK.Title",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "BANK"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#F34953",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 1025.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 1063.0,
+      "OffsetMax (Y)": 26.0
+    },
+    {
+      "Need to update?": false,
+      "Enabled?": true,
+      "Visible": true,
+      "Name": "Header.Field.BANK.Value",
+      "Type (Label/Panel/Button/Image)": "Label",
+      "Color": {
+        "HEX": "#FFFFFF",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Text": [
+        "{economy_bank_system}"
+      ],
+      "Font Size": 15,
+      "Font": 0,
+      "Align": "MiddleCenter",
+      "Text Color": {
+        "HEX": "#E2DBD3",
+        "Opacity (0 - 100)": 100.0
+      },
+      "Command ({user} - user steamid)": "",
+      "Image": "",
+      "Cursor Enabled": false,
+      "Keyboard Enabled": false,
+      "Sprite": "",
+      "Material": "",
+      "AnchorMin (X)": 0.0,
+      "AnchorMin (Y)": 0.5,
+      "AnchorMax (X)": 0.0,
+      "AnchorMax (Y)": 0.5,
+      "OffsetMin (X)": 1068.0,
+      "OffsetMin (Y)": -26.0,
+      "OffsetMax (X)": 1128.0,
+      "OffsetMax (Y)": 26.0
+    }
+  ]
+}

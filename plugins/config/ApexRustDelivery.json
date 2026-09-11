@@ -1,0 +1,5 @@
+{
+  "AgentSecret": "Lockoff123.",
+  "PollIntervalSeconds": 15,
+  "WorkerUrl": "https://apex-rust-store.weaky19.workers.dev"
+}

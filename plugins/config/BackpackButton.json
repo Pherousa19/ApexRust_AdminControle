@@ -1,0 +1,64 @@
+{
+  "Commands": [
+    "backpackui",
+    "backpackbutton"
+  ],
+  "Background": {
+    "Enabled": true,
+    "Color": "0.969 0.922 0.882 0.035",
+    "Sprite": "assets/content/ui/ui.background.tiletex.psd"
+  },
+  "Gather mode indicator": {
+    "Enabled": true,
+    "Color": "0.4 0.8 1 1"
+  },
+  "Retrieve mode indicator": {
+    "Enabled": true,
+    "Color": "0.4 0.8 1 1"
+  },
+  "Occupied & total slots": {
+    "Show occupied slots": true,
+    "Show total slots": true,
+    "Offset min": "0 -18",
+    "Offset max": "60 0",
+    "Text align": "MiddleCenter",
+    "Default color": "0.4 0.8 0.4 1",
+    "Enable dynamic color": true,
+    "Dynamic color by fullness percent": {
+      "70": "0.8 0.8 0.2 1",
+      "80": "0.8 0.4 0.2 1",
+      "90": "0.8 0.2 0.2 1"
+    }
+  },
+  "Fill bar": {
+    "Enabled": true,
+    "Width": 4.0,
+    "Sprite": "assets/content/ui/ui.background.tiletex.psd",
+    "Default color": "0.4 0.8 0.4 1",
+    "Enable dynamic color": true,
+    "Dynamic color by fullness percent": {
+      "70": "0.8 0.8 0.2 1",
+      "80": "0.8 0.4 0.2 1",
+      "90": "0.8 0.2 0.2 1"
+    }
+  },
+  "Default button position": "Right",
+  "Button positions": [
+    {
+      "Name": "Left",
+      "Enabled": true,
+      "Offset X": -263.5,
+      "URL": "",
+      "Skin ID": 3050420442,
+      "Image size": 56.0
+    },
+    {
+      "Name": "Right",
+      "Enabled": true,
+      "Offset X": 185.0,
+      "URL": "",
+      "Skin ID": 3050420772,
+      "Image size": 56.0
+    }
+  ]
+}

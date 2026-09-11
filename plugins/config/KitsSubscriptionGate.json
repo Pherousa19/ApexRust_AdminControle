@@ -1,0 +1,4 @@
+{
+  "Subscription kits claimed once per cycle (kit name -> permission to revoke on claim)": {},
+  "Log revocations to file": true
+}

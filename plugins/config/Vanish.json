@@ -1,0 +1,30 @@
+{
+  "NoClip on Vanish (runs noclip command)": true,
+  "Inventory view cmd": [
+    "inv",
+    "invspy"
+  ],
+  "Use OnEntityTakeDamage hook (Set to true to enable use of vanish.damage perm. Set to false for better performance)": false,
+  "Use CanUseLockedEntity hook (Allows vanished players with the perm vanish.unlock to bypass locks. Set to false for better performance)": true,
+  "Automatically vanish players (with the vanish.use perm) on player connect": false,
+  "Automatically vanish players (with the vanish.use perm) on player disconnect": false,
+  "Keep a vanished player hidden on disconnect": true,
+  "Teleport a vanished player under the map on disconnect": false,
+  "Teleport a vanished player above the map on connect": true,
+  "Bypass violation checks for vanished players": true,
+  "Turn off fly hack detection for players in vanish": true,
+  "Disable metabolism in vanish": true,
+  "Enable teleport to marker when vanished": false,
+  "Enable vanishing and reappearing sound effects": true,
+  "Make sound effects public": false,
+  "Enable chat notifications": true,
+  "Sound effect to use when vanishing": "assets/prefabs/npc/patrol helicopter/effects/rocket_fire.prefab",
+  "Sound effect to use when reappearing": "assets/prefabs/npc/patrol helicopter/effects/rocket_fire.prefab",
+  "Enable GUI": true,
+  "Use Native Invis Icon": false,
+  "Icon URL (.png or .jpg)": "https://i.ibb.co/3rZzftx/yL9HNRy.png",
+  "Icon Sprite": "assets/icons/refresh.png",
+  "Image Color": "1 1 1 0.5",
+  "Image AnchorMin": "0.175 0.017",
+  "Image AnchorMax": "0.22 0.08"
+}

@@ -1,0 +1,45 @@
+{
+  "Spawn distance in front of the player (metres)": 5.0,
+  "Vehicles": [
+    {
+      "Id": "rowboat",
+      "Display Name": "Rowboat",
+      "Prefab Path": "assets/content/vehicles/boats/rowboat/rowboat.prefab",
+      "Icon Url": "",
+      "Price": 500.0,
+      "Max Owned At Once": 2,
+      "Cooldown Seconds Between Purchases": 180,
+      "Spawn Height Offset": 0.5
+    },
+    {
+      "Id": "rhib",
+      "Display Name": "RHIB",
+      "Prefab Path": "assets/content/vehicles/boats/rhib/rhib.prefab",
+      "Icon Url": "",
+      "Price": 2500.0,
+      "Max Owned At Once": 1,
+      "Cooldown Seconds Between Purchases": 600,
+      "Spawn Height Offset": 0.5
+    },
+    {
+      "Id": "minicopter",
+      "Display Name": "Minicopter",
+      "Prefab Path": "assets/content/vehicles/minicopter/minicopter.entity.prefab",
+      "Icon Url": "",
+      "Price": 5000.0,
+      "Max Owned At Once": 1,
+      "Cooldown Seconds Between Purchases": 1800,
+      "Spawn Height Offset": 2.0
+    },
+    {
+      "Id": "horse",
+      "Display Name": "Horse",
+      "Prefab Path": "assets/rust.ai/agents/horse/ridablehorse.prefab",
+      "Icon Url": "",
+      "Price": 800.0,
+      "Max Owned At Once": 2,
+      "Cooldown Seconds Between Purchases": 300,
+      "Spawn Height Offset": 1.0
+    }
+  ]
+}
