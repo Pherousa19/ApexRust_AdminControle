@@ -1,162 +1,148 @@
 #!/usr/bin/env node
 /**
- * Simple RCON WebSocket relay for Cloudflare Workers.
+ * Persistent Pooled RCON WebSocket relay for Cloudflare Workers.
  * 
- * Accepts connections from Workers, forwards them to the actual RCON server.
- * Handles the Rust RCON protocol: ws://host:port/password
- * 
- * Deploy to: Railway.app or Render.com (free tier)
- * 
- * Environment variables:
- *   PORT           - listening port (default: 3000)
- *   RCON_HOST      - game server IP/hostname (e.g., 51.254.16.223)
- *   RCON_PORT      - game server RCON port (e.g., 25676)
- *   RELAY_SECRET   - shared secret to prevent abuse
+ * Maintains a permanent, always-on connection to the RCON target.
+ * Automatically handles auto-reconnects, connection tracking, and heartbeats.
  */
 
 const http = require("http");
 const WebSocket = require("ws");
 
 const PORT = process.env.PORT || 3000;
-// These should come from Railway environment variables, but default to your known values
 const RCON_HOST = process.env.RCON_HOST || "51.254.16.223";
 const RCON_PORT = parseInt(process.env.RCON_PORT || "25676", 10);
 const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
 
+// Key: password -> Value: { ws, clients: Set(clientWs), pingInterval, reconnectTimeout }
+const rconPool = new Map();
+
 const server = http.createServer((req, res) => {
   if (req.url === "/health") {
+    const activePools = [];
+    for (const [pass, entry] of rconPool.entries()) {
+      activePools.push({
+        passwordMasked: `${pass.substring(0, 3)}...`,
+        subscribers: entry.clients.size,
+        status: entry.ws ? entry.ws.readyState : "DISCONNECTED"
+      });
+    }
     res.writeHead(200, { "content-type": "application/json" });
-    res.end(JSON.stringify({ ok: true, uptime: process.uptime() }));
+    res.end(JSON.stringify({ ok: true, uptime: process.uptime(), pools: activePools }));
     return;
   }
-  res.writeHead(404);
-  res.end("Not found");
+  res.writeHead(404).end("Not found");
 });
 
 const wss = new WebSocket.Server({ noServer: true });
 
-// Handle WebSocket upgrade requests
 server.on("upgrade", (req, socket, head) => {
-  // Verify authorization
   const auth = req.headers.authorization || "";
-  if (!auth.startsWith("Bearer ")) {
-    console.warn(`[${new Date().toISOString()}] ❌ Unauthorized (missing Bearer)`);
+  if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
     socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
     socket.destroy();
     return;
   }
-
-  const token = auth.slice(7);
-  if (token !== RELAY_SECRET) {
-    console.warn(`[${new Date().toISOString()}] ❌ Unauthorized (invalid token)`);
-    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-    socket.destroy();
-    return;
-  }
-
-  // Accept the WebSocket upgrade
-  wss.handleUpgrade(req, socket, head, (ws) => {
-    handleConnection(ws, req);
-  });
+  wss.handleUpgrade(req, socket, head, (ws) => handleConnection(ws, req));
 });
 
-function handleConnection(clientWs, req) {
-  console.log(`[${new Date().toISOString()}] ✅ Client connected from ${req.socket.remoteAddress}`);
+// Main function to initialize and preserve the connection
+function maintainRconConnection(password) {
+  if (rconPool.has(password)) {
+    const entry = rconPool.get(password);
+    // If it's already active or connecting, do nothing
+    if (entry.ws && (entry.ws.readyState === WebSocket.OPEN || entry.ws.readyState === WebSocket.CONNECTING)) {
+      return entry;
+    }
+  }
 
-  let serverWs = null;
+  const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
+  console.log(`🔌 [Pool] Establishing permanent connection to RCON at ${RCON_HOST}:${RCON_PORT}`);
 
-  // Extract password from X-RCON-Password header (preferred) or URL path (fallback)
-  let password = req.headers["x-rcon-password"];
-  const source = password ? "header" : "url";
+  const serverWs = new WebSocket(rconUrl);
   
+  let poolEntry = rconPool.get(password);
+  if (!poolEntry) {
+    poolEntry = { clients: new Set(), pingInterval: null, reconnectTimeout: null };
+    rconPool.set(password, poolEntry);
+  }
+  
+  poolEntry.ws = serverWs;
+
+  serverWs.on("open", () => {
+    console.log(`✅ [Pool] Connected and holding pipe open permanently.`);
+    if (poolEntry.reconnectTimeout) clearTimeout(poolEntry.reconnectTimeout);
+    
+    // Heartbeat every 15 seconds to prevent network middleware drops
+    clearInterval(poolEntry.pingInterval);
+    poolEntry.pingInterval = setInterval(() => {
+      if (serverWs.readyState === WebSocket.OPEN) serverWs.ping();
+    }, 15000);
+  });
+
+  serverWs.on("message", (data, isBinary) => {
+    // Broadcast all incoming console packets out to any connected worker instances
+    for (const client of poolEntry.clients) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(data, { binary: isBinary });
+      }
+    }
+  });
+
+  serverWs.on("error", (err) => {
+    console.error(`❌ [Pool] Target RCON socket error: ${err.message}`);
+  });
+
+  serverWs.on("close", (code, reason) => {
+    console.warn(`⏹️  [Pool] Target RCON disconnected (${code}). Attempting automatic reconnection in 5s...`);
+    clearInterval(poolEntry.pingInterval);
+    
+    // Schedule a resilient reconnect loop
+    poolEntry.reconnectTimeout = setTimeout(() => {
+      maintainRconConnection(password);
+    }, 5000);
+  });
+
+  return poolEntry;
+}
+
+function handleConnection(clientWs, req) {
+  let password = req.headers["x-rcon-password"];
   if (!password) {
-    // Fallback to URL path (e.g., /c9451b20 or /c9451b20?...)
     const pathWithoutQuery = req.url.split('?')[0];
     const passwordMatch = pathWithoutQuery.match(/^\/(.+)$/);
     password = passwordMatch ? decodeURIComponent(passwordMatch[1]) : null;
   }
 
   if (!password) {
-    console.warn("❌ No password in header or URL path");
-    clientWs.send(JSON.stringify({ error: "No password provided" }));
     clientWs.close(1008, "No password");
     return;
   }
 
-  console.log(`📝 Using password from ${source} (length: ${password.length}): ${password.substring(0, 4)}...${password.substring(password.length - 4)}`);
+  // Ensure the permanent connection is alive, then grab the reference
+  const pool = maintainRconConnection(password);
+  pool.clients.add(clientWs);
 
-  // Connect to the actual RCON server
-  const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
-  console.log(`🔌 Connecting to RCON at ${rconUrl}`);
+  console.log(`[${new Date().toISOString()}] 👥 Worker attached. Total subscribers on this pipeline: ${pool.clients.size}`);
 
-  serverWs = new WebSocket(rconUrl);
-
-  serverWs.on("open", () => {
-    console.log(`✅ Connected to RCON server`);
-    // Could send a status message to client here if desired
-  });
-
-  serverWs.on("message", (data, isBinary) => {
-    // Forward RCON response back to client, preserving the original frame
-    // type (RCON always sends text/JSON, but ws.send() defaults Buffers to
-    // binary frames unless told otherwise, which breaks JSON.parse on the
-    // receiving end).
-    if (clientWs.readyState === WebSocket.OPEN) {
-      clientWs.send(data, { binary: isBinary });
-    }
-  });
-
-  serverWs.on("error", (err) => {
-    console.error(`❌ RCON server error: ${err.message}`);
-    if (clientWs.readyState === WebSocket.OPEN) {
-      clientWs.send(JSON.stringify({ error: `RCON error: ${err.message}` }));
-      clientWs.close(1011, "Server error");
-    }
-  });
-
-  serverWs.on("close", (code, reason) => {
-    console.log(`⏹️  RCON server closed (${code}: ${reason})`);
-    if (clientWs.readyState === WebSocket.OPEN) {
-      clientWs.close(1000, "Server closed");
-    }
-  });
-
-  // Handle incoming messages from client
+  // Forward worker console commands upstream through our persistent pipe
   clientWs.on("message", (data) => {
-    if (serverWs && serverWs.readyState === WebSocket.OPEN) {
-      serverWs.send(data);
+    if (pool.ws && pool.ws.readyState === WebSocket.OPEN) {
+      pool.ws.send(data);
     }
   });
 
-  clientWs.on("error", (err) => {
-    console.error(`❌ Client error: ${err.message}`);
-    if (serverWs && serverWs.readyState === WebSocket.OPEN) {
-      serverWs.close();
-    }
+  clientWs.on("close", () => {
+    pool.clients.delete(clientWs);
+    console.log(`[${new Date().toISOString()}] 👥 Worker detached. Remaining subscribers: ${pool.clients.size} (Pipe remains open)`);
+    // Note: We intentionally do NOT close pool.ws here. It stays open forever.
   });
 
-  clientWs.on("close", (code, reason) => {
-    console.log(`⏹️  Client disconnected (${code}: ${reason})`);
-    if (serverWs && serverWs.readyState === WebSocket.OPEN) {
-      serverWs.close();
-    }
+  clientWs.on("error", () => {
+    pool.clients.delete(clientWs);
   });
 }
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`
-╔════════════════════════════════════════╗
-║     🔌 RCON Relay Started              ║
-╠════════════════════════════════════════╣
-║ Listen: 0.0.0.0:${PORT}
-║ Target: ws://${RCON_HOST}:${RCON_PORT}
-║ Secret: ${RELAY_SECRET ? "✅ Configured" : "❌ NOT SET"}
-║ Health: /health
-╚════════════════════════════════════════╝
-`);
-});
-
-process.on("SIGTERM", () => {
-  console.log("\n🛑 Shutting down...");
-  server.close(() => process.exit(0));
+  console.log(`🚀 Persistent RCON Relay active on port ${PORT}`);
 });
