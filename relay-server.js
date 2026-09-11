@@ -49,7 +49,13 @@ function executeQuickQuery(password, command) {
 const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, `http://${req.headers.host}`);
   
-  // Security Authentication check for REST
+  // 🔓 SECURITY EXEMPTION: Allow public health checks so Railway and your browser can access it freely
+  if (urlObj.pathname === "/health") {
+    res.writeHead(200, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
+  }
+
+  // 🔒 SECURE PATH PROTECTION: Require authentication headers for all remaining routes
   const auth = req.headers.authorization || "";
   if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
     res.writeHead(401, { "content-type": "application/json" });
@@ -60,11 +66,6 @@ const server = http.createServer(async (req, res) => {
   if (!rconPassword) {
     res.writeHead(400, { "content-type": "application/json" });
     return res.end(JSON.stringify({ error: "Missing x-rcon-password header" }));
-  }
-
-  if (urlObj.pathname === "/health") {
-    res.writeHead(200, { "content-type": "application/json" });
-    return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
   }
 
   // Direct, non-polling data passthrough routes
@@ -164,7 +165,7 @@ function maintainRconConnection(password) {
 
   serverWs.on("close", (code) => {
     console.warn(`⏹️  [Pool] Connection dropped (${code}). Recovering pipe in 5s...`);
-    clearInterval(poolEntry.pingInterval);
+    clearInterval(poolInterval);
     poolEntry.reconnectTimeout = setTimeout(() => maintainRconConnection(password), 5000);
   });
 
