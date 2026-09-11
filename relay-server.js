@@ -70,9 +70,10 @@ function handleConnection(clientWs, req) {
   const source = password ? "header" : "url";
   
   if (!password) {
-    // Fallback to URL path (e.g., /password123)
-    const passwordMatch = req.url.match(/^\/(.+)$/);
-    password = passwordMatch ? passwordMatch[1] : null;
+    // Fallback to URL path (e.g., /c9451b20 or /c9451b20?...)
+    const pathWithoutQuery = req.url.split('?')[0];
+    const passwordMatch = pathWithoutQuery.match(/^\/(.+)$/);
+    password = passwordMatch ? decodeURIComponent(passwordMatch[1]) : null;
   }
 
   if (!password) {
@@ -82,7 +83,7 @@ function handleConnection(clientWs, req) {
     return;
   }
 
-  console.log(`📝 Using password from ${source}: ${password.substring(0, 4)}...${password.substring(password.length - 4)}`);
+  console.log(`📝 Using password from ${source} (length: ${password.length}): ${password.substring(0, 4)}...${password.substring(password.length - 4)}`);
 
   // Connect to the actual RCON server
   const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
@@ -95,10 +96,13 @@ function handleConnection(clientWs, req) {
     // Could send a status message to client here if desired
   });
 
-  serverWs.on("message", (data) => {
-    // Forward RCON response back to client
+  serverWs.on("message", (data, isBinary) => {
+    // Forward RCON response back to client, preserving the original frame
+    // type (RCON always sends text/JSON, but ws.send() defaults Buffers to
+    // binary frames unless told otherwise, which breaks JSON.parse on the
+    // receiving end).
     if (clientWs.readyState === WebSocket.OPEN) {
-      clientWs.send(data);
+      clientWs.send(data, { binary: isBinary });
     }
   });
 
@@ -156,4 +160,3 @@ process.on("SIGTERM", () => {
   console.log("\n🛑 Shutting down...");
   server.close(() => process.exit(0));
 });
-
