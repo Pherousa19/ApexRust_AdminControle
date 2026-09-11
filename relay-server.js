@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 // These should come from Railway environment variables, but default to your known values
 const RCON_HOST = process.env.RCON_HOST || "51.254.16.223";
 const RCON_PORT = parseInt(process.env.RCON_PORT || "25676", 10);
-const RELAY_SECRET = process.env.RELAY_SECRET || "change-me-please";
+const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
 
 const server = http.createServer((req, res) => {
   if (req.url === "/health") {
