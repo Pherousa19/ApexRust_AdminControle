@@ -107,108 +107,18 @@ payment, no matter how correctly everything else is configured. So:
     misconfigured (most often: this is a Live-mode charge but the endpoint
     is a Test-mode endpoint, or vice versa).
 
-## 5. RCON setup — read this carefully
+## 5. Relay setup
 
-The Worker sends commands to your Rust server over its built-in WebSocket
-RCON (`ws://host:port/password`). This **requires your RCON port to be
-reachable from the public internet**, since Cloudflare Workers can't reach a
-LAN-only IP. In `server.cfg` / your host's panel:
+The Worker communicates with Rust exclusively through the authenticated
+Railway relay. Configure `RELAY_URL` as the relay's base URL and store the
+matching `RELAY_SECRET` and Rust `RCON_PASSWORD` as Worker secrets. The relay
+uses `Authorization: Bearer <RELAY_SECRET>` and `x-rcon-password` for HTTP
+requests to `/api/serverinfo` and `/api/playerlist`, and the same credentials
+for the WebSocket console and command channel.
 
-- `rcon.port` — set it, and make sure it's open in your firewall/host panel
-- `rcon.password` — long and random, this is effectively a root password to
-  your server
-- `rcon.web 1` — required for the WebSocket protocol this Worker uses
-
-Set the host/port in `wrangler.toml` under `[vars]`, and the password as a
-secret:
-```
-npx wrangler secret put RCON_PASSWORD
-```
-
-**If your host won't let you expose RCON publicly** (some managed Rust
-hosts block this for security reasons), the Worker can't reach it directly.
-The fallback is a polling agent instead of push-based RCON:
-
-- Add a small Oxide plugin on the server that calls your Worker's API every
-  10-30 seconds asking "any pending commands for me?"
-- Change `drainDeliveryQueue` to expose a `GET /api/delivery/pending`
-  endpoint (auth'd with a shared secret) instead of calling `sendRconCommand`
-  directly, and add a `POST /api/delivery/ack` the plugin calls after
-  running each command
-- This is exactly the model CraftingStore's own plugin uses, and sidesteps
-  needing RCON exposed at all
-
-### Polling agent: reporting live status
-
-If you're on the polling-agent fallback above (`AGENT_SECRET` set), the
-Worker's own cron-based status check (`pollServerStatus`) **can't** reach
-RCON either — same reason it can't push commands — so the homepage's live
-server-status widget has no source of truth unless your agent reports it
-directly. Since the agent runs inside/alongside the Rust process, it can
-read player count and map straight from the game with no RCON needed on
-its end at all.
-
-Have your agent `POST` to `/api/agent/status` on the same timer it already
-uses to poll for commands (or its own — every 30-60s is plenty):
-
-```
-POST /api/agent/status
-Authorization: Bearer <AGENT_SECRET>
-Content-Type: application/json
-
-{ "players": 23, "maxPlayers": 100, "queued": 0, "hostname": "Apex Rust", "map": "Procedural Map" }
-```
-
-`players` and `maxPlayers` are required; `queued`, `hostname`, and `map`
-are optional extras shown in the widget when present. If the agent stops
-calling this (server down, plugin unloaded, network issue), the widget
-automatically falls back to "Status unavailable" once the last report is
-more than 6 minutes old — no explicit "going offline" call needed.
-
-Drop-in Oxide C# example, assuming your existing agent plugin already has
-`_workerUrl` and `_agentSecret` fields configured:
-
-```csharp
-private void ReportServerStatus()
-{
-    var payload = new Dictionary<string, object>
-    {
-        ["players"] = BasePlayer.activePlayerList.Count,
-        ["maxPlayers"] = ConVar.Server.maxplayers,
-        ["queued"] = ServerMgr.Instance != null ? ServerMgr.Instance.connectionQueue.queue.Count : 0,
-        ["hostname"] = ConVar.Server.hostname,
-        ["map"] = ConVar.Server.level,
-    };
-
-    webrequest.Enqueue(
-        $"{_workerUrl}/api/agent/status",
-        JsonConvert.SerializeObject(payload),
-        (code, response) => {
-            if (code != 200) PrintWarning($"Status report failed: {code} {response}");
-        },
-        this,
-        RequestMethod.POST,
-        new Dictionary<string, string> {
-            ["Authorization"] = $"Bearer {_agentSecret}",
-            ["Content-Type"] = "application/json",
-        }
-    );
-}
-
-// Call this from whatever timer already drives your pending-commands poll,
-// e.g.: timer.Every(60f, ReportServerStatus);
-```
-
-Check **Admin → Dashboard**'s Server Status panel after wiring this up —
-it shows the exact last-reported values and how long ago they came in, and
-has a "Check Now" button that re-runs the Worker's own RCON-based check
-(which will keep showing the AGENT_SECRET skip message in this mode — that's
-expected, since it's `/api/agent/status` doing the reporting here, not
-that check).
-
-I didn't build this fallback in by default since most self-hosted/VPS Rust
-setups can expose RCON safely behind a strong password — but say the word if
-your host blocks it and I'll swap the delivery mechanism over.
+The scheduled Worker task uses this relay for server status and delivery
+queue retries. No server plugin, heartbeat endpoint, registration request, or
+background polling process is required.
 
 ## 6. Admin panel
 

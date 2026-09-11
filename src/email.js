@@ -5,7 +5,7 @@
 // Fully optional: every call here is a no-op (with a console.warn) if
 // env.RESEND_API_KEY isn't set, so the store works exactly as before if
 // you don't configure email — same "gracefully skip if unconfigured"
-// pattern as RCON_HOST/AGENT_SECRET elsewhere in this codebase.
+// pattern as other Worker secrets elsewhere in this codebase.
 //
 // Setup (see DEPLOY.md):
 //   1. Create a Resend account and verify your sending domain.

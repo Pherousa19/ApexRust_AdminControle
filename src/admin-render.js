@@ -315,13 +315,7 @@ function telemetryChart(metrics, currentPlayers) {
   return `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Player activity chart"><defs><linearGradient id="apexArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><polygon points="0,100 ${points} 100,100" fill="url(#apexArea)"/><polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="1.8" vector-effect="non-scaling-stroke"/></svg>`;
 }
 
-/** Diagnostic panel showing exactly what the last server-status poll saw —
- * critical because the public homepage widget only ever shows a generic
- * "Status unavailable"/"Offline", with no way for anyone looking at it to
- * tell "cron isn't running", "this store uses polling-agent mode which
- * can't report status", "RCON_HOST isn't set", or "RCON is unreachable
- * even though the game server itself is up" (all four look IDENTICAL on
- * the public page) apart from each other. */
+/** Diagnostic panel showing exactly what the last server-status poll saw. */
 function serverStatusPanel(serverStatus) {
   if (!serverStatus) {
     return `<div class="notice">Server status hasn't been checked yet — migration_server_status.sql may not be applied. <form method="POST" action="/admin/server-status/check" style="display:inline;"><button class="link-btn" type="submit">Check Now</button></form></div>`;
@@ -337,7 +331,7 @@ function serverStatusPanel(serverStatus) {
     <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
       <span class="badge ${serverStatus.online && !isStale ? "badge-active" : "badge-warning"}">${serverStatus.online && !isStale ? "Online" : isStale ? "Stale" : "Offline"}</span>
       ${serverStatus.online ? `<span>${serverStatus.players} / ${serverStatus.max_players} players${serverStatus.map ? ` · ${esc(serverStatus.map)}` : ""}</span>` : ""}
-      <span class="muted" style="font-size:12px;">Last checked: ${updatedAt ? fmtDate(serverStatus.updated_at) : "never"}${isStale ? " (stale — if you're on polling-agent mode, your agent needs to POST to /api/agent/status; see DEPLOY.md)" : ""}</span>
+      <span class="muted" style="font-size:12px;">Last checked: ${updatedAt ? fmtDate(serverStatus.updated_at) : "never"}${isStale ? " (stale — check relay connectivity)" : ""}</span>
       <form method="POST" action="/admin/server-status/check" style="margin-left:auto;">
         <button class="btn secondary" type="submit">Check Now</button>
       </form>
@@ -359,6 +353,10 @@ export function renderPlugins({ storeName, plugins, flash }) {
       <td><span class="badge ${badge}">${esc(status)}</span></td>
       <td>${caps.length ? caps.map(c => `<span class="status-pill">${esc(c)}</span>`).join(' ') : '<span class="muted">No capabilities reported</span>'}</td>
       <td>${esc(fmtDate(p.last_seen_at))}</td>
+      <td class="admin-actions">
+        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(p.plugin_name)}"><input type="hidden" name="actionType" value="load"><button class="link-btn" type="submit">Load</button></form>
+        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(p.plugin_name)}"><input type="hidden" name="actionType" value="unload"><button class="link-btn danger" type="submit">Unload</button></form>
+      </td>
     </tr>`;
   }).join('');
   const online = (plugins || []).filter(p => p.status === 'online').length;
@@ -375,15 +373,15 @@ export function renderPlugins({ storeName, plugins, flash }) {
       <a class="kpi-card kpi-red" href="/admin/audit"><span class="kpi-icon">≡</span><div><small>AUDIT STREAM</small><strong>LIVE</strong><span>Open event history</span></div></a>
     </section>
     <div class="admin-panel">
-      <div class="panel-head"><div><span class="panel-eyebrow">INTEGRATIONS</span><h2>Rust plugin health</h2><small>Heartbeat, version and capabilities are supplied by ApexAgent / plugin telemetry.</small></div></div>
-      <div class="table-scroll"><table class="admin-table"><thead><tr><th>PLUGIN</th><th>VERSION</th><th>STATUS</th><th>CAPABILITIES</th><th>LAST SEEN</th></tr></thead><tbody>${rows || '<tr><td colspan="5" class="muted">No plugin telemetry received yet.</td></tr>'}</tbody></table></div>
+      <div class="panel-head"><div><span class="panel-eyebrow">INTEGRATIONS</span><h2>Rust plugin health</h2><small>Version and capabilities are supplied by the control plane.</small></div></div>
+      <div class="table-scroll"><table class="admin-table"><thead><tr><th>PLUGIN</th><th>VERSION</th><th>STATUS</th><th>CAPABILITIES</th><th>LAST SEEN</th><th>ACTIONS</th></tr></thead><tbody>${rows || '<tr><td colspan="6" class="muted">No plugins discovered yet. Run a server status check after the relay is online.</td></tr>'}</tbody></table></div>
     </div>
     <div class="admin-panel" style="margin-top:18px;">
       <div class="panel-head"><div><span class="panel-eyebrow">CONTRACT</span><h2>One integration surface</h2></div></div>
       <div class="control-contract-grid">
-        <div><b>Telemetry</b><span>Metrics, health and server state</span><code>POST /api/agent/telemetry</code></div>
-        <div><b>Commands</b><span>Existing delivery + query queues</span><code>/api/delivery/*</code></div>
-        <div><b>State</b><span>Players, items, cases and wipe state</span><code>POST /api/agent/state</code></div>
+        <div><b>Telemetry</b><span>Metrics, health and server state</span><code>RELAY_URL/api/serverinfo</code></div>
+        <div><b>Commands</b><span>Delivery and console commands</span><code>RELAY_URL/ WebSocket</code></div>
+        <div><b>State</b><span>Players and server data</span><code>RELAY_URL/api/playerlist</code></div>
         <div><b>Audit</b><span>Structured player/admin events</span><code>events[]</code></div>
       </div>
     </div>`;
@@ -648,7 +646,7 @@ export function renderPlayerSearch({ storeName, flash, roster, search }) {
 
   const rosterPanel =
     roster === null
-      ? `<div class="notice" style="margin-top:20px;">Player roster ${search ? "search " : ""}isn't available right now — couldn't reach the server (direct RCON) or no roster has been pushed yet (polling-agent mode, needs the patched ApexAdminAudit.cs + ApexAgent.cs deployed). You can still look someone up by SteamID64 or name below.</div>`
+      ? `<div class="notice" style="margin-top:20px;">Player roster ${search ? "search " : ""}isn't available right now — couldn't reach the server through the relay. You can still look someone up by SteamID64 or name below.</div>`
       : `
       <div class="admin-panel" style="margin-top:20px;">
         <h3>Known players ${roster.length ? `<span class="muted" style="font-weight:normal;">(${roster.length}${roster.length === 500 ? "+" : ""})</span>` : ""}</h3>
@@ -707,7 +705,7 @@ export function renderPlayerPermissions({ storeName, steamid, permissions, flash
     const body = `
     ${playerCardBackLink(steamid)}
     <h1>Permissions</h1>
-    <div class="notice" style="margin-top:16px;">Couldn't load permissions for ${esc(steamid)}. In polling-agent mode this needs the patched ApexAdminAudit.cs + ApexAgent.cs deployed (query round-trip, takes up to ~12s) — in direct-RCON mode it should be near-instant, so a null result there usually means the server's unreachable right now.</div>
+    <div class="notice" style="margin-top:16px;">Couldn't load permissions for ${esc(steamid)}. The relay may be unavailable right now.</div>
     `;
     return adminLayout({ storeName, active: "/admin/players", body, flash });
   }
@@ -792,7 +790,7 @@ function riskBadge(profile) {
 
 // Shared catalog dropdown builders - used by both the player card's Give
 // panel and the server console's Broadcast panel, so a catalog pushed by
-// ApexAgent.cs (or read live over RCON) always renders the same way instead
+// Live relay data always renders the same way instead
 // of one page getting a real dropdown and the other a manual text field.
 function caseSelectField(cases) {
   return cases && cases.length
@@ -1102,7 +1100,7 @@ export function renderPlayerCard({ storeName, query, steamid, audit, points, cas
       <div class="section-card-body">
         ${
           evidence === null
-            ? `<p class="muted" style="margin:0;">Not available right now — needs direct RCON (this isn't preloaded in polling-agent mode yet).</p>`
+            ? `<p class="muted" style="margin:0;">Not available right now — the relay could not reach the server.</p>`
             : evidenceLines
               ? `<div class="mono" style="font-size:11px; max-height:320px; overflow:auto; line-height:1.7; color:var(--text-2);">${evidenceLines}</div>`
               : `<p class="muted" style="margin:0;">Nothing recorded for this player yet.</p>`
@@ -1150,7 +1148,7 @@ function fmtUptime(seconds) {
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
-export function renderServerActions({ storeName, serverStatus, wipeblockStatus, recentActivity, metrics, agentMode, consoleCommand, consoleOutput, caseCatalog, items, kits, playerPositions, mapImageUrl, flash }) {
+export function renderServerActions({ storeName, serverStatus, wipeblockStatus, recentActivity, metrics, consoleCommand, consoleOutput, caseCatalog, items, kits, playerPositions, mapImageUrl, flash }) {
   const online = !!serverStatus?.online;
   const memoryPercent = metrics?.memory_percent ?? null;
   const cpuPercent = metrics?.cpu_percent ?? null;
@@ -1162,7 +1160,6 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
         <h1>${esc(serverStatus?.hostname || "Server console")}</h1>
         <p class="meta-line">${online ? `<span class="badge badge-active">Online</span>` : `<span class="badge">Offline</span>`} &nbsp;${esc(serverStatus?.map || "Unknown map")} ${serverStatus?.queued ? `&nbsp;\u00b7&nbsp; ${serverStatus.queued} queued` : ""}</p>
         ${serverStatus?.lastError ? `<p class="meta-line" style="margin-top:3px;">${esc(serverStatus.lastError)}</p>` : ""}
-        ${!serverStatus ? `<p class="meta-line" style="margin-top:3px;">No cached server status yet. ${agentMode ? "Fills in once ApexAgent.cs successfully reports in." : "Fills in on the next scheduled status check, or click Check Now on the Dashboard."}</p>` : ""}
       </div>
       <div class="hero-card-metrics">
         <div><span>Players</span><b>${serverStatus?.players ?? "\u2014"}<small style="font-size:11px;color:var(--muted);">/${serverStatus?.maxPlayers ?? "\u2014"}</small></b></div>
@@ -1174,28 +1171,16 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
       <div class="hero-card-actions"><a class="btn secondary" href="/admin">Overview</a><a class="btn secondary" href="/admin/plugins">Plugins</a></div>
     </div>`;
 
-  // ---- Live console ----
-  const consolePanel = agentMode
-    ? `<div class="section-card wide">
-        <div class="section-card-head"><div><h3>Queued Commands (Polling-Agent Mode)</h3><p>Commands execute on the next agent poll cycle—results aren't shown here.</p></div></div>
-        <div class="section-card-body">
-          <p class="muted" style="margin:0;margin-bottom:12px;">Your agent is reporting status, but live command responses aren't available yet. Use the broadcast, events, and world control forms below to queue commands that'll run on the next poll. Check your agent logs to verify execution.</p>
-          <p style="margin:0;font-size:13px;"><strong>What works:</strong> Broadcasts, Time of Day, Cargo Plane, Gather Rates, Events, Wipe Block, and Discord reports. <strong>What doesn't:</strong> Arbitrary RCON commands with live output.</p>
-        </div>
-      </div>`
-    : `<div class="section-card wide">
-        <div class="section-card-head"><div><h3>Live Console</h3><p>Runs any RCON command directly against the server, live.</p></div></div>
+  // ---- Live console Stream ----
+  const consolePanel = `<div class="section-card wide">
+        <div class="section-card-head"><div><h3>Live Console Stream</h3><p>Runs any RCON command directly against the server, live with a 2-way real-time background listener.</p></div></div>
         <div class="section-card-body" style="padding-top:0;">
           <div class="console-shell">
             <div class="console-shell-head"><i></i><i></i><i></i><span>rcon@apex-rust</span></div>
-            ${
-              consoleOutput != null
-                ? `<div class="console-output">&gt; ${esc(consoleCommand || "")}\n${esc(consoleOutput)}</div>`
-                : `<div class="console-output">Output from your last command appears here after you run one.</div>`
-            }
-            <form method="POST" action="/admin/console/exec" class="console-input-row">
+            <div class="console-output" style="white-space: pre-wrap; font-family: var(--mono); max-height: 400px; overflow-y: auto; background: #1a1a1a; color: #fff; padding: 14px; border-radius: 4px; line-height: 1.5; font-size: 13px;">&gt; Connecting to streaming multiplexer...</div>
+            <form method="POST" action="/admin/console/exec" class="console-input-row" id="consoleForm">
               <span class="prompt">&gt;</span>
-              <input type="text" name="command" value="" placeholder="e.g. playerlist, serverinfo, apexaudit.recent 10" autocomplete="off">
+              <input type="text" name="command" value="" placeholder="e.g. playerlist, serverinfo, status" autocomplete="off" id="consoleInput">
               <button class="btn secondary" type="submit">Run</button>
             </form>
           </div>
@@ -1226,7 +1211,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
                    ? `<p class="muted" style="margin:0;">Map size wasn't in the last status check, so a direct RustMaps link can't be built automatically.</p>`
                    : `<p class="muted" style="margin:0;">Seed info not available yet—it'll appear here after the next status check.</p>`
                }`
-            : `<p class="muted" style="margin:0;">No server status on record yet. ${agentMode ? "Waiting for your agent to report in..." : "Running first status check..."}</p>`
+            : `<p class="muted" style="margin:0;">No server status on record yet. Running first status check...</p>`
         }
       </div>
     </div>`;
@@ -1277,9 +1262,9 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
       <div class="section-card-head"><div><h3>Time of Day</h3></div></div>
       <div class="section-card-body">
         <div class="mod-actions">
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="tod_skipday">`}<button class="btn secondary world" type="submit">Skip to Day</button></form>
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="tod_skipnight">`}<button class="btn secondary world" type="submit">Skip to Night</button></form>
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="tod_freezetime">`}<button class="btn secondary world" type="submit">Toggle Freeze Time</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="tod_skipday"><button class="btn secondary world" type="submit">Skip to Day</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="tod_skipnight"><button class="btn secondary world" type="submit">Skip to Night</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="tod_freezetime"><button class="btn secondary world" type="submit">Toggle Freeze Time</button></form>
         </div>
         <div class="give-grid">
           <form method="POST" action="/admin/server/action" class="give-cell">
@@ -1296,15 +1281,15 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
       </div>
     </div>`;
 
-  // ---- Cargo Plane ----
+    // ---- Cargo Plane ----
   const cargoPanel = `
     <div class="section-card">
       <div class="section-card-head"><div><h3>Cargo Plane Crash Event</h3></div></div>
       <div class="section-card-body">
         <p class="muted" style="margin-top:0;">Forces the CargoPlaneCrash event to run, or stops one already in progress.</p>
         <div class="mod-actions">
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="cargo_force">`}<button class="btn secondary world" type="submit">Force Now</button></form>
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="cargo_stop">`}<button class="btn secondary world" type="submit">Stop</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="cargo_force"><button class="btn secondary world" type="submit">Force Now</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="cargo_stop"><button class="btn secondary world" type="submit">Stop</button></form>
         </div>
       </div>
     </div>`;
@@ -1330,7 +1315,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
             <div><label>Resource</label><input type="text" name="resource" value="*" placeholder="* for all"></div>
           </div>
           <div>
-            <label>Multiplier (or "remove")</label>
+            <label>Multiplier (or \"remove\")</label>
             <div class="form-row" style="grid-template-columns: 1fr auto;">
               <input type="text" name="multiplier" placeholder="e.g. 2 or remove" required>
               <button class="btn secondary world" type="submit">Apply</button>
@@ -1364,8 +1349,8 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
           </div>
         </form>
         <div class="mod-actions">
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="next_event">`}<button class="btn secondary world" type="submit">Show Next Scheduled</button></form>
-          <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="kill_event">`}<button class="btn secondary world" type="submit">Kill Running Event</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="next_event"><button class="btn secondary world" type="submit">Show Next Scheduled</button></form>
+          <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="kill_event"><button class="btn secondary world" type="submit">Kill Running Event</button></form>
         </div>
       </div>
     </div>`;
@@ -1373,7 +1358,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
   // ---- Broadcast ----
   const broadcastPanel = `
     <div class="section-card wide">
-      <div class="section-card-head"><div><h3>Broadcast to Everyone Online</h3><p>Reaches players connected right now only \u2014 it doesn't queue for anyone who joins later.</p></div></div>
+      <div class="section-card-head"><div><h3>Broadcast to Everyone Online</h3><p>Reaches players connected right now only — it doesn't queue for anyone who joins later.</p></div></div>
       <div class="section-card-body">
         <div class="give-grid">
           <form method="POST" action="/admin/server/action" class="give-cell">
@@ -1410,7 +1395,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
       <div class="section-card-head"><div><h3>Discord Report</h3></div></div>
       <div class="section-card-body">
         <p class="muted" style="margin-top:0;">Sends ApexAdminAudit's daily summary to Discord right now instead of waiting for its scheduled time.</p>
-        <form method="POST" action="/admin/server/action">${`<input type="hidden" name="actionType" value="discord_report">`}<button class="btn secondary" type="submit">Send Now</button></form>
+        <form method="POST" action="/admin/server/action"><input type="hidden" name="actionType" value="discord_report"><button class="btn secondary" type="submit">Send Now</button></form>
       </div>
     </div>`;
 
@@ -1418,29 +1403,75 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
   const activityRows = (recentActivity || [])
     .map((e) => {
       const time = e.time ? fmtDate(new Date(e.time * 1000).toISOString()) : "";
-      return `<tr${e.flagged ? ` class="flagged"` : ""}>
+      return `<tr${e.flagged ? ' class="flagged"' : ''}>
         <td class="muted">${esc(time)}</td>
         <td>${esc(e.event || "")}</td>
         <td class="muted">${esc(e.actorName || e.actorId || "")}</td>
-        <td>${esc(e.details || "")} ${e.flagged ? `<span class="badge badge-danger">flagged</span>` : ""}</td>
+        <td>${esc(e.details || "")} ${e.flagged ? '<span class="badge badge-danger">flagged</span>' : ''}</td>
       </tr>`;
     })
     .join("");
 
-  const activityPanel = `
-    <div class="section-card wide">
-      <div class="section-card-head"><div><h3>Recent Activity</h3><p>Server-wide feed from ApexAdminAudit, most recent first.</p></div></div>
-      <div class="section-card-body" style="padding:0;">
-        ${
-          recentActivity === null
-            ? `<p class="muted" style="margin:0;padding:16px 18px;">Not available right now \u2014 needs direct RCON (this isn't preloaded in polling-agent mode yet).</p>`
-            : `<div class="log-table-wrap"><table class="admin-table">
-                 <thead><tr><th>Time</th><th>Event</th><th>Player</th><th>Details</th></tr></thead>
-                 <tbody>${activityRows || `<tr><td colspan="4" class="empty-row">Nothing recent.</td></tr>`}</tbody>
-               </table></div>`
-        }
+const activityPanel = `
+  <div class="section-card wide">
+    <div class="section-card-head">
+      <div>
+        <h3>Recent Activity</h3>
+        <p>Server-wide feed from ApexAdminAudit, most recent first.</p>
       </div>
-    </div>`;
+    </div>
+    <div class="section-card-body" style="padding:0;">
+      ${
+        recentActivity === null
+          ? `<p class="muted" style="margin:0;padding:16px 18px;">Not available right now — the relay could not reach the server.</p>`
+          : '<div class="log-table-wrap"><table class="admin-table">' +
+            '<thead><tr><th>Time</th><th>Event</th><th>Player</th><th>Details</th></tr></thead>' +
+            '<tbody>' +
+            (activityRows || '<tr><td colspan="4" class="empty-row">Nothing recent.</td></tr>') +
+            '</tbody></table></div>'
+      }
+    </div>
+  </div>`;
+
+  // Real-Time 2-Way WebSocket Stream Client Engine Script Block
+  const liveConsoleStreamScript = `
+    <script>
+      (function() {
+        const consoleLogBox = document.querySelector(".console-output");
+        if (!consoleLogBox) return;
+
+        const socketUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/api/admin/console/ws";
+        
+        console.log("Stream initialized targeting multiplexer:", socketUrl);
+        const ws = new WebSocket(socketUrl);
+
+        ws.onopen = () => {
+          consoleLogBox.textContent = "[CONNECTED TO LIVE RELAY CHANNEL - LISTENING FOR UPSTREAM EVENTS]";
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data && data.Message) {
+              consoleLogBox.textContent += "\\n" + data.Message;
+              consoleLogBox.scrollTop = consoleLogBox.scrollHeight;
+            }
+          } catch(e) {
+            consoleLogBox.textContent += "\\n" + event.data;
+            consoleLogBox.scrollTop = consoleLogBox.scrollHeight;
+          }
+        };
+
+        ws.onerror = (err) => {
+          consoleLogBox.textContent += "\\n[STREAM ERROR: Verification or endpoint connection mismatch]";
+        };
+
+        ws.onclose = () => {
+          consoleLogBox.textContent += "\\n[STREAM DISCONNECTED: Pipe background loop inactive]";
+        };
+      })();
+    </script>
+  `;
 
   const body = `
   <section class="page-heading">
@@ -1461,6 +1492,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
     ${discordPanel}
     ${activityPanel}
   </div>
+  ${liveConsoleStreamScript}
   `;
   return adminLayout({ storeName, active: "/admin/server", body, flash });
 }

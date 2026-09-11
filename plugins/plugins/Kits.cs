@@ -37,10 +37,6 @@ namespace Oxide.Plugins
         private readonly Hash<ulong, ulong> _pickerSkin = new Hash<ulong, ulong>();
         private readonly Hash<ulong, string> _pickerSlot = new Hash<ulong, string>();
         private readonly Hash<ulong, int> _pickerPage = new Hash<ulong, int>();
-        private Timer deliveryPollTimer;
-        private Timer deliveryPollWatchdog;
-        private bool deliveryPollInFlight;
-        
         private static Func<BasePlayer, ulong, bool> _canUseSkin;
         private static Func<BasePlayer, int, int> _getRedirectedIfNotOwned;
 
@@ -88,11 +84,6 @@ namespace Oxide.Plugins
             else if (!PlayerDLCAPI)
                 Debug.LogWarning("[Kits] - PlayerDLCAPI plugin is not loaded, skin ownership checks will not work!");
 
-            if (!string.IsNullOrEmpty(Configuration.DeliveryWorkerUrl) && !string.IsNullOrEmpty(Configuration.DeliveryAgentSecret))
-            {
-                deliveryPollTimer = timer.Every(Mathf.Max(10f, Configuration.DeliveryPollInterval), PollDeliveryQueue);
-                timer.Once(5f, PollDeliveryQueue);
-            }
         }
 
         private void OnNewSave(string filename)
@@ -161,9 +152,6 @@ namespace Oxide.Plugins
                 SavePlayerData();
                 SaveMailData();
             }
-
-            deliveryPollTimer?.Destroy();
-            deliveryPollWatchdog?.Destroy();
 
             foreach (BasePlayer player in BasePlayer.activePlayerList)
             {
@@ -3107,15 +3095,6 @@ namespace Oxide.Plugins
             [JsonProperty(PropertyName = "Mail delivery - notify players on connect if they have kits waiting")]
             public bool MailNotifyOnConnect { get; set; } = true;
 
-            [JsonProperty(PropertyName = "Web delivery - polling agent Worker URL")]
-            public string DeliveryWorkerUrl { get; set; } = string.Empty;
-
-            [JsonProperty(PropertyName = "Web delivery - polling agent shared secret")]
-            public string DeliveryAgentSecret { get; set; } = string.Empty;
-
-            [JsonProperty(PropertyName = "Web delivery - polling interval seconds")]
-            public float DeliveryPollInterval { get; set; } = 15f;
-
             [JsonProperty(PropertyName = "Autokits ordered by priority")]
             public List<string> AutoKits { get; set; }
 
@@ -3287,103 +3266,6 @@ namespace Oxide.Plugins
             PrintWarning("Config update completed!");
         }
 
-        #endregion
-
-        #region Web Delivery Polling Agent
-        private void PollDeliveryQueue()
-        {
-            if (deliveryPollInFlight || string.IsNullOrEmpty(Configuration.DeliveryWorkerUrl) || string.IsNullOrEmpty(Configuration.DeliveryAgentSecret))
-                return;
-
-            deliveryPollInFlight = true;
-            string url = Configuration.DeliveryWorkerUrl.TrimEnd('/') + "/api/delivery/pending";
-            var headers = new Dictionary<string, string>
-            {
-                ["Authorization"] = "Bearer " + Configuration.DeliveryAgentSecret,
-                ["Accept"] = "application/json"
-            };
-
-            deliveryPollWatchdog?.Destroy();
-            deliveryPollWatchdog = timer.Once(20f, () =>
-            {
-                if (!deliveryPollInFlight)
-                    return;
-
-                deliveryPollInFlight = false;
-                PrintWarning("Web delivery poll timed out locally after 20 seconds; polling has been reset.");
-            });
-
-            webrequest.Enqueue(url, null, (code, response) =>
-            {
-                try
-                {
-                    deliveryPollWatchdog?.Destroy();
-                    deliveryPollWatchdog = null;
-                    if (code < 200 || code >= 300)
-                    {
-                        PrintWarning($"Web delivery poll failed: HTTP {code} {response}");
-                        return;
-                    }
-
-                    JObject payload = JObject.Parse(response ?? "{}");
-                    var acknowledged = new List<int>();
-                    JArray jobs = payload["jobs"] as JArray;
-                    if (jobs == null || jobs.Count == 0)
-                        return;
-
-                    Puts($"Web delivery poll received {jobs.Count} job(s).");
-
-                    foreach (JToken job in jobs)
-                    {
-                        int id = job["id"]?.Value<int>() ?? 0;
-                        string command = job["command"]?.Value<string>();
-                        if (id <= 0 || string.IsNullOrEmpty(command))
-                            continue;
-
-                        try
-                        {
-                            ConsoleSystem.Run(ConsoleSystem.Option.Server, command);
-                            acknowledged.Add(id);
-                            Puts($"Web delivery command executed: {command}");
-                        }
-                        catch (Exception ex)
-                        {
-                            PrintWarning($"Web delivery command failed (job {id}): {ex.Message}");
-                        }
-                    }
-
-                    if (acknowledged.Count > 0)
-                        AcknowledgeDeliveryJobs(acknowledged);
-                }
-                catch (Exception ex)
-                {
-                    PrintWarning("Web delivery response could not be processed: " + ex.Message);
-                }
-                finally
-                {
-                    deliveryPollInFlight = false;
-                }
-            }, this, RequestMethod.GET, headers, 15f);
-        }
-
-        private void AcknowledgeDeliveryJobs(List<int> ids)
-        {
-            string url = Configuration.DeliveryWorkerUrl.TrimEnd('/') + "/api/delivery/ack";
-            var headers = new Dictionary<string, string>
-            {
-                ["Authorization"] = "Bearer " + Configuration.DeliveryAgentSecret,
-                ["Content-Type"] = "application/json"
-            };
-            string json = JsonConvert.SerializeObject(new { ids });
-
-            webrequest.Enqueue(url, json, (code, response) =>
-            {
-                if (code < 200 || code >= 300)
-                    PrintWarning($"Web delivery acknowledgement failed: HTTP {code} {response}");
-                else
-                    Puts($"Web delivery acknowledgement succeeded for {ids.Count} job(s): {response}");
-            }, this, RequestMethod.POST, headers, 15f);
-        }
         #endregion
 
         #region Data Management

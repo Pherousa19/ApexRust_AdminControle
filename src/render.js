@@ -143,11 +143,9 @@ const SUB_STATUS_BADGE = {
   canceled: '<span class="badge badge-canceled">Canceled</span>',
 };
 
-// Renders as: online, offline, or unknown (row not seeded / migration not
-// applied / cron poll never run yet — e.g. a fresh install still on the
-// polling-agent RCON mode). A cached row is also treated as stale if the
-// cron hasn't refreshed it recently, since a wedged cron shouldn't keep
-// showing a confident "online" forever.
+// Renders as: online, offline, or unknown. A cached row is also treated as
+// stale if the cron hasn't refreshed it recently, since a wedged cron
+// shouldn't keep showing a confident "online" forever.
 const SERVER_STATUS_STALE_MS = 6 * 60 * 1000; // cron runs every 2 min — 6 gives it 3 misses of slack
 
 function formatPlayerDisplayName(name) {

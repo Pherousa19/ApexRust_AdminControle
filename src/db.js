@@ -587,65 +587,6 @@ export async function upsertServerStatus(db, { online, players = 0, maxPlayers =
 }
 
 // ============================================================
-// Agent queries (on-demand player-card lookups — see migration_agent_queries.sql)
-// ============================================================
-
-export async function createAgentQuery(db, queryType, target) {
-  const result = await db
-    .prepare("INSERT INTO agent_queries (query_type, target) VALUES (?, ?) RETURNING id")
-    .bind(queryType, target)
-    .first();
-  return result.id;
-}
-
-export async function getAgentQuery(db, id) {
-  const row = await db.prepare("SELECT id, status, result_json FROM agent_queries WHERE id = ?").bind(id).first();
-  if (!row) return null;
-  return { id: row.id, status: row.status, result: row.result_json ? JSON.parse(row.result_json) : null };
-}
-
-export async function getPendingAgentQueries(db, limit = 20) {
-  const { results } = await db
-    .prepare("SELECT id, query_type, target FROM agent_queries WHERE status = 'pending' ORDER BY id ASC LIMIT ?")
-    .bind(limit)
-    .all();
-  return results || [];
-}
-
-export async function completeAgentQuery(db, id, result) {
-  await db
-    .prepare("UPDATE agent_queries SET status = 'done', result_json = ?, completed_at = datetime('now') WHERE id = ?")
-    .bind(JSON.stringify(result), id)
-    .run();
-}
-
-// ============================================================
-// Agent state cache (case catalog, online players — pushed by the polling
-// agent in AGENT_SECRET mode; see ApexAgent.cs and migration_agent_state.sql)
-// ============================================================
-
-export async function getAgentState(db, key) {
-  try {
-    const row = await db.prepare("SELECT value_json, updated_at FROM agent_state WHERE key = ?").bind(key).first();
-    if (!row) return null;
-    return { value: JSON.parse(row.value_json), updatedAt: row.updated_at };
-  } catch {
-    return null;
-  }
-}
-
-export async function upsertAgentState(db, key, value) {
-  await db
-    .prepare(
-      `INSERT INTO agent_state (key, value_json, updated_at)
-       VALUES (?, ?, datetime('now'))
-       ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at`
-    )
-    .bind(key, JSON.stringify(value))
-    .run();
-}
-
-// ============================================================
 // Gift cards
 // ============================================================
 

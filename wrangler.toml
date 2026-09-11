@@ -14,13 +14,14 @@ binding = "ASSETS"
 # then paste the database_id it prints below.
 [[d1_databases]]
 binding = "DB"
-database_name = "apex-rust-store"
-database_id = "e8198041-ba65-4fb9-a20d-083c07475a25"
+database_name = "apex-rust-store-v2"
+database_id = "ef3863d3-4cfc-4f68-98e3-b053161195e7"
 
 # Secrets (never put these here — set with `npx wrangler secret put NAME`):
 #   STRIPE_SECRET_KEY       sk_live_... or sk_test_...
 #   STRIPE_WEBHOOK_SECRET   whsec_... (from the Stripe webhook endpoint config)
-#   RCON_PASSWORD           your Rust server's RCON password
+#   RCON_PASSWORD           your Rust server's RCON password, sent only to the relay
+#   RELAY_SECRET            shared bearer secret for the relay
 #   ADMIN_PASSWORD          password for the /admin panel
 #   ADMIN_SESSION_SECRET    long random string, signs the admin login cookie
 #                           (generate one with: openssl rand -hex 32)
@@ -37,11 +38,7 @@ database_id = "e8198041-ba65-4fb9-a20d-083c07475a25"
 #
 # Plain (non-secret) config below — safe to edit directly:
 [vars]
-RCON_HOST = "51.254.16.223"
-RCON_PORT = "25676"
-# Railway relay URL (for Cloudflare-blocked RCON servers). If set along with
-# RELAY_SECRET, the Worker will route commands through this relay instead of
-# trying to connect directly. Leave blank to use direct RCON mode.
+# Railway relay URL. All Worker-to-server traffic uses this relay.
 RELAY_URL = "https://web-production-ad450.up.railway.app"
 STORE_NAME = "Apex Rust"
 STORE_URL = "https://apexrust.co.uk"

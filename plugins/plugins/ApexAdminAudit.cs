@@ -6648,7 +6648,7 @@ namespace Oxide.Plugins
             arg.ReplyWith(BuildPlayerProfileJson(arg.GetString(0).ToString()));
         }
 
-        // In-process equivalent of apexaudit.player.json, for ApexAgent (or any
+            // In-process equivalent of apexaudit.player.json, for other
         // other plugin) to call directly without a console-command round trip -
         // same lookup logic, same JSON shape, no permission gate since a plugin
         // call is already trusted (unlike a console command, which anyone with

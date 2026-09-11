@@ -62,7 +62,6 @@ import {
   enqueueDelivery,
   getPendingDeliveries,
   markDelivered,
-  getDeliveryQueueRow,
   markOrderDeliveredIfComplete,
   markDeliveryFailed,
   resetDeliveryForRetry,
@@ -90,12 +89,6 @@ import {
   getSubscriptionByIdForSteamId,
   getServerStatus,
   upsertServerStatus,
-  getAgentState,
-  upsertAgentState,
-  createAgentQuery,
-  getAgentQuery,
-  getPendingAgentQueries,
-  completeAgentQuery,
   recordControlEvents,
   listControlEvents,
   upsertPluginRegistry,
@@ -181,6 +174,7 @@ export default {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(drainDeliveryQueue(env));
     ctx.waitUntil(pollServerStatus(env));
+    ctx.waitUntil(collectServerTelemetry(env));
     // Re-checks every linked player's Discord roles and grants/revokes
     // perks accordingly (e.g. a lapsed Server Boost losing VIP) without
     // needing them to log back in. No-ops until DISCORD_BOT_TOKEN and
@@ -243,6 +237,11 @@ async function handleFetch(request, env, ctx) {
       pathname.startsWith("/images/")
     ) {
       return env.ASSETS.fetch(request);
+    }
+
+    if (pathname === "/api/admin/console/ws" && request.method === "GET") {
+      if (!(await isValidSession(request, env))) return new Response("Unauthorized", { status: 401 });
+      return await handleConsoleWebSocket(request, env);
     }
 
     // ---- Admin ----
@@ -570,58 +569,6 @@ async function handleFetch(request, env, ctx) {
       return await handleDiscountCheck(request, env);
     }
 
-    // ---- Polling-agent delivery (fallback for hosts that won't expose
-    // RCON publicly — see DEPLOY.md section 5). The Oxide plugin polls
-    // GET /api/delivery/pending and POSTs the ids it ran to
-    // /api/delivery/ack, instead of this Worker calling sendRconCommand
-    // directly. ----
-    if (pathname === "/api/delivery/pending" && request.method === "GET") {
-      return await handleDeliveryPending(request, env);
-    }
-
-    if (pathname === "/api/delivery/ack" && request.method === "POST") {
-      return await handleDeliveryAck(request, env);
-    }
-
-    // Lets the polling agent push live server status (player count, map,
-    // etc) on its own schedule, since it's running inside/alongside the
-    // Rust process and can read this directly — no RCON needed even on
-    // its end. This is what actually powers the homepage's live status
-    // widget for stores on the polling-agent delivery mode (AGENT_SECRET
-    // set): the Worker-side cron's own status poll (pollServerStatus)
-    // intentionally can't reach RCON in that mode at all, by design — see
-    // its comments — so without the agent calling this, the widget has no
-    // possible source of truth and will always show "unavailable".
-    if (pathname === "/api/agent/status" && request.method === "POST") {
-      return await handleAgentStatusReport(request, env);
-    }
-
-    if (pathname === "/api/agent/state" && request.method === "POST") {
-      return await handleAgentStateReport(request, env);
-    }
-
-    // Central telemetry endpoint for Apex plugins. A single authenticated
-    // POST lets ApexAgent/ApexAdminAudit and future plugins publish their
-    // capabilities, server metrics and structured audit events without each
-    // plugin needing its own Worker route or database schema.
-    if (pathname === "/api/agent/telemetry" && request.method === "POST") {
-      return await handleAgentTelemetry(request, env);
-    }
-
-    if (pathname === "/api/agent/queries/pending" && request.method === "GET") {
-      if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-      const pending = await getPendingAgentQueries(env.DB, 20);
-      return json({ queries: pending });
-    }
-
-    const queryCompleteMatch = pathname.match(/^\/api\/agent\/queries\/(\d+)\/complete$/);
-    if (queryCompleteMatch && request.method === "POST") {
-      if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-      const body = await request.json();
-      await completeAgentQuery(env.DB, Number(queryCompleteMatch[1]), body.result ?? {});
-      return json({ ok: true });
-    }
-
     // ---- Stripe webhook ----
     if (pathname === "/webhook/stripe" && request.method === "POST") {
       return await handleStripeWebhook(request, env, ctx);
@@ -647,24 +594,6 @@ async function handleFetch(request, env, ctx) {
 
 function html(body) {
   return new Response(body, { headers: { "content-type": "text/html; charset=utf-8" } });
-}
-
-// Whether this Worker should treat itself as "polling-agent mode" for
-// commands/telemetry that need a live round trip to the game server.
-// AGENT_SECRET is the authoritative switch, full stop — it used to seem safe
-// to second-guess that by also checking whether RCON_HOST/RCON_PORT looked
-// configured, on the theory that direct RCON should win whenever it's
-// available. That's wrong in practice: plenty of hosts put their public
-// game/RCON IP behind their own Cloudflare (Spectrum/Tunnel) for DDoS
-// protection, which happily proxies a raw TCP WebRCON client but returns
-// Cloudflare's own edge error (e.g. "error code: 1003 - Direct IP Access
-// Not Allowed") when a Worker's fetch()-based Upgrade request hits it —
-// because that request is now Cloudflare-edge-to-Cloudflare-edge, not
-// worker-to-origin. RCON_HOST/RCON_PORT being set says nothing about
-// whether that path actually works; only the admin deciding to run
-// ApexAgent.cs and set AGENT_SECRET does. Don't infer this from other vars.
-function isPollingMode(env) {
-  return !!env.AGENT_SECRET;
 }
 
 function json(data, status = 200) {
@@ -1251,15 +1180,8 @@ async function enqueueRevoke(env, product, steamid, reason, refs = {}) {
   }
 }
 
-/** Send every pending RCON command in the queue. Failures stay queued for the next run.
- * If AGENT_SECRET is configured, this Worker is running in polling-agent mode
- * (see DEPLOY.md section 5) — the in-game plugin drains the queue itself via
- * /api/delivery/pending, so pushing over RCON here as well would fail every
- * time (RCON isn't exposed) and burn the attempts<5 budget that endpoint
- * also depends on. Skip the push entirely in that case. */
+/** Send every pending RCON command in the queue. Failures stay queued for the next run. */
 async function drainDeliveryQueue(env) {
-  if (isPollingMode(env)) return;
-
   const pending = await getPendingDeliveries(env.DB);
   for (const job of pending) {
     try {
@@ -1299,79 +1221,11 @@ async function resolveSteamProfile(env, steamid) {
   return await fetchSteamProfile(env, steamid);
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/** Assembles everything for the /admin/players/:query card.
- *
- * Direct-RCON mode: ApexAdminAudit is asked first since it already does
- * name-or-SteamID lookup and is the plugin any given player is most likely
- * to have a profile in; its resolved SteamID becomes canonical for the
- * other three RCON calls, which all key strictly by SteamID.
- *
- * AGENT_SECRET mode: there's no RCON connection to do any of that
- * synchronously, so instead a query row is dropped in agent_queries, the
- * agent picks it up on its next poll (every ~5s, see ApexAgent.cs), resolves
- * the player and runs all four lookups in-process, and posts the combined
- * result back — this function just waits (short-polling the row) for that
- * to land. Expect this to take a few seconds in agent mode; that's the
- * trade-off for not exposing RCON to the internet.
- *
- * Either way, every source is independent - a null section means "couldn't
- * get that one", not "the whole card failed". */
+/** Assembles everything for the /admin/players/:query card. */
 async function buildPlayerCard(env, query) {
   let audit = null;
   let steamid = null;
 
-  if (isPollingMode(env)) {
-    const queryId = await createAgentQuery(env.DB, "player_lookup", query);
-    let resolved = null;
-
-    // Short-poll for up to ~12s (agent reports roughly every 5s, so this
-    // covers one full miss + a retry without making the admin wait forever).
-    for (let attempt = 0; attempt < 12; attempt++) {
-      await sleep(1000);
-      const row = await getAgentQuery(env.DB, queryId);
-      if (row?.status === "done") {
-        resolved = row.result;
-        break;
-      }
-    }
-
-    if (resolved) {
-      audit = resolved.audit ?? null;
-      steamid = resolved.steamid ?? (audit?.found ? audit.steamid : null);
-      if (!steamid) {
-        return { steamid: null, audit, points: null, cases: null, rankings: null, bans: null, account: null, steamProfile: null };
-      }
-      const [bans, account, steamProfile] = await Promise.all([
-        fetchSteamBansForOne(env, steamid).catch((err) => {
-          console.error("buildPlayerCard: steam ban lookup failed:", err.message);
-          return null;
-        }),
-        getPlayerCardAccount(env.DB, steamid),
-        resolveSteamProfile(env, steamid),
-      ]);
-      return { steamid, audit, points: resolved.points ?? null, cases: resolved.cases ?? null, rankings: resolved.rankings ?? null, bans, account, steamProfile };
-    }
-
-    // Agent never answered in time - fall back to whatever D1/Steam can tell
-    // us on their own if the query at least looks like a real SteamID64, so
-    // the admin isn't left with a completely empty page.
-    steamid = /^\d{17}$/.test(query) ? query : null;
-    if (!steamid) {
-      return { steamid: null, audit: null, points: null, cases: null, rankings: null, bans: null, account: null, steamProfile: null };
-    }
-    const [bans, account, steamProfile] = await Promise.all([
-      fetchSteamBansForOne(env, steamid).catch(() => null),
-      getPlayerCardAccount(env.DB, steamid),
-      resolveSteamProfile(env, steamid),
-    ]);
-    return { steamid, audit: null, points: null, cases: null, rankings: null, bans, account, steamProfile };
-  }
-
-  // Direct-RCON mode - unchanged from before.
   try {
     const raw = await sendRconCommand(env, `apexaudit.player.json ${rconArg(query)}`, { timeoutMs: 6000 });
     audit = JSON.parse(raw);
@@ -1426,19 +1280,8 @@ async function getPlayerCardAccount(db, steamid) {
   return { player, orders, subs };
 }
 
-/** Fetches the case list for the "Give Case" dropdown on /admin/actions, so
- * it can never drift out of sync with what's actually configured in-game.
- * Direct-RCON mode asks the server live (`cases.admin.list`); AGENT_SECRET
- * mode has no RCON connection to do that, so it reads whatever the polling
- * agent last pushed to agent_state instead (see ApexAgent.cs /
- * handleAgentStateReport). Either way, null means "nothing to show" and the
- * dropdown falls back to a manual case-ID text field rather than failing
- * the whole page — a null here should never be surprising, just stale. */
+/** Fetches the case list for the "Give Case" dropdown on /admin/actions. */
 async function fetchCaseCatalog(env) {
-  if (isPollingMode(env)) {
-    const cached = await getAgentState(env.DB, "cases");
-    return cached?.value ?? null;
-  }
   try {
     const raw = await sendRconCommand(env, "cases.admin.list", { timeoutMs: 6000 });
     return JSON.parse(raw);
@@ -1448,14 +1291,8 @@ async function fetchCaseCatalog(env) {
   }
 }
 
-/** Same idea as fetchCaseCatalog, for the "pick an online player" dropdown -
- * direct RCON calls Rust's built-in `playerlist`, AGENT_SECRET mode reads
- * the polling agent's last push instead. */
+/** Fetches the current online player list through the relay. */
 async function fetchOnlinePlayersForActions(env) {
-  if (isPollingMode(env)) {
-    const cached = await getAgentState(env.DB, "onlinePlayers");
-    return cached?.value ?? null;
-  }
   try {
     return await fetchOnlinePlayers(env);
   } catch (err) {
@@ -1464,31 +1301,13 @@ async function fetchOnlinePlayersForActions(env) {
   }
 }
 
-/** Item catalog for the "Give Rust Item" dropdown - pushed once at server
- * start by ApexAgent (ItemManager.itemList doesn't change at runtime, so
- * there's no need to re-push it on the regular report timer like cases/
- * online-players). No direct-RCON equivalent exists yet since vanilla Rust
- * has no built-in command that dumps the full item list as JSON - if this
- * is ever needed outside AGENT_SECRET mode, it'd want a small plugin
- * console command mirroring cases.admin.list. For now this only ever
- * returns something in agent mode; null elsewhere means exactly that. */
+/** Rust does not expose a built-in JSON item catalog command. */
 async function fetchItemCatalog(env) {
-  const cached = await getAgentState(env.DB, "items");
-  return cached?.value ?? null;
+  return null;
 }
 
-/** Player roster for the "pick a player" dropdown on /admin/players -
- * everyone ApexAdminAudit has ever seen connect, not just people with a
- * store account. Direct-RCON mode asks live (apexaudit.roster.json,
- * optionally filtered); AGENT_SECRET mode reads whatever the polling agent
- * last pushed (same mechanism as cases/onlinePlayers above - see
- * ApexAgent.cs PushAgentState). search only filters the direct-RCON path
- * server-side; agent mode filters client-side in JS over the cached list. */
+/** Fetches the player roster through RCON/relay, optionally filtered server-side. */
 async function fetchPlayerRoster(env, search) {
-  if (isPollingMode(env)) {
-    const cached = await getAgentState(env.DB, "playerRoster");
-    return cached?.value ?? null;
-  }
   try {
     const cmd = search ? `apexaudit.roster.json ${rconArg(search)}` : "apexaudit.roster.json";
     const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
@@ -1500,16 +1319,8 @@ async function fetchPlayerRoster(env, search) {
   }
 }
 
-/** Kit catalog for the "Give Kit" dropdown - Kits.cs has no JSON list
- * command, just `kit list` returning "Kit List: a, b, c" as plain text, so
- * this parses that. AGENT_SECRET mode reads whatever ApexAgent.cs last
- * pushed to agent_state instead (see PushKitCatalog in ApexAgent.cs) -
- * same dual-mode pattern as cases/onlinePlayers/roster above. */
+/** Fetches the kit catalog from Kits.cs's plain-text `kit list` command. */
 async function fetchKitCatalog(env) {
-  if (isPollingMode(env)) {
-    const cached = await getAgentState(env.DB, "kits");
-    return cached?.value ?? null;
-  }
   try {
     const raw = await sendRconCommand(env, "kit list", { timeoutMs: 6000 });
     const match = raw.match(/Kit List:\s*(.*)/i);
@@ -1521,13 +1332,8 @@ async function fetchKitCatalog(env) {
   }
 }
 
-/** WipeBlock's current config/status, for the read-only summary on Server
- * Actions. Same dual-mode pattern as the roster above. */
+/** Fetches WipeBlock's current config/status for Server Actions. */
 async function fetchWipeBlockStatus(env) {
-  if (isPollingMode(env)) {
-    const cached = await getAgentState(env.DB, "wipeblockStatus");
-    return cached?.value ?? null;
-  }
   try {
     const raw = await sendRconCommand(env, "wipeblock.status.json", { timeoutMs: 6000 });
     return JSON.parse(raw);
@@ -1537,12 +1343,8 @@ async function fetchWipeBlockStatus(env) {
   }
 }
 
-/** JSON evidence report for one player - see apexaudit.evidence.json in
- * ApexAdminAudit.cs. Direct-RCON only for now (same reasoning as
- * fetchKitCatalog: no agent-state push exists for this yet, since it's
- * on-demand per-player rather than a good fit for the periodic broadcast). */
+/** Fetches the JSON evidence report for one player. */
 async function fetchPlayerEvidence(env, steamid) {
-  if (isPollingMode(env)) return null;
   try {
     const raw = await sendRconCommand(env, `apexaudit.evidence.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
     return JSON.parse(raw);
@@ -1565,7 +1367,6 @@ const CHAT_FLAG_RE = new RegExp(`\\b(${CHAT_FLAG_WORDS.join("|")})\\b`, "i");
  * against CHAT_FLAG_WORDS - this never blocks or auto-punishes anything,
  * it just highlights the line for a human moderator to look at. */
 async function fetchRecentActivity(env, { eventFilter, count = 50 } = {}) {
-  if (isPollingMode(env)) return null;
   try {
     const cmd = eventFilter ? `apexaudit.recent.json ${rconArg(eventFilter)} ${count}` : `apexaudit.recent.json ${count}`;
     const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
@@ -1581,26 +1382,16 @@ async function fetchRecentActivity(env, { eventFilter, count = 50 } = {}) {
   }
 }
 
-/** Live player positions for the Server Console map overlay - pushed by
- * ApexAgent.cs on its normal report timer (same cadence as telemetry, so
- * expect it to be up to ~1 report interval stale, not truly real-time).
- * Direct-RCON mode has no equivalent yet (no built-in Rust command dumps
- * every player's world position), so this only ever returns something in
- * polling-agent mode - null elsewhere just means "no overlay to draw". */
+/** Live player positions are not exposed by the relay's supported API. */
 async function fetchPlayerPositions(env) {
-  if (!isPollingMode(env)) return null;
-  const cached = await getAgentState(env.DB, "playerPositions");
-  return cached?.value ?? null;
+  return null;
 }
 
 /** Resolves (and caches) the actual map image for the Server Console's Map
  * panel via the RustMaps v4 API (https://api.rustmaps.com/docs) - optional,
  * needs RUSTMAPS_API_KEY set (get one free at https://rustmaps.com/dashboard).
  * Without a key this just returns null and the panel falls back to a plain
- * "View on RustMaps" link like before. Cached in agent_state (keyed by
- * seed+size, since that's genuinely static until the next wipe) so this
- * doesn't hit RustMaps' rate limit on every single page load.
- *
+ * "View on RustMaps" link like before.
  * The exact response shape isn't nailed down from RustMaps' own docs (their
  * reference page is a JS app this Worker can't execute), so this defensively
  * checks every plausible image-field name instead of trusting one - if
@@ -1608,12 +1399,6 @@ async function fetchPlayerPositions(env) {
  * throwing. */
 async function fetchRustMapImage(env, seed, size) {
   if (!env.RUSTMAPS_API_KEY || !seed || !size) return null;
-
-  const cacheKey = "rustmapImage";
-  const cached = await getAgentState(env.DB, cacheKey);
-  if (cached?.value?.seed === String(seed) && cached.value?.size === String(size) && cached.value?.imageUrl) {
-    return cached.value.imageUrl;
-  }
 
   try {
     const resp = await fetch(`https://api.rustmaps.com/v4/maps/${size}/${seed}`, {
@@ -1640,7 +1425,6 @@ async function fetchRustMapImage(env, seed, size) {
       data?.imageIconUrl || data?.thumbnailUrl || data?.imageUrl || data?.image || data?.mapImageUrl || null;
 
     if (imageUrl) {
-      await upsertAgentState(env.DB, cacheKey, { seed: String(seed), size: String(size), imageUrl });
     }
     return imageUrl;
   } catch (err) {
@@ -1649,21 +1433,8 @@ async function fetchRustMapImage(env, seed, size) {
   }
 }
 
-/* Permissions panel. Direct-RCON asks live; AGENT_SECRET mode uses the same
- * on-demand query round-trip as the player lookup itself (query_type
- * "permissions" - see ApexAgent.cs), since per-player permission data isn't
- * a good fit for the periodic broadcast-everything state push. Expect a
- * few seconds' wait in agent mode, same as the player card itself. */
+/* Permissions panel uses a live relay-backed RCON request. */
 async function fetchOxidePermissions(env, steamid) {
-  if (isPollingMode(env)) {
-    const queryId = await createAgentQuery(env.DB, "permissions", steamid);
-    for (let attempt = 0; attempt < 12; attempt++) {
-      await sleep(1000);
-      const row = await getAgentQuery(env.DB, queryId);
-      if (row?.status === "done") return row.result;
-    }
-    return null;
-  }
   try {
     const raw = await sendRconCommand(env, `apexaudit.permissions.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
     return JSON.parse(raw);
@@ -1679,10 +1450,7 @@ async function fetchOxidePermissions(env, steamid) {
  * making a live RCON round-trip on every visitor's page load. Runs on the
  * same 2-minute cron as delivery drainage.
  *
- * Skipped entirely in polling-agent mode (AGENT_SECRET set) — same reason
- * as drainDeliveryQueue: that mode means RCON isn't publicly reachable from
- * this Worker at all, so the call would just fail every time. A future
- * agent-side `/api/status` push could fill this in for that deployment mode. */
+ * Runs on the same scheduled task as delivery drainage. */
 /** The public-facing server status shown on the homepage — sourced from
  * the same apex-rust-leaderboard Worker that rustrankings-web and the
  * connect page already read from (via the LEADERBOARD_API service
@@ -1760,33 +1528,8 @@ async function fetchTopPlayers(env, limit = 3) {
 }
 
 async function pollServerStatus(env) {
-  // These early returns used to just bail with nothing recorded — which
-  // looks IDENTICAL from the homepage's point of view to "the cron isn't
-  // running at all": both leave server_status.updated_at stuck at
-  // whatever it was last set to (or its original migration-seed value,
-  // if this has never successfully run even once), so the widget shows
-  // "Status unavailable" (stale) forever with zero indication of why.
-  // Recording the skip reason here means Admin > Dashboard's server
-  // status panel can actually tell you which of these it is, instead of
-  // you having to guess between "cron not registered", "AGENT_SECRET is
-  // set (this store uses the polling-agent delivery mode, which this
-  // function fundamentally can't report through)", "RCON_HOST unset", or
-  // "RCON_HOST set but unreachable" (the try/catch below).
-  if (isPollingMode(env)) {
-    // Don't touch server_status here at all - the agent's own
-    // /api/agent/status POST (handleAgentStatusReport below) owns this row
-    // exclusively in this mode. Writing an "offline/skipped" placeholder on
-    // every cron tick used to stomp the agent's real data moments after it
-    // reported in successfully, which is why Dashboard/Server Actions could
-    // look like they "can't reach the server" even with a healthy,
-    // currently-reporting agent - the cron kept overwriting the good row
-    // with this notice on its own unrelated schedule. Staleness (agent
-    // stopped reporting) is now surfaced by checking updated_at when the
-    // row is read instead, not by the cron pre-emptively marking it down.
-    return;
-  }
-  if (!env.RCON_HOST) {
-    await upsertServerStatus(env.DB, { online: false, lastError: "Skipped: RCON_HOST is not set" });
+  if (!env.RELAY_URL || !env.RELAY_SECRET) {
+    await upsertServerStatus(env.DB, { online: false, lastError: "RELAY_URL and RELAY_SECRET are not configured" });
     return;
   }
 
@@ -1801,6 +1544,14 @@ async function pollServerStatus(env) {
       map: info.map,
       seed: info.seed,
       size: info.size,
+      framerate: info.framerate,
+      entityCount: info.entityCount,
+      uptimeSeconds: info.uptimeSeconds,
+    });
+    await recordServerMetrics(env.DB, {
+      players: info.players,
+      maxPlayers: info.maxPlayers,
+      queued: info.queued,
       framerate: info.framerate,
       entityCount: info.entityCount,
       uptimeSeconds: info.uptimeSeconds,
@@ -1820,157 +1571,77 @@ async function pollServerStatus(env) {
   }
 }
 
-// ============================================================
-// Polling-agent delivery (fallback when RCON can't be exposed publicly)
-// ============================================================
-
-/** Checks the request's `Authorization: Bearer <secret>` header against
- * env.AGENT_SECRET. Returns true if valid. Requires AGENT_SECRET to be
- * set (`npx wrangler secret put AGENT_SECRET`) — refuses all requests
- * if it isn't configured, rather than silently accepting anything. */
-function checkAgentAuth(request, env) {
-  if (!env.AGENT_SECRET) return false;
-  const header = request.headers.get("Authorization") || "";
-  const match = header.match(/^Bearer\s+(.+)$/i);
-  if (!match) return false;
-  return match[1] === env.AGENT_SECRET;
-}
-
-/** GET /api/delivery/pending — returns queued commands for the in-game
- * agent plugin to run itself, instead of this Worker calling
- * sendRconCommand. Shape matches the Oxide plugin's PendingResponse. */
-async function handleDeliveryPending(request, env) {
-  if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-
-  const pending = await getPendingDeliveries(env.DB);
-  const jobs = pending.map((job) => ({ id: job.id, command: job.command }));
-  return json({ jobs });
-}
-
-/** POST /api/delivery/ack — marks the given delivery_queue ids as
- * delivered once the in-game agent has actually run them. Body:
- * { ids: number[] }. */
-async function handleDeliveryAck(request, env) {
-  if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-
-  const body = await request.json();
-  const ids = Array.isArray(body.ids) ? body.ids : [];
-  for (const id of ids) {
-    const numericId = Number(id);
-    if (!Number.isInteger(numericId)) continue;
-    const job = await getDeliveryQueueRow(env.DB, numericId);
-    await markDelivered(env.DB, numericId);
-    if (job?.order_id) await markOrderDeliveredIfComplete(env.DB, job.order_id);
+async function collectServerTelemetry(env) {
+  try {
+    const raw = await sendRconCommand(env, "oxide.plugins", { timeoutMs: 6000 });
+    const plugins = parsePluginList(raw);
+    if (plugins.length) await upsertPluginRegistry(env.DB, plugins);
+  } catch (err) {
+    console.error("Server telemetry collection failed:", err.message);
   }
-  return json({ acked: ids.length });
 }
 
-/** POST /api/agent/telemetry — the shared Apex Control ingestion endpoint.
- * Plugins can report capabilities, health, server metrics and structured
- * events in one authenticated request. This deliberately accepts a narrow
- * JSON contract and caps event/plugin counts so a broken plugin cannot turn
- * one heartbeat into an unbounded database write.
- */
-async function handleAgentTelemetry(request, env) {
-  if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-  const body = await request.json();
-  const serverKey = String(body.serverKey || "primary").slice(0, 80);
-  const plugins = Array.isArray(body.plugins) ? body.plugins.slice(0, 100) : [];
-  const events = Array.isArray(body.events) ? body.events.slice(0, 100) : [];
-  const metric = body.metrics && typeof body.metrics === "object" ? { ...body.metrics, serverKey } : null;
+function parsePluginList(raw) {
+  const text = String(raw || "").trim();
+  if (!text) return [];
 
-  const pluginCount = await upsertPluginRegistry(env.DB, plugins, serverKey);
-  const eventCount = await recordControlEvents(env.DB, events.map((e) => ({ ...e, serverKey })));
-  if (metric) await recordServerMetrics(env.DB, metric);
+  try {
+    const parsed = JSON.parse(text);
+    const rows = Array.isArray(parsed) ? parsed : parsed.plugins;
+    if (Array.isArray(rows)) {
+      return rows.map((plugin) => ({
+        name: plugin.name || plugin.Name,
+        version: plugin.version || plugin.Version || null,
+        enabled: plugin.enabled !== false,
+        status: plugin.status || "online",
+      })).filter((plugin) => plugin.name);
+    }
+  } catch {}
 
-  // Keep the existing live status row as the public/admin single-source of
-  // truth too, when the telemetry payload contains the Rust server basics.
-  if (metric && Number.isFinite(Number(metric.players)) && Number.isFinite(Number(metric.maxPlayers))) {
-    await upsertServerStatus(env.DB, {
-      online: true,
-      players: Number(metric.players),
-      maxPlayers: Number(metric.maxPlayers),
-      queued: Number(metric.queued) || 0,
-      hostname: body.hostname || null,
-      map: body.map || null,
-      seed: body.seed ?? null,
-      size: body.size ?? null,
-      framerate: metric.framerate ?? null,
-      entityCount: metric.entityCount ?? null,
-      uptimeSeconds: metric.uptimeSeconds ?? null,
-    });
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^[\s\-|]+/, "").trim())
+    .map((line) => {
+      const match = line.match(/^([^\s(]+)(?:\s+v?([\d.]+))?/);
+      return match ? { name: match[1], version: match[2] || null, status: "online", enabled: true } : null;
+    })
+    .filter((plugin) => plugin && plugin.name && !/^(loaded|plugins|total|name)$/i.test(plugin.name));
+}
+
+async function handleConsoleWebSocket(request, env) {
+  if (!env.RELAY_URL || !env.RELAY_SECRET || !env.RCON_PASSWORD) {
+    return new Response("Relay configuration is incomplete", { status: 503 });
   }
 
-  return json({ ok: true, serverKey, pluginCount, eventCount, metricsRecorded: !!metric });
-}
-
-/** POST /api/agent/status — the polling-agent equivalent of pollServerStatus:
- * lets the in-game agent push live player count/map on its own schedule,
- * since it can read this directly from the Rust process (e.g.
- * BasePlayer.activePlayerList.Count in an Oxide/Carbon plugin) with no
- * RCON needed even on its end. Body: { players, maxPlayers, queued?,
- * hostname?, map? } — only `players` and `maxPlayers` are required, the
- * rest are optional extras shown in the widget when present. See
- * DEPLOY.md's "Polling agent: reporting live status" section for a
- * drop-in Oxide snippet. */
-async function handleAgentStatusReport(request, env) {
-  if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
-
-  const body = await request.json();
-  const players = Number(body.players);
-  const maxPlayers = Number(body.maxPlayers);
-  if (!Number.isFinite(players) || !Number.isFinite(maxPlayers)) {
-    return json({ error: "players and maxPlayers are required numbers" }, 400);
+  const upgrade = request.headers.get("Upgrade");
+  if (!upgrade || upgrade.toLowerCase() !== "websocket") {
+    return new Response("Expected WebSocket upgrade", { status: 426 });
   }
 
-  await upsertServerStatus(env.DB, {
-    online: true,
-    players,
-    maxPlayers,
-    queued: Number(body.queued) || 0,
-    hostname: body.hostname || null,
-    map: body.map || null,
-    seed: body.seed ?? null,
-    size: body.size ?? null,
+  const relayResponse = await fetch(`${env.RELAY_URL.trimEnd('/')}/`, {
+    headers: {
+      Upgrade: "websocket",
+      Authorization: `Bearer ${env.RELAY_SECRET}`,
+      "X-RCON-Password": env.RCON_PASSWORD,
+    },
   });
-  return json({ ok: true });
-}
+  const relaySocket = relayResponse.webSocket;
+  if (!relaySocket) return new Response("Relay WebSocket unavailable", { status: 502 });
 
-/** POST /api/agent/state — companion to /api/agent/status: the same polling
- * agent pushes the current case catalog + online player list here on the
- * same schedule, since in AGENT_SECRET mode the Worker has no RCON
- * connection to fetch either live (see ApexAgent.cs). Cached in agent_state
- * and read by fetchCaseCatalog()/fetchOnlinePlayersForActions() below rather
- * than kept in memory, so it survives across Worker invocations. Body:
- * { cases: [...], onlinePlayers: [...] } — both optional, each cached
- * independently so a plugin that isn't loaded (e.g. no Cases.cs) doesn't
- * blank out the other. */
-async function handleAgentStateReport(request, env) {
-  if (!checkAgentAuth(request, env)) return json({ error: "Unauthorized" }, 401);
+  const pair = new WebSocketPair();
+  const clientSocket = pair[0];
+  const workerSocket = pair[1];
+  workerSocket.accept();
+  relaySocket.accept();
 
-  const body = await request.json();
-  if (Array.isArray(body.cases)) {
-    await upsertAgentState(env.DB, "cases", body.cases);
-  }
-  if (Array.isArray(body.onlinePlayers)) {
-    await upsertAgentState(env.DB, "onlinePlayers", body.onlinePlayers);
-  }
-  if (Array.isArray(body.items)) {
-    await upsertAgentState(env.DB, "items", body.items);
-  }
-  if (Array.isArray(body.kits)) {
-    await upsertAgentState(env.DB, "kits", body.kits);
-  }
-  if (Array.isArray(body.playerPositions)) {
-    await upsertAgentState(env.DB, "playerPositions", body.playerPositions);
-  }
-  if (Array.isArray(body.playerRoster)) {
-    await upsertAgentState(env.DB, "playerRoster", body.playerRoster);
-  }
-  if (body.wipeblockStatus && typeof body.wipeblockStatus === "object") {
-    await upsertAgentState(env.DB, "wipeblockStatus", body.wipeblockStatus);
-  }
-  return json({ ok: true });
+  workerSocket.addEventListener("message", (event) => relaySocket.send(event.data));
+  relaySocket.addEventListener("message", (event) => workerSocket.send(event.data));
+  workerSocket.addEventListener("close", () => relaySocket.close());
+  relaySocket.addEventListener("close", () => workerSocket.close());
+  workerSocket.addEventListener("error", () => relaySocket.close());
+  relaySocket.addEventListener("error", () => workerSocket.close());
+
+  return new Response(null, { status: 101, webSocket: clientSocket });
 }
 
 // ============================================================
@@ -2023,8 +1694,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   }
 
   // Manually runs the same server-status poll the cron does, so an admin
-  // can get an immediate answer ("is it AGENT_SECRET mode, RCON_HOST
-  // unset, or an actual connection failure — and what's the exact error")
+  // can get an immediate answer ("is the relay configured, or is there an
+  // actual connection failure — and what's the exact error")
   // instead of waiting up to 2 minutes for the next cron tick, or worse,
   // guessing blind from the public homepage's generic "Status unavailable".
   if (pathname === "/admin/server-status/check" && method === "POST") {
@@ -2247,6 +1918,23 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     return html(renderPlugins({ storeName, plugins, flash: url.searchParams.get("flash") }));
   }
 
+  if (pathname === "/admin/plugins/action" && method === "POST") {
+    const form = await request.formData();
+    const plugin = String(form.get("plugin") || "").trim();
+    const actionType = String(form.get("actionType") || "").trim();
+    if (!plugin || !["load", "unload"].includes(actionType)) {
+      return redirect("/admin/plugins?flash=" + encodeURIComponent("Invalid plugin action."));
+    }
+
+    try {
+      await sendRconCommand(env, `oxide.${actionType} ${rconArg(plugin)}`, { timeoutMs: 8000 });
+      await collectServerTelemetry(env);
+      return redirect(`/admin/plugins?flash=${encodeURIComponent(`${plugin} ${actionType} command sent.`)}`);
+    } catch (err) {
+      return redirect(`/admin/plugins?flash=${encodeURIComponent(`${plugin} ${actionType} failed: ${err.message}`)}`);
+    }
+  }
+
   if (pathname === "/admin/audit" && method === "GET") {
     const events = await listControlEvents(env.DB, { limit: 120 });
     return html(renderAudit({ storeName, events, flash: url.searchParams.get("flash") }));
@@ -2310,8 +1998,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   // something to everyone online at once, and global events.
   //
   // Same delivery_queue/drainDeliveryQueue pipeline as a store purchase,
-  // so this works unmodified in both direct-RCON and AGENT_SECRET
-  // (polling-agent) mode, and every action is auto-logged in
+  // so this works through the relay, and every action is auto-logged in
   // /admin/deliveries with a retry if the server is briefly unreachable.
   const playerCardActionMatch = pathname.match(/^\/admin\/players\/([^/]+)\/action$/);
   if (playerCardActionMatch && method === "POST") {
@@ -2420,9 +2107,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   if (pathname === "/admin/server" && method === "GET") {
     // Cached/service-binding status, NOT a live RCON call - same source as
     // the homepage widget (see fetchLiveServerStatus above). A live
-    // serverinfo call here would just add latency in direct-RCON mode and
-    // fail outright in AGENT_SECRET mode (no RCON connection to make it
-    // over), and the cache is already refreshed every 2 minutes.
+    // serverinfo call here would add latency, and the cache is already
+    // refreshed every 2 minutes.
     const [serverStatusRaw, wipeblockStatus, recentActivity, recentMetrics, caseCatalog, items, kits] = await Promise.all([
       getServerStatus(env.DB),
       fetchWipeBlockStatus(env),
@@ -2435,8 +2121,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     // D1 row is snake_case; the renderer wants camelCase to match
     // fetchServerInfo's shape elsewhere. Also flags staleness here rather
     // than the cron pre-emptively marking things down (see pollServerStatus)
-    // - in AGENT_SECRET mode especially, "no update in 10+ minutes" is a much
-    // more honest signal than a hard online/offline flip.
+    // - a stale relay result is a more honest signal than a hard
+    // online/offline flip.
     let serverStatus = null;
     if (serverStatusRaw) {
       const updatedMs = serverStatusRaw.updated_at ? Date.parse(serverStatusRaw.updated_at + "Z") : null;
@@ -2455,7 +2141,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
         entityCount: serverStatusRaw.entity_count ?? null,
         uptimeSeconds: serverStatusRaw.uptime_seconds ?? null,
         lastError: isStale
-          ? `No status update in ${staleMinutes} min${isPollingMode(env) ? " — check ApexAgent.cs is still loaded and reporting" : " — check RCON connectivity"}.`
+          ? `No status update in ${staleMinutes} min — check relay connectivity.`
           : serverStatusRaw.last_error,
       };
     }
@@ -2466,6 +2152,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     ]);
 
     return html(renderServerActions({
+      env,
       storeName,
       serverStatus,
       wipeblockStatus,
@@ -2476,22 +2163,14 @@ async function handleAdmin(request, env, url, storeName, ctx) {
       kits,
       playerPositions,
       mapImageUrl,
-      agentMode: isPollingMode(env),
       consoleCommand: url.searchParams.get("cmd"),
       consoleOutput: url.searchParams.has("out") ? url.searchParams.get("out") : null,
       flash: url.searchParams.get("flash"),
     }));
   }
 
-  // ---- Mini console - direct RCON mode only (see fetchRecentActivity's
-  // comment for why AGENT_SECRET mode can't do a response round trip for
-  // arbitrary commands yet). Output is truncated and passed back via query
-  // params rather than held server-side anywhere, so there's nothing new
-  // to clean up or that outlives the redirect. ----
+  // ---- Mini console ----
   if (pathname === "/admin/console/exec" && method === "POST") {
-    if (isPollingMode(env)) {
-      return redirect(`/admin/server?flash=${encodeURIComponent("Console isn't available in polling-agent mode yet.")}`);
-    }
     const form = await request.formData();
     const command = (form.get("command") || "").trim();
     if (!command) return redirect("/admin/server");

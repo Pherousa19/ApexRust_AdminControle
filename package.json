@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "db:init": "wrangler d1 execute apex-rust-store --file=./schema.sql",
-    "db:init:remote": "wrangler d1 execute apex-rust-store --remote --file=./schema.sql"
+    "db:init": "wrangler d1 execute apex-rust-store-v2 --local --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute apex-rust-store-v2 --remote --file=./schema.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

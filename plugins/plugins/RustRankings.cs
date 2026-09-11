@@ -2316,7 +2316,7 @@ namespace Oxide.Plugins
             arg.ReplyWith(BuildStatsJson(arg.Args[0].ToString(), lifetime));
         }
 
-        // In-process equivalent of rustrankings.stats.json, for ApexAgent's
+        // In-process equivalent of rustrankings.stats.json for plugin integrations
         // player-card query path - same lookup, same JSON shape.
         [HookMethod("RustRankings_GetStatsJson")]
         public string RustRankings_GetStatsJson(string nameOrId, bool lifetime = false) => BuildStatsJson(nameOrId, lifetime);
@@ -4148,7 +4148,7 @@ namespace Oxide.Plugins
                 onlinePlayers = BasePlayer.activePlayerList.Count,
                 maxPlayers = config.WebLeaderboardMaxPlayers > 0 ? config.WebLeaderboardMaxPlayers : ConVar.Server.maxplayers,
                 // Hostname/map mirror what the ApexRustDelivery store plugin already
-                // reports to the store's /api/agent/status — keeping the field names
+                // reports to the store's relay-backed status contract — keeping the field names
                 // identical (hostname/map) so the web frontend can treat both sources
                 // the same way if it ever needs to.
                 hostname = ConVar.Server.hostname,

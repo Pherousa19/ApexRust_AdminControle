@@ -753,7 +753,7 @@ namespace Oxide.Plugins
             return GetOwnedCount(userId, caseId);
         }
 
-        // In-process equivalent of cases.admin.player, for ApexAgent's player-card
+        // In-process equivalent of cases.admin.player for plugin integrations
         // query path. Same shape as that console command's JSON output.
         [HookMethod("Cases_GetOwnedCases")]
         public List<Dictionary<string, object>> Cases_GetOwnedCases(ulong userId)
