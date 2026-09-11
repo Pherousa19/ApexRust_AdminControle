@@ -87,6 +87,25 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  if (urlObj.pathname === "/api/command" && req.method === "POST") {
+    try {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const body = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
+      const command = typeof body.command === "string" ? body.command.trim() : "";
+      if (!command || command.length > 4000) {
+        res.writeHead(400, { "content-type": "application/json" });
+        return res.end(JSON.stringify({ error: "A command between 1 and 4000 characters is required" }));
+      }
+      const data = await executeQuickQuery(rconPassword, command);
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ output: data }));
+    } catch (err) {
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
   res.writeHead(404).end(JSON.stringify({ error: "Not found" }));
 });
 
