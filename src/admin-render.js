@@ -1211,8 +1211,8 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
           serverStatus
             ? `<div class="kv-grid" style="margin-bottom:12px;">
                 <div class="kv-item"><span>Map</span><b style="font-size:12px;">${esc(serverStatus.map || "Procedural Map")}</b></div>
-                ${serverStatus.seed ? `<div class="kv-item"><span>Seed</span><b class="mono" style="font-size:12px;">${esc(serverStatus.seed)}</b></div>` : ""}
-                ${serverStatus.size ? `<div class="kv-item"><span>Size</span><b style="font-size:12px;">${esc(String(serverStatus.size))}</b></div>` : ""}
+                ${serverStatus.seed ? `<div class="kv-item"><span>Seed</span><b class="mono" style="font-size:12px;">${esc(String(serverStatus.seed).replace(/\D/g, ''))}</b></div>` : ""}
+                ${serverStatus.size ? `<div class="kv-item"><span>Size</span><b style="font-size:12px;">${esc(String(Math.floor(Number(serverStatus.size) || 0)))}</b></div>` : ""}
                </div>
                ${
                  mapImageUrl
@@ -1221,7 +1221,7 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
                }
                ${
                  serverStatus.seed && serverStatus.size
-                   ? `<a class="btn secondary block" href="https://rustmaps.com/map/${esc(String(serverStatus.size))}_${esc(String(serverStatus.seed))}" target="_blank" rel="noopener">View on RustMaps &rarr;</a>`
+                   ? `<a class="btn secondary block" href="https://rustmaps.com/map/${esc(String(Math.floor(Number(serverStatus.size) || 0)))}_${esc(String(serverStatus.seed).replace(/\D/g, ''))}" target="_blank" rel="noopener">View on RustMaps &rarr;</a>`
                    : serverStatus.seed
                    ? `<p class="muted" style="margin:0;">Map size wasn't in the last status check, so a direct RustMaps link can't be built automatically.</p>`
                    : `<p class="muted" style="margin:0;">Seed info not available yet—it'll appear here after the next status check.</p>`

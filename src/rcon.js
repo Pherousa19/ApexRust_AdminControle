@@ -197,7 +197,7 @@ export async function fetchServerInfo(env) {
     // missing seed/size as "can't build a RustMaps link automatically"
     // rather than an error.
     seed: data.Seed ?? null,
-    size: data.WorldSize ?? data.Size ?? null,
+    size: (data.WorldSize ?? data.Size) != null ? Math.floor(Number(data.WorldSize ?? data.Size)) : null,
     // Rust's serverinfo already returns these three - just wasn't being
     // read before. Framerate/EntityCount are instantaneous at the moment
     // of the check; Uptime is in seconds since last server start.
