@@ -13,13 +13,18 @@ const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
 
 const rconPool = new Map();
 
-function executeQuickQuery(password, command) {
-  return new Promise((resolve, reject) => {
-    const pool = rconPool.get(password);
-    if (!pool || !pool.ws || pool.ws.readyState !== WebSocket.OPEN) {
-      return reject(new Error("RCON backend pipeline is offline"));
-    }
+async function executeQuickQuery(password, command) {
+  const pool = rconPool.get(password);
+  if (!pool) throw new Error("RCON backend pipeline is offline");
 
+  if (!pool.ws || pool.ws.readyState !== WebSocket.OPEN) {
+    await Promise.race([
+      pool.readyPromise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), 5000)),
+    ]);
+  }
+
+  return await new Promise((resolve, reject) => {
     const id = Math.floor(Math.random() * 100000);
     const timer = setTimeout(() => {
       pool.routingMap.delete(id);
@@ -115,11 +120,17 @@ function maintainRconConnection(password) {
     poolEntry = { clients: new Set(), routingMap: new Map(), pingInterval: null, reconnectTimeout: null };
     rconPool.set(password, poolEntry);
   }
+
+  poolEntry.readyPromise = new Promise((resolve, reject) => {
+    poolEntry.resolveReady = resolve;
+    poolEntry.rejectReady = reject;
+  });
   
   poolEntry.ws = serverWs;
 
   serverWs.on("open", () => {
     console.log("✅ [Pool] Pipeline established.");
+    poolEntry.resolveReady?.();
     if (poolEntry.reconnectTimeout) clearTimeout(poolEntry.reconnectTimeout);
     
     clearInterval(poolEntry.pingInterval);
@@ -154,6 +165,7 @@ function maintainRconConnection(password) {
 
   serverWs.on("close", (code) => {
     console.warn(`⏹️  [Pool] Connection dropped (${code}). Recovering pipe in 5s...`);
+    poolEntry.rejectReady?.(new Error(`RCON backend connection closed (${code})`));
     clearInterval(poolEntry.pingInterval);
     poolEntry.reconnectTimeout = setTimeout(() => maintainRconConnection(password), 5000);
   });
