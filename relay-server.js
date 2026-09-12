@@ -3,9 +3,9 @@
  * Advanced Multi-plexed Persistent RCON Pipeline
  */
 
-const http = require("http");
-const WebSocket = require("ws");
-const crypto = require("crypto");
+import http from "node:http";
+import crypto from "node:crypto";
+import { WebSocket, WebSocketServer } from "ws";
 
 const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
 const RCON_HOST = (process.env.RCON_HOST || "51.254.16.223").trim();
@@ -141,7 +141,7 @@ const server = http.createServer(async (req, res) => {
   res.writeHead(404).end(JSON.stringify({ error: "Not found" }));
 });
 
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocketServer({ noServer: true });
 
 server.on("upgrade", (req, socket, head) => {
   const auth = req.headers.authorization || "";
