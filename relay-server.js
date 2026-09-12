@@ -7,12 +7,19 @@ import http from "node:http";
 import crypto from "node:crypto";
 import WebSocket from "ws";
 
-const PORT = process.env.PORT || 3000;
-const RCON_HOST = process.env.RCON_HOST;
-const RCON_PORT = parseInt(process.env.RCON_PORT || "", 10);
-const RELAY_SECRET = process.env.RELAY_SECRET;
+const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
+const RCON_HOST = String(process.env.RCON_HOST || "").trim();
+const RCON_PORT = Number.parseInt(String(process.env.RCON_PORT || "").trim(), 10);
+const RELAY_SECRET = String(process.env.RELAY_SECRET || "").trim();
 
 if (!RCON_HOST || !Number.isInteger(RCON_PORT) || RCON_PORT <= 0 || !RELAY_SECRET) {
+  console.error("Relay env validation failed:", {
+    RCON_HOST: RCON_HOST || null,
+    RCON_PORT: Number.isInteger(RCON_PORT) ? RCON_PORT : null,
+    RELAY_SECRET: RELAY_SECRET ? "present" : null,
+    PORT,
+    matchingKeys: Object.keys(process.env).filter((key) => /RCON|RELAY|PORT/i.test(key)).sort(),
+  });
   throw new Error("RCON_HOST, RCON_PORT, and RELAY_SECRET environment variables are required");
 }
 
