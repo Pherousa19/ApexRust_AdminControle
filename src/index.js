@@ -36,8 +36,9 @@ import {
   renderServerActions,
   renderPlugins,
   renderAudit,
+  renderAdminUsers,
 } from "./admin-render.js";
-import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword } from "./auth.js";
+import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword, verifyPassword, hashPassword } from "./auth.js";
 import {
   buildSteamLoginUrl,
   verifySteamCallback,
@@ -61,9 +62,14 @@ import {
   markRenewalProcessed,
   enqueueDelivery,
   getPendingDeliveries,
+  claimPendingDeliveries,
   markDelivered,
   markOrderDeliveredIfComplete,
   markDeliveryFailed,
+  claimStripeEvent,
+  markStripeEventProcessed,
+  addPlayerRoleGrant,
+  removePlayerRoleGrant,
   resetDeliveryForRetry,
   getAllProducts,
   getProductByIdAny,
@@ -92,6 +98,7 @@ import {
   recordControlEvents,
   listControlEvents,
   upsertPluginRegistry,
+  replacePluginRegistry,
   listPluginRegistry,
   recordServerMetrics,
   listServerMetrics,
@@ -114,6 +121,7 @@ import {
   getOrderById,
   getUndeliveredQueueRowsForOrder,
   resetDeliveryAttempts,
+  resetFailedDeliveries,
   insertUnresolvedOrder,
   listUnresolvedOrders,
   countUnresolvedOrders,
@@ -140,6 +148,11 @@ import {
   setTicketDiscordMessageId,
   countOpenTicketsForSteamId,
   getBestActiveDiscountPercent,
+  listAdminUsers,
+  getAdminUserByUsername,
+  createAdminUser,
+  setAdminUserEnabled,
+  updateAdminUserLastLogin,
 } from "./db.js";
 import {
   createPaymentCheckout,
@@ -149,6 +162,7 @@ import {
   extractSteamId,
   cancelSubscription,
   createBillingPortalSession,
+  refundPaymentIntent,
 } from "./stripe.js";
 import { sendRconCommand, fillCommandTemplate, fetchServerInfo, fetchOnlinePlayers } from "./rcon.js";
 import { fetchSteamBansForOne, fetchSteamProfileFull } from "./steam.js";
@@ -242,6 +256,20 @@ async function handleFetch(request, env, ctx) {
     if (pathname === "/api/admin/console/ws" && request.method === "GET") {
       if (!(await isValidSession(request, env))) return new Response("Unauthorized", { status: 401 });
       return await handleConsoleWebSocket(request, env);
+    }
+
+    if (pathname === "/api/admin/console/token" && request.method === "GET") {
+      if (!(await isValidSession(request, env))) return json({ error: "Unauthorized" }, 401);
+      return json({ token: await createConsoleRelayToken(env) });
+    }
+
+    if (
+      request.method === "POST" &&
+      pathname !== "/webhook/stripe" &&
+      pathname !== "/discord/interactions" &&
+      !isSameOriginRequest(request)
+    ) {
+      return json({ error: "Cross-origin request rejected" }, 403);
     }
 
     // ---- Admin ----
@@ -818,6 +846,8 @@ async function handleStripeWebhook(request, env, ctx) {
     return new Response("Invalid signature", { status: 400 });
   }
 
+  if (!(await claimStripeEvent(env.DB, event.id, event.type))) return new Response("ok");
+
   switch (event.type) {
     case "checkout.session.completed":
       await onCheckoutCompleted(env, event.data.object, ctx);
@@ -850,9 +880,14 @@ async function handleStripeWebhook(request, env, ctx) {
       await onChargeback(env, charge);
       break;
     }
+    case "charge.refunded":
+      await onRefund(env, event.data.object, ctx);
+      break;
     default:
       break; // ignore everything else
   }
+
+  await markStripeEventProcessed(env.DB, event.id);
 
   return new Response("ok");
 }
@@ -1013,7 +1048,7 @@ async function onInvoicePaid(env, invoice, ctx) {
   // the one-time-purchase flow does, so track it directly on the subscription.
   if (sub.last_renewal_invoice_id === invoice.id) return;
 
-  const product = await getProduct(env.DB, sub.product_id);
+  const product = await getProductByIdAny(env.DB, sub.product_id);
   if (!product?.grant_command) return;
 
   // A payment just succeeded — whatever caused earlier failures (if any) is
@@ -1060,7 +1095,7 @@ async function onInvoicePaymentFailed(env, invoice, ctx) {
   const sub = await getSubscriptionByStripeId(env.DB, stripeSubscriptionId);
   if (!sub || sub.status === "canceled") return;
 
-  const product = await getProduct(env.DB, sub.product_id);
+  const product = await getProductByIdAny(env.DB, sub.product_id);
   if (!product) return;
 
   const failureCount = await incrementFailedPaymentCount(env.DB, stripeSubscriptionId);
@@ -1092,7 +1127,7 @@ async function onSubscriptionEnded(env, stripeSubscription, reason) {
 
   await updateSubscriptionStatus(env.DB, stripeSubscription.id, "canceled");
 
-  const product = await getProduct(env.DB, sub.product_id);
+  const product = await getProductByIdAny(env.DB, sub.product_id);
   await enqueueRevoke(env, product, sub.steamid, reason, { subscriptionId: sub.id });
   await revokeVipDiscordRole(env, sub.steamid);
 
@@ -1100,44 +1135,44 @@ async function onSubscriptionEnded(env, stripeSubscription, reason) {
 }
 
 async function onChargeback(env, charge) {
-  const order = await env.DB
+  const { results: orders } = await env.DB
     .prepare("SELECT * FROM orders WHERE stripe_payment_intent = ?")
     .bind(charge.payment_intent)
-    .first();
-  if (!order) return;
+    .all();
+  for (const order of orders || []) {
+    await env.DB.prepare("UPDATE orders SET status = 'chargeback' WHERE id = ?").bind(order.id).run();
+    const product = await getProductByIdAny(env.DB, order.product_id);
+    await enqueueRevoke(env, product, order.steamid, "chargeback", { orderId: order.id });
 
-  await env.DB.prepare("UPDATE orders SET status = 'chargeback' WHERE id = ?").bind(order.id).run();
-
-  const product = await getProduct(env.DB, order.product_id);
-  await enqueueRevoke(env, product, order.steamid, "chargeback", { orderId: order.id });
-
-  // Auto-ban on chargeback: revoking a subscription's permission (above)
-  // doesn't take back a one-time kit's items that already got looted or
-  // stashed in-game, and most one-time kits have no revoke_command at all
-  // since there's normally nothing to un-deliver. A chargeback means the
-  // customer got their money back from their bank while keeping whatever
-  // was delivered — banning is the standard countermeasure. Goes through
-  // the same delivery queue as every other command, so it retries on
-  // failure and shows up in Admin > Deliveries like anything else.
-  //
-  // Set CHARGEBACK_AUTO_BAN = "false" in wrangler.toml to disable this if
-  // you'd rather review chargebacks manually before banning (e.g. your
-  // playerbase skews toward chargebacks that turn out to be bank errors
-  // rather than fraud). Admin > Bans can lift a ban either way.
-  const autoBanEnabled = env.CHARGEBACK_AUTO_BAN !== "false";
-  if (autoBanEnabled) {
-    const reason = "Chargeback - payment disputed, contact support to appeal";
-    const banCommand = env.CHARGEBACK_BAN_COMMAND || 'ban {steamid} "Chargeback - payment disputed"';
-    await enqueueDelivery(env.DB, {
-      steamid: order.steamid,
-      command: fillCommandTemplate(banCommand, { steamid: order.steamid }),
-      reason: "chargeback_ban",
-      orderId: order.id,
-    });
-    await insertChargebackBan(env.DB, { steamid: order.steamid, orderId: order.id, reason });
+    const autoBanEnabled = env.CHARGEBACK_AUTO_BAN !== "false";
+    if (autoBanEnabled) {
+      const reason = "Chargeback - payment disputed, contact support to appeal";
+      const banCommand = env.CHARGEBACK_BAN_COMMAND || 'ban {steamid} "Chargeback - payment disputed"';
+      await enqueueDelivery(env.DB, {
+        steamid: order.steamid,
+        command: fillCommandTemplate(banCommand, { steamid: order.steamid }),
+        reason: "chargeback_ban",
+        orderId: order.id,
+      });
+      await insertChargebackBan(env.DB, { steamid: order.steamid, orderId: order.id, reason });
+    }
   }
 
   await drainDeliveryQueue(env);
+}
+
+async function onRefund(env, charge, ctx) {
+  const { results: orders } = await env.DB
+    .prepare("SELECT * FROM orders WHERE stripe_payment_intent = ?")
+    .bind(charge.payment_intent)
+    .all();
+  for (const order of orders || []) {
+    await env.DB.prepare("UPDATE orders SET status = 'refunded' WHERE id = ?").bind(order.id).run();
+    const product = await getProductByIdAny(env.DB, order.product_id);
+    await enqueueRevoke(env, product, order.steamid, "refund", { orderId: order.id });
+  }
+  await drainDeliveryQueue(env);
+  void ctx;
 }
 
 // Queues a product's grant_command, and its optional grant_command_2 right
@@ -1182,12 +1217,17 @@ async function enqueueRevoke(env, product, steamid, reason, refs = {}) {
 
 /** Send every pending RCON command in the queue. Failures stay queued for the next run. */
 async function drainDeliveryQueue(env) {
-  const pending = await getPendingDeliveries(env.DB);
+  const pending = await claimPendingDeliveries(env.DB);
   for (const job of pending) {
     try {
       await sendRconCommand(env, job.command);
       await markDelivered(env.DB, job.id);
       await markOrderDeliveredIfComplete(env.DB, job.order_id);
+      if (job.discord_role_id && job.discord_role_action === "grant") {
+        await addPlayerRoleGrant(env.DB, job.steamid, job.discord_role_id);
+      } else if (job.discord_role_id && job.discord_role_action === "revoke") {
+        await removePlayerRoleGrant(env.DB, job.steamid, job.discord_role_id);
+      }
     } catch (err) {
       console.error(`RCON delivery failed for job ${job.id} (${job.command}):`, err.message);
       await markDeliveryFailed(env.DB, job.id, err.message);
@@ -1301,9 +1341,16 @@ async function fetchOnlinePlayersForActions(env) {
   }
 }
 
-/** Rust does not expose a built-in JSON item catalog command. */
 async function fetchItemCatalog(env) {
-  return null;
+  try {
+    const raw = await sendRconCommand(env, "apex.items", { timeoutMs: 6000 });
+    const envelope = JSON.parse(raw);
+    const parsed = envelope?.Message ? JSON.parse(envelope.Message) : envelope;
+    return parsed?.items ?? null;
+  } catch (err) {
+    console.error("fetchItemCatalog failed:", err.message);
+    return null;
+  }
 }
 
 /** Fetches the player roster through RCON/relay, optionally filtered server-side. */
@@ -1575,7 +1622,7 @@ async function collectServerTelemetry(env) {
   try {
     const raw = await sendRconCommand(env, "oxide.plugins", { timeoutMs: 6000 });
     const plugins = parsePluginList(raw);
-    if (plugins.length) await upsertPluginRegistry(env.DB, plugins);
+    if (plugins.length) await replacePluginRegistry(env.DB, plugins);
   } catch (err) {
     console.error("Server telemetry collection failed:", err.message);
   }
@@ -1586,8 +1633,11 @@ function parsePluginList(raw) {
   if (!text) return [];
 
   try {
-    const parsed = JSON.parse(text);
-    const rows = Array.isArray(parsed) ? parsed : parsed.plugins;
+    let parsed = JSON.parse(text);
+    if (parsed && typeof parsed.Message === "string") {
+      try { parsed = JSON.parse(parsed.Message); } catch { parsed = parsed.Message; }
+    }
+    const rows = Array.isArray(parsed) ? parsed : parsed?.plugins;
     if (Array.isArray(rows)) {
       return rows.map((plugin) => ({
         name: plugin.name || plugin.Name,
@@ -1598,14 +1648,23 @@ function parsePluginList(raw) {
     }
   } catch {}
 
-  return text
+  const plainText = (() => {
+    try {
+      const parsed = JSON.parse(text);
+      return parsed?.Message || text;
+    } catch {
+      return text;
+    }
+  })();
+
+  return String(plainText)
     .split(/\r?\n/)
     .map((line) => line.replace(/^[\s\-|]+/, "").trim())
     .map((line) => {
       const match = line.match(/^([^\s(]+)(?:\s+v?([\d.]+))?/);
       return match ? { name: match[1], version: match[2] || null, status: "online", enabled: true } : null;
     })
-    .filter((plugin) => plugin && plugin.name && !/^(loaded|plugins|total|name)$/i.test(plugin.name));
+    .filter((plugin) => plugin && plugin.name && !/^(loaded|plugins|total|name|message|identifier|type|stacktrace)$/i.test(plugin.name));
 }
 
 async function handleConsoleWebSocket(request, env) {
@@ -1644,6 +1703,27 @@ async function handleConsoleWebSocket(request, env) {
   return new Response(null, { status: 101, webSocket: clientSocket });
 }
 
+async function createConsoleRelayToken(env) {
+  const expires = Math.floor(Date.now() / 1000) + 60;
+  const payload = `${expires}.${env.RCON_PASSWORD}`;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(env.RELAY_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
+  return `${base64UrlEncode(payload)}.${base64UrlEncode(signature)}`;
+}
+
+function base64UrlEncode(value) {
+  const bytes = typeof value === "string" ? new TextEncoder().encode(value) : new Uint8Array(value);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
 // ============================================================
 // Admin
 // ============================================================
@@ -1663,23 +1743,94 @@ async function handleAdmin(request, env, url, storeName, ctx) {
 
   if (pathname === "/admin/login" && method === "POST") {
     const form = await request.formData();
-    if (checkPassword(env, form.get("password"))) {
-      const cookie = await createSessionCookie(env);
+    const username = String(form.get("username") || "admin").trim();
+    const submitted = String(form.get("password") || "");
+
+    const adminUser = username ? await getAdminUserByUsername(env.DB, username) : null;
+    const legacyMatch = checkPassword(env, submitted);
+    const accountMatch = adminUser && adminUser.enabled && await verifyPassword(submitted, adminUser.password_hash);
+
+    if (adminUser ? accountMatch : legacyMatch) {
+      const userPayload = adminUser ? { username: adminUser.username, role: adminUser.role || "admin" } : { username: "admin", role: "admin" };
+      const cookie = await createSessionCookie(env, userPayload);
+      if (adminUser) {
+        await updateAdminUserLastLogin(env.DB, adminUser.id);
+      }
+      await recordControlEvents(env.DB, [{
+        eventType: "ADMIN_LOGIN_SUCCESS",
+        source: "admin",
+        severity: "info",
+        payload: { mode: adminUser ? "account" : "password", username: userPayload.username, role: userPayload.role },
+      }]);
       return redirect("/admin", { "Set-Cookie": cookie });
     }
-    return new Response(renderLogin({ storeName, error: "Incorrect password." }), {
+
+    await recordControlEvents(env.DB, [{
+      eventType: "ADMIN_LOGIN_FAILED",
+      source: "admin",
+      severity: "warning",
+      payload: { mode: adminUser ? "account" : "password", username: username || null },
+    }]);
+    return new Response(renderLogin({ storeName, error: "Incorrect username or password." }), {
       status: 401,
       headers: { "content-type": "text/html; charset=utf-8" },
     });
   }
 
   if (pathname === "/admin/logout") {
+    await recordControlEvents(env.DB, [{
+      eventType: "ADMIN_LOGOUT",
+      source: "admin",
+      severity: "info",
+      payload: { reason: "manual" },
+    }]);
     return redirect("/admin/login", { "Set-Cookie": clearSessionCookie() });
   }
 
   // ---- Everything else requires a valid session ----
-  if (!(await isValidSession(request, env))) {
+  if (!(await isValidSession(request, env, "admin"))) {
     return redirect("/admin/login");
+  }
+
+  if (pathname === "/admin/users" && method === "GET") {
+    const users = await listAdminUsers(env.DB);
+    return html(renderAdminUsers({ storeName, users, flash: url.searchParams.get("flash") }));
+  }
+
+  if (pathname === "/admin/users" && method === "POST") {
+    const form = await request.formData();
+    const username = String(form.get("username") || "").trim();
+    const password = String(form.get("password") || "");
+    const role = ["admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
+    if (!username || !password || password.length < 8) {
+      return redirect(`/admin/users?flash=${encodeURIComponent("Username and a password of at least 8 characters are required.")}`);
+    }
+    if (await getAdminUserByUsername(env.DB, username)) {
+      return redirect(`/admin/users?flash=${encodeURIComponent("That username already exists.")}`);
+    }
+    const passwordHash = await hashPassword(password);
+    await createAdminUser(env.DB, { username, passwordHash, role });
+    return redirect(`/admin/users?flash=${encodeURIComponent(`Created admin account "${username}".`)}`);
+  }
+
+  const adminUserToggleMatch = pathname.match(/^\/admin\/users\/(\d+)\/toggle$/);
+  if (adminUserToggleMatch && method === "POST") {
+    const users = await listAdminUsers(env.DB);
+    const target = users.find((user) => String(user.id) === adminUserToggleMatch[1]);
+    if (target) {
+      await setAdminUserEnabled(env.DB, target.id, !target.enabled);
+    }
+    return redirect(`/admin/users?flash=${encodeURIComponent("Admin account status updated.")}`);
+  }
+
+  if (method === "POST" && !isSameOriginRequest(request)) {
+    await recordControlEvents(env.DB, [{
+      eventType: "ADMIN_CROSS_ORIGIN_REJECTED",
+      source: "admin",
+      severity: "warning",
+      payload: { path: pathname, origin: request.headers.get("Origin") || null, referer: request.headers.get("Referer") || null },
+    }]);
+    return new Response("Cross-origin request rejected", { status: 403 });
   }
 
   if (pathname === "/admin" && method === "GET") {
@@ -1766,6 +1917,28 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     const [orders, total] = await Promise.all([listOrders(env.DB, { limit, offset: page * limit }), countOrders(env.DB)]);
     const totalPages = Math.max(1, Math.ceil(total / limit));
     return html(renderOrders({ storeName, orders, page, hasMore: (page + 1) * limit < total, totalPages, total, flash: url.searchParams.get("flash") }));
+  }
+
+  const refundMatch = pathname.match(/^\/admin\/orders\/(\d+)\/refund$/);
+  if (refundMatch && method === "POST") {
+    const order = await getOrderById(env.DB, Number(refundMatch[1]));
+    if (!order) return redirect("/admin/orders?flash=" + encodeURIComponent("Order not found."));
+    if (order.status !== "paid") return redirect("/admin/orders?flash=" + encodeURIComponent("Only paid orders can be refunded."));
+    if (!order.stripe_payment_intent) return redirect("/admin/orders?flash=" + encodeURIComponent("This order has no Stripe payment intent."));
+
+    try {
+      await refundPaymentIntent(env, order.stripe_payment_intent);
+      await recordControlEvents(env.DB, [{
+        eventType: "ADMIN_REFUND_REQUESTED",
+        severity: "warning",
+        source: "admin",
+        targetId: String(order.id),
+        payload: { paymentIntent: order.stripe_payment_intent, steamid: order.steamid },
+      }]);
+      return redirect("/admin/orders?flash=" + encodeURIComponent("Refund requested. Stripe will process the refund webhook and revoke access."));
+    } catch (err) {
+      return redirect("/admin/orders?flash=" + encodeURIComponent(`Refund failed: ${err.message}`));
+    }
   }
 
   // Re-delivers a specific order's grant command(s). Handles both real
@@ -1902,6 +2075,24 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     return html(renderDeliveries({ storeName, deliveries }));
   }
 
+  if (pathname === "/admin/deliveries/retry-failed" && method === "POST") {
+    const count = await resetFailedDeliveries(env.DB);
+    await recordControlEvents(env.DB, [{ eventType: "ADMIN_DELIVERY_BULK_RETRY", source: "admin", payload: { count } }]);
+    await drainDeliveryQueue(env);
+    return redirect(`/admin/deliveries?flash=${encodeURIComponent(`Reset ${count} failed deliveries.`)}`);
+  }
+
+  if ((pathname === "/admin/export/orders.csv" || pathname === "/admin/export/deliveries.csv") && method === "GET") {
+    const rows = pathname.endsWith("orders.csv")
+      ? await listOrders(env.DB, { limit: 10000, offset: 0 })
+      : await listDeliveryQueue(env.DB, { limit: 10000 });
+    const columns = pathname.endsWith("orders.csv")
+      ? ["id", "created_at", "product_name", "steamid", "customer_email", "amount_cents", "payment_method", "status", "delivered"]
+      : ["id", "created_at", "steamid", "command", "reason", "attempts", "delivered", "last_error"];
+    const csv = [columns.join(","), ...rows.map((row) => columns.map((column) => csvCell(row[column])).join(","))].join("\n");
+    return new Response(csv, { headers: { "content-type": "text/csv; charset=utf-8", "content-disposition": `attachment; filename=${pathname.endsWith("orders.csv") ? "orders" : "deliveries"}.csv` } });
+  }
+
   const deliveryRetryMatch = pathname.match(/^\/admin\/deliveries\/(\d+)\/retry$/);
   if (deliveryRetryMatch && method === "POST") {
     await resetDeliveryForRetry(env.DB, Number(deliveryRetryMatch[1]));
@@ -1929,6 +2120,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     try {
       await sendRconCommand(env, `oxide.${actionType} ${rconArg(plugin)}`, { timeoutMs: 8000 });
       await collectServerTelemetry(env);
+      await recordControlEvents(env.DB, [{ eventType: "ADMIN_PLUGIN_ACTION", source: "admin", targetId: plugin, payload: { action: actionType } }]);
       return redirect(`/admin/plugins?flash=${encodeURIComponent(`${plugin} ${actionType} command sent.`)}`);
     } catch (err) {
       return redirect(`/admin/plugins?flash=${encodeURIComponent(`${plugin} ${actionType} failed: ${err.message}`)}`);
@@ -2110,7 +2302,41 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     // serverinfo call here would add latency, and the cache is already
     // refreshed every 2 minutes.
     const [serverStatusRaw, wipeblockStatus, recentActivity, recentMetrics, caseCatalog, items, kits] = await Promise.all([
-      getServerStatus(env.DB),
+      fetchServerInfo(env)
+        .then(async (info) => {
+          await upsertServerStatus(env.DB, {
+            online: true,
+            players: info.players,
+            maxPlayers: info.maxPlayers,
+            queued: info.queued,
+            hostname: info.hostname,
+            map: info.map,
+            seed: info.seed,
+            size: info.size,
+            framerate: info.framerate,
+            entityCount: info.entityCount,
+            uptimeSeconds: info.uptimeSeconds,
+          });
+          return {
+            online: 1,
+            players: info.players,
+            max_players: info.maxPlayers,
+            queued: info.queued,
+            hostname: info.hostname,
+            map: info.map,
+            seed: info.seed,
+            size: info.size,
+            framerate: info.framerate,
+            entity_count: info.entityCount,
+            uptime_seconds: info.uptimeSeconds,
+            last_error: null,
+            updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+          };
+        })
+        .catch(async (err) => {
+          console.error("Live admin serverinfo failed:", err.message);
+          return await getServerStatus(env.DB);
+        }),
       fetchWipeBlockStatus(env),
       fetchRecentActivity(env, { count: 40 }),
       listServerMetrics(env.DB, { limit: 1 }),
@@ -2152,7 +2378,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     ]);
 
     return html(renderServerActions({
-      env,
+      relayUrl: env.RELAY_URL,
       storeName,
       serverStatus,
       wipeblockStatus,
@@ -2540,6 +2766,22 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   }
 
   return new Response("Not found", { status: 404 });
+}
+
+function csvCell(value) {
+  const text = String(value ?? "");
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function isSameOriginRequest(request) {
+  const requestOrigin = new URL(request.url).origin;
+  const origin = request.headers.get("Origin");
+  if (origin) return origin === requestOrigin;
+  const referer = request.headers.get("Referer");
+  if (referer) {
+    try { return new URL(referer).origin === requestOrigin; } catch { return false; }
+  }
+  return true;
 }
 
 function validateSlug(id) {

@@ -174,6 +174,13 @@ export async function cancelSubscription(env, stripeSubscriptionId) {
   return await stripe.subscriptions.cancel(stripeSubscriptionId);
 }
 
+export async function refundPaymentIntent(env, paymentIntent, amountCents = null) {
+  const stripe = getStripe(env);
+  const params = { payment_intent: paymentIntent };
+  if (amountCents != null) params.amount = amountCents;
+  return await stripe.refunds.create(params);
+}
+
 /** Creates a Stripe-hosted Billing Portal session for a customer — lets them
  * update their card on file and download past invoices without building
  * any of that UI ourselves. Cancellation still goes through the in-store

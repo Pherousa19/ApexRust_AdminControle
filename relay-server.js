@@ -8,9 +8,13 @@ const WebSocket = require("ws");
 const crypto = require("crypto");
 
 const PORT = process.env.PORT || 3000;
-const RCON_HOST = process.env.RCON_HOST || "51.254.16.223";
-const RCON_PORT = parseInt(process.env.RCON_PORT || "25676", 10);
-const RELAY_SECRET = process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f";
+const RCON_HOST = process.env.RCON_HOST;
+const RCON_PORT = parseInt(process.env.RCON_PORT || "", 10);
+const RELAY_SECRET = process.env.RELAY_SECRET;
+
+if (!RCON_HOST || !Number.isInteger(RCON_PORT) || RCON_PORT <= 0 || !RELAY_SECRET) {
+  throw new Error("RCON_HOST, RCON_PORT, and RELAY_SECRET environment variables are required");
+}
 
 const rconPool = new Map();
 

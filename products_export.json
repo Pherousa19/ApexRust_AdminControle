@@ -1,0 +1,6 @@
+
+{
+  "error": {
+    "text": "Couldn't find a D1 DB with the name or binding 'apex-rust-store' in your wrangler.toml file."
+  }
+}

@@ -67,7 +67,7 @@ function adminLayout({ storeName, active, body, flash }) {
     "/admin": "Overview", "/admin/products": "Products", "/admin/orders": "Orders", "/admin/unresolved": "Unresolved Orders",
     "/admin/subscriptions": "Subscriptions", "/admin/deliveries": "Deliveries", "/admin/gift-cards": "Gift Cards", "/admin/discounts": "Discounts",
     "/admin/discord-perks": "Discord Perks", "/admin/pages": "Pages", "/admin/tickets": "Support Tickets", "/admin/players": "Players",
-    "/admin/server": "Server Console", "/admin/plugins": "Plugins", "/admin/audit": "Activity", "/admin/bans": "Bans",
+    "/admin/server": "Server Console", "/admin/plugins": "Plugins", "/admin/audit": "Activity", "/admin/bans": "Bans", "/admin/users": "Admin Accounts",
   }[active] || "Admin";
   return `<!doctype html>
 <html lang="en">
@@ -96,6 +96,7 @@ function adminLayout({ storeName, active, body, flash }) {
       ${navItem("/admin/audit", "Activity", "activity")}
       ${navItem("/admin/players", "Players", "users")}
       <div class="admin-nav-label">Manage</div>
+      ${navItem("/admin/users", "Admin Accounts", "settings")}
       ${navItem("/admin/bans", "Bans", "ban")}
       ${navItem("/admin/plugins", "Plugins", "plugin")}
       ${navItem("/admin/tickets", "Support", "ticket")}
@@ -156,6 +157,8 @@ export function renderLogin({ storeName, error }) {
     </div>
     ${error ? `<div class="notice notice-danger">${esc(error)}</div>` : ""}
     <form method="POST" action="/admin/login">
+      <label>Username</label>
+      <input type="text" name="username" value="admin" autocomplete="username" required>
       <label>Password</label>
       <input type="password" name="password" autofocus required>
       <button class="btn block" type="submit" style="margin-top:16px;">Log In</button>
@@ -545,6 +548,7 @@ export function renderOrders({ storeName, orders, page, hasMore, totalPages, tot
                <button class="link-btn" type="submit">Retry</button>
              </form>`
           : ""}
+          ${o.status === "paid" && o.stripe_payment_intent ? `<form method="POST" action="/admin/orders/${o.id}/refund" style="display:inline;" onsubmit="return confirm('Request a full Stripe refund for this order?');"><button class="link-btn link-btn-danger" type="submit">Refund</button></form>` : ""}
       </td>
     </tr>`
     )
@@ -553,7 +557,10 @@ export function renderOrders({ storeName, orders, page, hasMore, totalPages, tot
   const body = `
   <div class="admin-header-row">
     <h1>Orders</h1>
-    ${typeof total === "number" ? `<div class="muted">${total} total</div>` : ""}
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="btn secondary" href="/admin/export/orders.csv">Export CSV</a>
+      ${typeof total === "number" ? `<div class="muted">${total} total</div>` : ""}
+    </div>
   </div>
   <p class="muted" style="margin-top:-10px; margin-bottom:16px; font-size:13px;">"Pending" means the order was paid but its grant command hasn't been delivered in-game yet — click Retry once the underlying issue (usually RCON connectivity) is fixed. Check <a href="/admin/deliveries">Deliveries</a> for the failure reason first.</p>
   <table class="admin-table">
@@ -620,7 +627,7 @@ export function renderDeliveries({ storeName, deliveries }) {
     .join("");
 
   const body = `
-  <h1>Delivery Queue</h1>
+  <div class="admin-header-row"><h1>Delivery Queue</h1><div style="display:flex;gap:10px;"><a class="btn secondary" href="/admin/export/deliveries.csv">Export CSV</a><form method="POST" action="/admin/deliveries/retry-failed" onsubmit="return confirm('Reset and retry every failed delivery?');"><button class="btn secondary" type="submit">Retry Failed</button></form></div></div>
   <p class="muted">Every RCON command sent to the game server — grants, revokes, renewals. Retries automatically every 2 minutes until delivered or 5 attempts fail.</p>
   <table class="admin-table">
     <thead><tr><th>Time</th><th>SteamID</th><th>Command</th><th>Reason</th><th>Status</th><th>Attempts</th><th>Last Error</th><th></th></tr></thead>
@@ -1148,7 +1155,7 @@ function fmtUptime(seconds) {
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
-export function renderServerActions({ storeName, serverStatus, wipeblockStatus, recentActivity, metrics, consoleCommand, consoleOutput, caseCatalog, items, kits, playerPositions, mapImageUrl, flash }) {
+export function renderServerActions({ storeName, relayUrl, serverStatus, wipeblockStatus, recentActivity, metrics, consoleCommand, consoleOutput, caseCatalog, items, kits, playerPositions, mapImageUrl, flash }) {
   const online = !!serverStatus?.online;
   const memoryPercent = metrics?.memory_percent ?? null;
   const cpuPercent = metrics?.cpu_percent ?? null;
@@ -1171,13 +1178,13 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
       <div class="hero-card-actions"><a class="btn secondary" href="/admin">Overview</a><a class="btn secondary" href="/admin/plugins">Plugins</a></div>
     </div>`;
 
-  // ---- Live console Stream ----
+  // ---- Console command runner ----
   const consolePanel = `<div class="section-card wide">
-        <div class="section-card-head"><div><h3>Live Console Stream</h3><p>Runs any RCON command directly against the server, live with a 2-way real-time background listener.</p></div></div>
+      <div class="section-card-head"><div><h3>Live Server Console</h3><p>Watch live Rust console traffic and run commands through the authenticated relay.</p></div></div>
         <div class="section-card-body" style="padding-top:0;">
           <div class="console-shell">
             <div class="console-shell-head"><i></i><i></i><i></i><span>rcon@apex-rust</span></div>
-            <div class="console-output" style="white-space: pre-wrap; font-family: var(--mono); max-height: 400px; overflow-y: auto; background: #1a1a1a; color: #fff; padding: 14px; border-radius: 4px; line-height: 1.5; font-size: 13px;">&gt; Connecting to streaming multiplexer...</div>
+            <div class="console-output" id="liveConsoleOutput" style="white-space: pre-wrap; font-family: var(--mono); height: 420px; max-height: 420px; overflow-y: auto; overflow-x: hidden; overflow-wrap: anywhere; background: #1a1a1a; color: #fff; padding: 14px; border-radius: 4px; line-height: 1.5; font-size: 13px;">${consoleOutput ? `&gt; ${esc(consoleCommand || "command")}\n${esc(consoleOutput)}` : "> Connecting to live relay..."}</div>
             <form method="POST" action="/admin/console/exec" class="console-input-row" id="consoleForm">
               <span class="prompt">&gt;</span>
               <input type="text" name="command" value="" placeholder="e.g. playerlist, serverinfo, status" autocomplete="off" id="consoleInput">
@@ -1186,6 +1193,60 @@ export function renderServerActions({ storeName, serverStatus, wipeblockStatus, 
           </div>
         </div>
       </div>`;
+
+  const liveConsoleScript = `
+    <script>
+      (() => {
+        const output = document.getElementById("liveConsoleOutput");
+        if (!output) return;
+        const MAX_MESSAGES = 500;
+        const MAX_BUFFER_CHARS = 100000;
+        const messages = output.textContent ? [output.textContent] : [];
+        const append = (value) => {
+          messages.push(String(value));
+          while (messages.length > MAX_MESSAGES) messages.shift();
+          while (messages.length > 1 && messages.join("\\n").length > MAX_BUFFER_CHARS) messages.shift();
+          output.textContent = messages.join("\\n");
+          output.scrollTop = output.scrollHeight;
+        };
+        fetch("/api/admin/console/token")
+          .then((response) => response.json())
+          .then(({ token }) => {
+            if (!token) throw new Error("No console token");
+            const socketUrl = "${relayUrl}".replace(/^http/, "ws") + "/?token=" + encodeURIComponent(token);
+            const socket = new WebSocket(socketUrl);
+            socket.onopen = () => append("[LIVE RELAY CONNECTED]");
+          socket.onmessage = (event) => {
+          try {
+            const frame = JSON.parse(event.data);
+                const message = frame.Message ?? event.data;
+                append(typeof message === "string" ? message : JSON.stringify(message));
+          } catch {
+            append(event.data);
+          }
+            };
+            socket.onerror = () => append("[LIVE RELAY ERROR]");
+            socket.onclose = () => append("[LIVE RELAY DISCONNECTED]");
+
+            const form = document.getElementById("consoleForm");
+            const input = document.getElementById("consoleInput");
+            form?.addEventListener("submit", (event) => {
+              event.preventDefault();
+              const command = input?.value.trim();
+              if (!command) return;
+              if (socket.readyState !== WebSocket.OPEN) {
+                append("[LIVE RELAY NOT CONNECTED]");
+                return;
+              }
+              append("> " + command);
+              socket.send(JSON.stringify({ Identifier: Math.floor(Math.random() * 100000), Message: command, Name: "WebRcon" }));
+              if (input) input.value = "";
+            });
+          })
+          .catch((error) => append("[LIVE RELAY ERROR: " + error.message + "]"));
+      })();
+    </script>
+  `;
 
   // ---- Map & Seed ----
   const mapPanel = `
@@ -1433,46 +1494,6 @@ const activityPanel = `
     </div>
   </div>`;
 
-  // Real-Time 2-Way WebSocket Stream Client Engine Script Block
-  const liveConsoleStreamScript = `
-    <script>
-      (function() {
-        const consoleLogBox = document.querySelector(".console-output");
-        if (!consoleLogBox) return;
-
-        const socketUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/api/admin/console/ws";
-        
-        console.log("Stream initialized targeting multiplexer:", socketUrl);
-        const ws = new WebSocket(socketUrl);
-
-        ws.onopen = () => {
-          consoleLogBox.textContent = "[CONNECTED TO LIVE RELAY CHANNEL - LISTENING FOR UPSTREAM EVENTS]";
-        };
-
-        ws.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            if (data && data.Message) {
-              consoleLogBox.textContent += "\\n" + data.Message;
-              consoleLogBox.scrollTop = consoleLogBox.scrollHeight;
-            }
-          } catch(e) {
-            consoleLogBox.textContent += "\\n" + event.data;
-            consoleLogBox.scrollTop = consoleLogBox.scrollHeight;
-          }
-        };
-
-        ws.onerror = (err) => {
-          consoleLogBox.textContent += "\\n[STREAM ERROR: Verification or endpoint connection mismatch]";
-        };
-
-        ws.onclose = () => {
-          consoleLogBox.textContent += "\\n[STREAM DISCONNECTED: Pipe background loop inactive]";
-        };
-      })();
-    </script>
-  `;
-
   const body = `
   <section class="page-heading">
     <div><span class="eyebrow">GAME OPERATIONS</span><h1>Server console</h1><p>Live RCON console, telemetry, world/event controls and broadcasts. For per-player actions (give/kick/ban/freeze), use a player's card under <a href="/admin/players">Players</a>.</p></div>
@@ -1492,11 +1513,66 @@ const activityPanel = `
     ${discordPanel}
     ${activityPanel}
   </div>
-  ${liveConsoleStreamScript}
+  ${liveConsoleScript}
   `;
   return adminLayout({ storeName, active: "/admin/server", body, flash });
 }
 
+
+export function renderAdminUsers({ storeName, users, flash }) {
+  const rows = (users || [])
+    .map((user) => `
+      <tr>
+        <td><strong>${esc(user.username)}</strong></td>
+        <td><span class="badge ${user.role === "admin" ? "badge-active" : user.role === "auditor" ? "badge-warning" : "badge-muted"}">${esc(user.role || "admin")}</span></td>
+        <td>${user.enabled ? '<span class="badge badge-active">Enabled</span>' : '<span class="badge badge-muted">Disabled</span>'}</td>
+        <td>${user.last_login_at ? fmtDate(user.last_login_at) : "—"}</td>
+        <td>${fmtDate(user.created_at)}</td>
+        <td class="admin-actions">
+          <form method="POST" action="/admin/users/${user.id}/toggle" style="display:inline;">
+            <button class="link-btn" type="submit">${user.enabled ? "Disable" : "Enable"}</button>
+          </form>
+        </td>
+      </tr>
+    `).join("");
+
+  const body = `
+    <div class="admin-header-row">
+      <h1>Admin Accounts</h1>
+    </div>
+    <div class="admin-panel" style="margin-bottom:24px;">
+      <h2>Create account</h2>
+      <form method="POST" action="/admin/users" class="admin-form">
+        <div class="form-row">
+          <div>
+            <label>Username</label>
+            <input type="text" name="username" placeholder="ops" required>
+          </div>
+          <div>
+            <label>Role</label>
+            <select name="role">
+              <option value="admin">Admin</option>
+              <option value="auditor">Auditor</option>
+              <option value="moderator">Moderator</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Password</label>
+            <input type="password" name="password" minlength="8" required>
+          </div>
+        </div>
+        <button class="btn" type="submit" style="margin-top:14px;">Create account</button>
+      </form>
+    </div>
+    <table class="admin-table">
+      <thead><tr><th>Username</th><th>Role</th><th>Status</th><th>Last login</th><th>Created</th><th></th></tr></thead>
+      <tbody>${rows || `<tr><td colspan="6" class="muted">No admin accounts yet.</td></tr>`}</tbody>
+    </table>
+  `;
+  return adminLayout({ storeName, active: "/admin/users", body, flash });
+}
 
 export function renderGiftCardsAdmin({ storeName, giftCards, flash }) {
   const rows = giftCards

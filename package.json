@@ -2,11 +2,15 @@
   "name": "apex-rust-store",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "test": "node --test tests/**/*.test.js",
     "db:init": "wrangler d1 execute apex-rust-store-v2 --local --file=./schema.sql",
-    "db:init:remote": "wrangler d1 execute apex-rust-store-v2 --remote --file=./schema.sql"
+    "db:init:remote": "wrangler d1 execute apex-rust-store-v2 --remote --file=./schema.sql",
+    "db:migrate:integrity": "wrangler d1 execute apex-rust-store-v2 --remote --file=./migration_integrity.sql",
+    "db:migrate:stripe-events": "wrangler d1 execute apex-rust-store-v2 --remote --file=./migration_stripe_event_status.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

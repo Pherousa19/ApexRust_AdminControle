@@ -97,10 +97,10 @@ export async function updateSubscriptionStatus(db, stripeSubscriptionId, status)
 export async function enqueueDelivery(db, entry) {
   await db
     .prepare(
-      `INSERT INTO delivery_queue (steamid, command, reason, order_id, subscription_id)
-       VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO delivery_queue (steamid, command, reason, order_id, subscription_id, discord_role_id, discord_role_action)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
     )
-    .bind(entry.steamid, entry.command, entry.reason, entry.orderId ?? null, entry.subscriptionId ?? null)
+    .bind(entry.steamid, entry.command, entry.reason, entry.orderId ?? null, entry.subscriptionId ?? null, entry.discordRoleId ?? null, entry.discordRoleAction ?? null)
     .run();
 }
 
@@ -112,8 +112,24 @@ export async function getPendingDeliveries(db, limit = 20) {
   return results;
 }
 
+export async function claimPendingDeliveries(db, limit = 20) {
+  const claimToken = crypto.randomUUID();
+  const { results } = await db.prepare(
+    `UPDATE delivery_queue
+     SET processing = 1, claimed_at = datetime('now'), claim_token = ?
+     WHERE id IN (
+       SELECT id FROM delivery_queue
+       WHERE delivered = 0 AND attempts < 5
+         AND (processing = 0 OR claimed_at < datetime('now', '-10 minutes'))
+       ORDER BY id ASC LIMIT ?
+     )
+     RETURNING *`
+  ).bind(claimToken, limit).all();
+  return results || [];
+}
+
 export async function markDelivered(db, id) {
-  await db.prepare("UPDATE delivery_queue SET delivered = 1 WHERE id = ?").bind(id).run();
+  await db.prepare("UPDATE delivery_queue SET delivered = 1, processing = 0, claimed_at = NULL, claim_token = NULL WHERE id = ?").bind(id).run();
 }
 
 export async function getDeliveryQueueRow(db, id) {
@@ -125,16 +141,35 @@ export async function getDeliveryQueueRow(db, id) {
 // cause (RCON config, server downtime, etc.) has actually been fixed.
 export async function resetDeliveryForRetry(db, id) {
   await db
-    .prepare("UPDATE delivery_queue SET attempts = 0, last_error = NULL WHERE id = ?")
+    .prepare("UPDATE delivery_queue SET attempts = 0, processing = 0, claimed_at = NULL, claim_token = NULL, last_error = NULL WHERE id = ?")
     .bind(id)
     .run();
 }
 
 export async function markDeliveryFailed(db, id, errorMessage) {
   await db
-    .prepare("UPDATE delivery_queue SET attempts = attempts + 1, last_error = ? WHERE id = ?")
+    .prepare("UPDATE delivery_queue SET attempts = attempts + 1, processing = 0, claimed_at = NULL, claim_token = NULL, last_error = ? WHERE id = ?")
     .bind(String(errorMessage).slice(0, 500), id)
     .run();
+}
+
+export async function claimStripeEvent(db, eventId, eventType) {
+  try {
+    await db.prepare("INSERT INTO stripe_events (event_id, event_type, status) VALUES (?, ?, 'processing')").bind(eventId, eventType).run();
+    return true;
+  } catch {
+    const row = await db.prepare("SELECT status, processed_at FROM stripe_events WHERE event_id = ?").bind(eventId).first();
+    if (!row || row.status === "processed") return false;
+    if (row.processed_at && row.processed_at < new Date(Date.now() - 10 * 60 * 1000).toISOString().slice(0, 19).replace("T", " ")) {
+      await db.prepare("UPDATE stripe_events SET status = 'processing', processed_at = datetime('now') WHERE event_id = ?").bind(eventId).run();
+      return true;
+    }
+    return false;
+  }
+}
+
+export async function markStripeEventProcessed(db, eventId) {
+  await db.prepare("UPDATE stripe_events SET status = 'processed', processed_at = datetime('now') WHERE event_id = ?").bind(eventId).run();
 }
 
 /** Flips orders.delivered to 1 once every delivery_queue row tied to this
@@ -379,6 +414,13 @@ export async function resetDeliveryAttempts(db, orderId) {
     .prepare("UPDATE delivery_queue SET attempts = 0, last_error = NULL WHERE order_id = ? AND delivered = 0")
     .bind(orderId)
     .run();
+}
+
+export async function resetFailedDeliveries(db) {
+  const result = await db.prepare(
+    "UPDATE delivery_queue SET attempts = 0, processing = 0, claimed_at = NULL, claim_token = NULL, last_error = NULL WHERE delivered = 0 AND attempts >= 5"
+  ).run();
+  return result.meta?.changes || 0;
 }
 
 export async function listSubscriptions(db, { limit = 50, offset = 0 } = {}) {
@@ -980,6 +1022,15 @@ export async function removePlayerRoleGrant(db, steamid, discordRoleId) {
   await db.prepare("DELETE FROM player_role_grants WHERE steamid = ? AND discord_role_id = ?").bind(steamid, discordRoleId).run();
 }
 
+export async function hasPendingDiscordRoleDelivery(db, steamid, discordRoleId, action) {
+  const row = await db.prepare(
+    `SELECT id FROM delivery_queue
+     WHERE steamid = ? AND discord_role_id = ? AND discord_role_action = ? AND delivered = 0 AND attempts < 5
+     LIMIT 1`
+  ).bind(steamid, discordRoleId, action).first();
+  return !!row;
+}
+
 // ============================================================
 // Support tickets
 // ============================================================
@@ -1145,11 +1196,48 @@ export async function upsertPluginRegistry(db, plugins = [], serverKey = 'primar
   return count;
 }
 
+export async function replacePluginRegistry(db, plugins = [], serverKey = 'primary') {
+  await db.prepare("DELETE FROM plugin_registry WHERE server_key = ?").bind(serverKey).run();
+  return await upsertPluginRegistry(db, plugins, serverKey);
+}
+
 export async function listPluginRegistry(db, serverKey = 'primary') {
   const { results } = await db.prepare(`SELECT * FROM plugin_registry WHERE server_key = ? ORDER BY
     CASE status WHEN 'online' THEN 0 WHEN 'warning' THEN 1 WHEN 'offline' THEN 2 ELSE 3 END,
     plugin_name ASC`).bind(serverKey).all();
   return results || [];
+}
+
+export async function listAdminUsers(db) {
+  const { results } = await db.prepare("SELECT * FROM admin_users ORDER BY username ASC").all();
+  return results || [];
+}
+
+export async function getAdminUserByUsername(db, username) {
+  return await db.prepare("SELECT * FROM admin_users WHERE username = ?").bind(String(username || "").trim()).first();
+}
+
+export async function createAdminUser(db, { username, passwordHash, role = "admin", enabled = true }) {
+  const { meta } = await db.prepare(
+    "INSERT INTO admin_users (username, password_hash, role, enabled, created_at, updated_at) VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(String(username || "").trim(), String(passwordHash || ""), String(role || "admin"), enabled ? 1 : 0).run();
+  return Number(meta.last_row_id);
+}
+
+export async function setAdminUserEnabled(db, id, enabled) {
+  await db.prepare("UPDATE admin_users SET enabled = ?, updated_at = datetime('now') WHERE id = ?").bind(enabled ? 1 : 0, Number(id)).run();
+}
+
+export async function setAdminUserPassword(db, id, passwordHash) {
+  await db.prepare("UPDATE admin_users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?").bind(String(passwordHash || ""), Number(id)).run();
+}
+
+export async function setAdminUserRole(db, id, role) {
+  await db.prepare("UPDATE admin_users SET role = ?, updated_at = datetime('now') WHERE id = ?").bind(String(role || "admin"), Number(id)).run();
+}
+
+export async function updateAdminUserLastLogin(db, id) {
+  await db.prepare("UPDATE admin_users SET last_login_at = datetime('now'), updated_at = datetime('now') WHERE id = ?").bind(Number(id)).run();
 }
 
 export async function recordServerMetrics(db, metric = {}) {

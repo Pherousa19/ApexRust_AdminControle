@@ -1318,6 +1318,22 @@ namespace Oxide.Plugins
         #endregion
 
         #region UI Commands
+        [ConsoleCommand("apex.items")]
+        private void ccmdApexItems(ConsoleSystem.Arg arg)
+        {
+            var items = ItemManager.itemList
+                .Where(item => item != null && !item.hidden && item.shortname != "blueprintbase")
+                .OrderBy(item => item.displayName.english)
+                .Select(item => new
+                {
+                    shortname = item.shortname,
+                    displayName = item.displayName.english
+                })
+                .ToList();
+
+            arg.ReplyWith(JsonConvert.SerializeObject(new { items }));
+        }
+
         #region View Commands
         [ConsoleCommand("kits.close")]
         private void ccmdKitsClose(ConsoleSystem.Arg arg)

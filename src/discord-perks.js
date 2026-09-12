@@ -8,8 +8,7 @@ import { fillCommandTemplate } from "./rcon.js";
 import {
   listDiscordRolePerks,
   getPlayerRoleGrants,
-  addPlayerRoleGrant,
-  removePlayerRoleGrant,
+  hasPendingDiscordRoleDelivery,
   listPlayersWithDiscordLinked,
   enqueueDelivery,
   getPlayer,
@@ -41,23 +40,27 @@ export async function syncPlayerPerks(env, steamid, discordUserId) {
     const shouldHaveRole = hasRole(perk.discord_role_id);
 
     if (shouldHaveRole && !currentlyGranted) {
+      if (await hasPendingDiscordRoleDelivery(env.DB, steamid, perk.discord_role_id, "grant")) continue;
       if (perk.grant_command) {
         await enqueueDelivery(env.DB, {
           steamid,
           command: fillCommandTemplate(perk.grant_command, { steamid }),
           reason: `discord_role:${perk.label}`,
+          discordRoleId: perk.discord_role_id,
+          discordRoleAction: "grant",
         });
       }
-      await addPlayerRoleGrant(env.DB, steamid, perk.discord_role_id);
     } else if (!shouldHaveRole && currentlyGranted) {
+      if (await hasPendingDiscordRoleDelivery(env.DB, steamid, perk.discord_role_id, "revoke")) continue;
       if (perk.revoke_command) {
         await enqueueDelivery(env.DB, {
           steamid,
           command: fillCommandTemplate(perk.revoke_command, { steamid }),
           reason: `discord_role_lost:${perk.label}`,
+          discordRoleId: perk.discord_role_id,
+          discordRoleAction: "revoke",
         });
       }
-      await removePlayerRoleGrant(env.DB, steamid, perk.discord_role_id);
     }
   }
 }

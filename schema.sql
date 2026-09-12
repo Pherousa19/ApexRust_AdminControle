@@ -62,8 +62,20 @@ CREATE TABLE delivery_queue (
   subscription_id INTEGER REFERENCES subscriptions(id),
   attempts INTEGER NOT NULL DEFAULT 0,
   delivered INTEGER NOT NULL DEFAULT 0,
+  processing INTEGER NOT NULL DEFAULT 0,
+  claimed_at TEXT,
+  claim_token TEXT,
+  discord_role_id TEXT,
+  discord_role_action TEXT,
   last_error TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE stripe_events (
+  event_id TEXT PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'processing',
+  processed_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE gift_cards (
@@ -90,6 +102,18 @@ CREATE TABLE players (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX idx_players_discord_id ON players(discord_id);
+
+CREATE TABLE admin_users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'admin' CHECK (role IN ('admin','auditor','moderator')),
+  enabled INTEGER NOT NULL DEFAULT 1,
+  last_login_at TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX idx_admin_users_role ON admin_users(role, enabled);
 
 CREATE TABLE discord_role_perks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
