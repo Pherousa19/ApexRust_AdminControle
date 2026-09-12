@@ -1460,6 +1460,69 @@ export function renderServerActions({ storeName, relayUrl, serverStatus, wipeblo
       </div>
     </div>`;
 
+  // ---- Plugin Diagnostics ----
+  const gatherManagerSummary = [
+    { name: "Pickup", multiplier: 2.0, baseline: 1.0, note: "Plants / nodes / small pickups" },
+    { name: "Dispenser", multiplier: 2.0, baseline: 1.0, note: "Trees, ore, animal resources" },
+    { name: "Quarry", multiplier: 2.0, baseline: 1.0, note: "Mining quarry output" },
+    { name: "Excavator", multiplier: 2.0, baseline: 1.0, note: "Excavator digging schedule" },
+    { name: "Survey", multiplier: 2.0, baseline: 1.0, note: "Survey charge / large node yields" },
+  ];
+
+  const loottableSummary = [
+    { label: "Use JSON config folder", value: "Off" },
+    { label: "Cover free slots", value: "On" },
+    { label: "Refresh warning", value: "On" },
+    { label: "Max loot iterations", value: "100" },
+    { label: "Stacking mode", value: "Strict (different names/text blocked)" },
+  ];
+
+  const gatherRows = gatherManagerSummary.map((entry) => {
+    const delta = ((entry.multiplier - entry.baseline) * 100).toFixed(0);
+    return `
+      <tr>
+        <td>${esc(entry.name)}</td>
+        <td class="mono">${entry.multiplier.toFixed(1)}x</td>
+        <td class="mono">${entry.baseline.toFixed(1)}x</td>
+        <td>${delta > 0 ? `+${delta}%` : `${delta}%`}</td>
+        <td class="muted">${esc(entry.note)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  const loottableRows = loottableSummary.map((entry) => `
+    <tr>
+      <td>${esc(entry.label)}</td>
+      <td>${esc(entry.value)}</td>
+    </tr>
+  `).join("");
+
+  const pluginDiagnosticsPanel = `
+    <div class="section-card wide">
+      <div class="section-card-head"><div><h3>Plugin diagnostics</h3><p>Read-only view of the live server config expectations for Gather Manager and Loottable.</p></div></div>
+      <div class="section-card-body" style="padding-top:0;">
+        <div class="two-col-grid" style="display:grid; grid-template-columns: 1.4fr 1fr; gap:16px;">
+          <div>
+            <h4 style="margin: 12px 0 8px;">Gather Manager</h4>
+            <div class="table-scroll"><table class="admin-table">
+              <thead><tr><th>Source</th><th>Current</th><th>Vanilla</th><th>Delta</th><th>Notes</th></tr></thead>
+              <tbody>${gatherRows}</tbody>
+            </table></div>
+            <p class="muted" style="margin-top:10px; margin-bottom:0;">Expected baseline: vanilla Rust is 1.0x. The current plugin config is set to 2.0x by default, which means roughly +100% gather output across the active resources unless a per-resource override changes it.</p>
+          </div>
+          <div>
+            <h4 style="margin: 12px 0 8px;">Loottable</h4>
+            <div class="table-scroll"><table class="admin-table">
+              <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+              <tbody>${loottableRows}</tbody>
+            </table></div>
+            <p class="muted" style="margin-top:10px; margin-bottom:0;">This section is intentionally non-destructive: it shows the active config intent and expected loot behavior without exposing the full raw table editor until the relay and config flow are fully stable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
   // ---- Recent Activity ----
   const activityRows = (recentActivity || [])
     .map((e) => {
@@ -1511,6 +1574,7 @@ const activityPanel = `
     ${mapPanel}
     ${wipeblockPanel}
     ${discordPanel}
+    ${pluginDiagnosticsPanel}
     ${activityPanel}
   </div>
   ${liveConsoleScript}
