@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSessionCookie, isValidSession, checkPassword, hashPassword, verifyPassword } from '../src/auth.js';
+import { createSessionCookie, isValidSession, checkPassword, hashPassword, verifyPassword, hasAdminPermission } from '../src/auth.js';
 import { parsePluginList } from '../src/index.js';
 
 const env = {
@@ -26,6 +26,17 @@ test('admin session rejects a mismatched required role', async () => {
 
   const valid = await isValidSession(request, env, 'admin');
   assert.equal(valid, false);
+});
+
+test('owner role is recognized as the root admin tier and can satisfy admin requirements', async () => {
+  const cookie = await createSessionCookie(env, { username: 'owner', role: 'owner' });
+  const request = new Request('https://example.com/admin', {
+    headers: { Cookie: cookie },
+  });
+
+  assert.equal(await isValidSession(request, env, 'admin'), true);
+  assert.equal(await isValidSession(request, env, ['users:manage']), true);
+  assert.equal(hasAdminPermission('owner', 'users:manage'), true);
 });
 
 test('admin passwords can be hashed and verified securely', async () => {
