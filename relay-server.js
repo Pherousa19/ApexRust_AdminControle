@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 /**
- * Advanced Multi-plexed Persistent RCON Pipeline
+ * Stable direct RELAY_URL bridge for Rust RCON.
+ * This is the simpler, proven path the worker expects:
+ *   - worker calls /api/serverinfo, /api/playerlist, /api/command
+ *   - relay owns a persistent websocket to the Rust RCON endpoint
+ *   - websocket console path uses a signed token or bearer secret
  */
 
-import http from "node:http";
-import crypto from "node:crypto";
-import { WebSocket, WebSocketServer } from "ws";
+const http = require("http");
+const crypto = require("crypto");
+const { WebSocket, WebSocketServer } = require("ws");
 
 const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
 const RCON_HOST = (process.env.RCON_HOST || "51.254.16.223").trim();
@@ -13,55 +17,43 @@ const RCON_PORT = Number.parseInt((process.env.RCON_PORT || "25676").trim(), 10)
 const RELAY_SECRET = (process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f").trim();
 
 if (!Number.isInteger(RCON_PORT) || RCON_PORT <= 0) {
-  console.error("Relay env validation failed:", {
-    RCON_HOST: RCON_HOST || null,
-    RCON_PORT: Number.isInteger(RCON_PORT) ? RCON_PORT : null,
-    RELAY_SECRET: RELAY_SECRET ? "present" : null,
-    PORT,
-    matchingKeys: Object.keys(process.env).filter((key) => /RCON|RELAY|PORT/i.test(key)).sort(),
-  });
   throw new Error("RCON_PORT is invalid");
 }
-
 if (!RELAY_SECRET) {
   throw new Error("RELAY_SECRET environment variable is required");
 }
 
 const rconPool = new Map();
 
-function createMessageId(pool) {
-  let id;
-  do {
-    id = crypto.randomInt(1, Number.MAX_SAFE_INTEGER);
-  } while (pool.routingMap.has(id));
-  return id;
+function normalizeRconFrame(message) {
+  if (typeof message === "string") return message;
+  if (Buffer.isBuffer(message)) return message.toString("utf8");
+  if (message instanceof ArrayBuffer) return Buffer.from(message).toString("utf8");
+  if (ArrayBuffer.isView(message)) return Buffer.from(message.buffer, message.byteOffset, message.byteLength).toString("utf8");
+  return JSON.stringify(message);
 }
-
-// Bounds on the caller-supplied timeout so nobody can request 0ms or
-// 10 minutes by accident. Default matches the old hardcoded behavior.
-const MIN_QUERY_TIMEOUT_MS = 1000;
-const MAX_QUERY_TIMEOUT_MS = 15000;
-const DEFAULT_QUERY_TIMEOUT_MS = 5000;
 
 function clampTimeoutMs(value) {
   const n = Number.parseInt(value, 10);
-  if (!Number.isFinite(n)) return DEFAULT_QUERY_TIMEOUT_MS;
-  return Math.min(MAX_QUERY_TIMEOUT_MS, Math.max(MIN_QUERY_TIMEOUT_MS, n));
+  if (!Number.isFinite(n)) return 5000;
+  return Math.min(15000, Math.max(1000, n));
 }
 
-async function executeQuickQuery(password, command, timeoutMs = DEFAULT_QUERY_TIMEOUT_MS) {
+async function executeQuickQuery(password, command, timeoutMs = 5000) {
   const pool = rconPool.get(password);
   if (!pool) throw new Error("RCON backend pipeline is offline");
 
   if (!pool.ws || pool.ws.readyState !== WebSocket.OPEN) {
     await Promise.race([
       pool.readyPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), timeoutMs)),
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), timeoutMs);
+      }),
     ]);
   }
 
   return await new Promise((resolve, reject) => {
-    const id = createMessageId(pool);
+    const id = Math.floor(Math.random() * 100000);
     const timer = setTimeout(() => {
       pool.routingMap.delete(id);
       reject(new Error(`Query timed out after ${timeoutMs}ms`));
@@ -72,115 +64,12 @@ async function executeQuickQuery(password, command, timeoutMs = DEFAULT_QUERY_TI
       send: (message) => {
         clearTimeout(timer);
         resolve(normalizeRconFrame(message));
-      }
+      },
     });
 
     pool.ws.send(JSON.stringify({ Identifier: id, Message: command, Name: "WebRcon" }));
   });
 }
-
-function normalizeRconFrame(message) {
-  if (typeof message === "string") return message;
-  if (Buffer.isBuffer(message)) return message.toString("utf8");
-  if (message instanceof ArrayBuffer) return Buffer.from(message).toString("utf8");
-  if (ArrayBuffer.isView(message)) return Buffer.from(message.buffer, message.byteOffset, message.byteLength).toString("utf8");
-  return JSON.stringify(message);
-}
-
-const server = http.createServer(async (req, res) => {
-  const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-
-  if (urlObj.pathname === "/health") {
-    res.writeHead(200, { "content-type": "application/json" });
-    return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
-  }
-
-  const auth = req.headers.authorization || "";
-  if (!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) {
-    res.writeHead(401, { "content-type": "application/json" });
-    return res.end(JSON.stringify({ error: "Unauthorized" }));
-  }
-
-  const rconPassword = req.headers["x-rcon-password"];
-  if (!rconPassword) {
-    res.writeHead(400, { "content-type": "application/json" });
-    return res.end(JSON.stringify({ error: "Missing x-rcon-password header" }));
-  }
-
-  maintainRconConnection(rconPassword);
-
-  // Callers (rcon.js) can ask for a longer wait on commands they know are
-  // slow (audit/roster/recent-activity style oxide plugin commands) by
-  // sending x-timeout-ms. Falls back to the 5s default, clamped 1-15s.
-  const timeoutMs = clampTimeoutMs(req.headers["x-timeout-ms"]);
-
-  if (urlObj.pathname === "/api/serverinfo") {
-    try {
-      const data = await executeQuickQuery(rconPassword, "serverinfo", timeoutMs);
-      res.writeHead(200, { "content-type": "application/json" });
-      return res.end(data);
-    } catch (err) {
-      console.error(`[HTTP] /api/serverinfo failed: ${err.message}`);
-      res.writeHead(502, { "content-type": "application/json" });
-      return res.end(JSON.stringify({ error: err.message }));
-    }
-  }
-
-  if (urlObj.pathname === "/api/playerlist") {
-    try {
-      const data = await executeQuickQuery(rconPassword, "playerlist", timeoutMs);
-      res.writeHead(200, { "content-type": "application/json" });
-      return res.end(data);
-    } catch (err) {
-      console.error(`[HTTP] /api/playerlist failed: ${err.message}`);
-      res.writeHead(502, { "content-type": "application/json" });
-      return res.end(JSON.stringify({ error: err.message }));
-    }
-  }
-
-  if (urlObj.pathname === "/api/command" && req.method === "POST") {
-    let command = "";
-    try {
-      const chunks = [];
-      for await (const chunk of req) chunks.push(chunk);
-      const body = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-      command = typeof body.command === "string" ? body.command.trim() : "";
-      if (!command || command.length > 4000) {
-        res.writeHead(400, { "content-type": "application/json" });
-        return res.end(JSON.stringify({ error: "A command between 1 and 4000 characters is required" }));
-      }
-      // Body can also override the timeout, in case a caller can't set headers.
-      const effectiveTimeoutMs = body.timeoutMs != null ? clampTimeoutMs(body.timeoutMs) : timeoutMs;
-      const data = await executeQuickQuery(rconPassword, command, effectiveTimeoutMs);
-      res.writeHead(200, { "content-type": "application/json" });
-      return res.end(JSON.stringify({ output: data }));
-    } catch (err) {
-      console.error(`[HTTP] /api/command "${command}" failed: ${err.message}`);
-      res.writeHead(502, { "content-type": "application/json" });
-      return res.end(JSON.stringify({ error: err.message }));
-    }
-  }
-
-  res.writeHead(404).end(JSON.stringify({ error: "Not found" }));
-});
-
-const wss = new WebSocketServer({ noServer: true });
-
-server.on("upgrade", (req, socket, head) => {
-  const auth = req.headers.authorization || "";
-  const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
-  let tokenPassword = null;
-  const token = urlObj.searchParams.get("token");
-  if (token) tokenPassword = verifyConsoleToken(token);
-
-  if ((!auth.startsWith("Bearer ") || auth.slice(7) !== RELAY_SECRET) && !tokenPassword) {
-    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
-    socket.destroy();
-    return;
-  }
-  if (tokenPassword) req.headers["x-rcon-password"] = tokenPassword;
-  wss.handleUpgrade(req, socket, head, (ws) => handleConnection(ws, req));
-});
 
 function verifyConsoleToken(token) {
   if (typeof token !== "string") return null;
@@ -189,10 +78,10 @@ function verifyConsoleToken(token) {
 
   const payload = Buffer.from(encodedPayload, "base64url").toString("utf8");
   const expected = crypto.createHmac("sha256", RELAY_SECRET).update(payload).digest("base64url");
-
-  const providedBuffer = Buffer.from(encodedSignature, "base64url");
+  const provided = Buffer.from(encodedSignature, "base64url");
   const expectedBuffer = Buffer.from(expected, "base64url");
-  if (providedBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(providedBuffer, expectedBuffer)) {
+
+  if (provided.length !== expectedBuffer.length || !crypto.timingSafeEqual(provided, expectedBuffer)) {
     return null;
   }
 
@@ -214,19 +103,19 @@ function maintainRconConnection(password) {
   console.log(`🔌 [Pool] Establishing permanent target link to ${RCON_HOST}:${RCON_PORT}`);
 
   const serverWs = new WebSocket(rconUrl);
+  const poolEntry = rconPool.get(password) || {
+    clients: new Set(),
+    routingMap: new Map(),
+    pingInterval: null,
+    reconnectTimeout: null,
+  };
 
-  let poolEntry = rconPool.get(password);
-  if (!poolEntry) {
-    poolEntry = { clients: new Set(), routingMap: new Map(), pingInterval: null, reconnectTimeout: null };
-    rconPool.set(password, poolEntry);
-  }
-
+  poolEntry.ws = serverWs;
   poolEntry.readyPromise = new Promise((resolve, reject) => {
     poolEntry.resolveReady = resolve;
     poolEntry.rejectReady = reject;
   });
-
-  poolEntry.ws = serverWs;
+  rconPool.set(password, poolEntry);
 
   serverWs.on("open", () => {
     console.log("✅ [Pool] Pipeline established.");
@@ -254,7 +143,6 @@ function maintainRconConnection(password) {
     try {
       const payload = JSON.parse(data.toString());
       const identifier = payload.Identifier;
-
       if (identifier !== undefined && poolEntry.routingMap.has(identifier)) {
         const targetClient = poolEntry.routingMap.get(identifier);
         if (targetClient && targetClient.readyState === WebSocket.OPEN) {
@@ -263,7 +151,7 @@ function maintainRconConnection(password) {
         poolEntry.routingMap.delete(identifier);
         return;
       }
-    } catch (e) {}
+    } catch (err) {}
 
     for (const client of poolEntry.clients) {
       if (client.readyState === WebSocket.OPEN) {
@@ -283,9 +171,9 @@ function maintainRconConnection(password) {
 }
 
 function handleConnection(clientWs, req) {
-  let password = req.headers["x-rcon-password"];
+  let password = req.headers["x-rcon-password"] || req.headers["X-RCON-Password"];
   if (!password) {
-    const pathWithoutQuery = req.url.split('?')[0];
+    const pathWithoutQuery = req.url.split("?")[0];
     const passwordMatch = pathWithoutQuery.match(/^\/(.+)$/);
     password = passwordMatch ? decodeURIComponent(passwordMatch[1]) : null;
   }
@@ -328,7 +216,7 @@ function handleConnection(clientWs, req) {
         pool.routingMap.set(payload.Identifier, clientWs);
         clientIdentifiers.add(payload.Identifier);
       }
-    } catch (e) {}
+    } catch (err) {}
 
     if (pool.ws?.readyState === WebSocket.OPEN && !pendingMessages.length && !flushing) {
       pool.ws.send(data);
@@ -345,11 +233,107 @@ function handleConnection(clientWs, req) {
     }
   });
 
-  clientWs.on("error", (err) => {
-    console.warn("[Relay] client websocket error:", err?.message || err);
+  clientWs.on("error", () => {
     pool.clients.delete(clientWs);
   });
 }
+
+const server = http.createServer(async (req, res) => {
+  const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+
+  if (urlObj.pathname === "/health") {
+    res.writeHead(200, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), active_pools: rconPool.size }));
+  }
+
+  const auth = req.headers.authorization || "";
+  const hasBearer = auth.startsWith("Bearer ") && auth.slice(7) === RELAY_SECRET;
+  if (!hasBearer) {
+    res.writeHead(401, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ error: "Unauthorized" }));
+  }
+
+  const rconPassword = req.headers["x-rcon-password"] || req.headers["X-RCON-Password"];
+  if (!rconPassword) {
+    res.writeHead(400, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ error: "Missing x-rcon-password header" }));
+  }
+
+  maintainRconConnection(rconPassword);
+
+  const timeoutMs = clampTimeoutMs(req.headers["x-timeout-ms"] || req.headers["X-Timeout-Ms"] || 5000);
+
+  if (urlObj.pathname === "/api/serverinfo") {
+    try {
+      const data = await executeQuickQuery(rconPassword, "serverinfo", timeoutMs);
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(data);
+    } catch (err) {
+      console.error("[HTTP] /api/serverinfo failed:", err.message);
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
+  if (urlObj.pathname === "/api/playerlist") {
+    try {
+      const data = await executeQuickQuery(rconPassword, "playerlist", timeoutMs);
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(data);
+    } catch (err) {
+      console.error("[HTTP] /api/playerlist failed:", err.message);
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
+  if (urlObj.pathname === "/api/command" && req.method === "POST") {
+    try {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const body = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
+      const command = typeof body.command === "string" ? body.command.trim() : "";
+      if (!command || command.length > 4000) {
+        res.writeHead(400, { "content-type": "application/json" });
+        return res.end(JSON.stringify({ error: "A command between 1 and 4000 characters is required" }));
+      }
+
+      const effectiveTimeoutMs = body.timeoutMs != null ? clampTimeoutMs(body.timeoutMs) : timeoutMs;
+      const data = await executeQuickQuery(rconPassword, command, effectiveTimeoutMs);
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ output: data }));
+    } catch (err) {
+      console.error("[HTTP] /api/command failed:", err.message);
+      res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
+  res.writeHead(404, { "content-type": "application/json" });
+  return res.end(JSON.stringify({ error: "Not found" }));
+});
+
+const wss = new WebSocketServer({ noServer: true });
+
+server.on("upgrade", (req, socket, head) => {
+  const auth = req.headers.authorization || "";
+  const hasBearer = auth.startsWith("Bearer ") && auth.slice(7) === RELAY_SECRET;
+  const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
+  const token = urlObj.searchParams.get("token");
+  const tokenPassword = token ? verifyConsoleToken(token) : null;
+
+  if (!hasBearer && !tokenPassword) {
+    socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+    socket.destroy();
+    return;
+  }
+
+  if (tokenPassword) {
+    req.headers["x-rcon-password"] = tokenPassword;
+  }
+
+  wss.handleUpgrade(req, socket, head, (ws) => handleConnection(ws, req));
+});
 
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Smart Persistent Multi-plexing Relay active on port ${PORT}`);

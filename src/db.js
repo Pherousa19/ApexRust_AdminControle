@@ -629,6 +629,35 @@ export async function upsertServerStatus(db, { online, players = 0, maxPlayers =
 }
 
 // ============================================================
+// Generic RCON result cache (roster, recent activity, catalogs, etc.)
+// ============================================================
+
+/** Generic short-lived cache for RCON-derived data that doesn't need a
+ * fresh RCON round-trip on every admin page load (catalogs, roster,
+ * recent activity, wipeblock status, per-player evidence). See
+ * withRconCache in rcon.js for how freshness/fallback is decided. Same
+ * "return null rather than throw if the migration hasn't run yet"
+ * convention as getServerStatus above. */
+export async function getRconCache(db, key) {
+  try {
+    return await db.prepare("SELECT value, updated_at FROM rcon_cache WHERE key = ?").bind(key).first();
+  } catch {
+    return null;
+  }
+}
+
+export async function upsertRconCache(db, key, value) {
+  await db
+    .prepare(
+      `INSERT INTO rcon_cache (key, value, updated_at)
+       VALUES (?, ?, datetime('now'))
+       ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`
+    )
+    .bind(key, JSON.stringify(value))
+    .run();
+}
+
+// ============================================================
 // Gift cards
 // ============================================================
 

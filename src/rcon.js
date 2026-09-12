@@ -1,6 +1,8 @@
 // The Worker talks to the relay over authenticated HTTP/WebSocket requests;
 // only the relay service connects to Rust's built-in RCON endpoint.
 
+import { getRconCache, upsertRconCache } from "./db.js";
+
 /**
  * Send a single RCON command and return the server's response string.
  * Throws on timeout, connection failure, or a non-2xx websocket close.
@@ -140,6 +142,35 @@ async function sendRconViaRelay(env, command, timeoutMs) {
 /** Substitute {steamid} (and any other {placeholder}) into a command template. */
 export function fillCommandTemplate(template, vars) {
   return template.replace(/\{(\w+)\}/g, (_, key) => (key in vars ? String(vars[key]) : `{${key}}`));
+}
+
+/**
+ * Serves cached RCON-derived data from D1 when it's fresh enough (age <
+ * ttlMs), and only calls `fetcher` — the real RCON round-trip — once it's
+ * expired. If a refresh attempt then fails (RCON slow/unreachable), falls
+ * back to whatever's cached, even if stale, instead of throwing — so a
+ * flaky RCON command degrades to "a bit out of date" rather than a 502 on
+ * the admin page. Requires the rcon_cache table (see migration).
+ */
+export async function withRconCache(env, key, ttlMs, fetcher) {
+  const cached = await getRconCache(env.DB, key);
+  const ageMs = cached ? Date.now() - new Date(`${cached.updated_at}Z`).getTime() : Infinity;
+
+  if (cached && ageMs < ttlMs) {
+    return JSON.parse(cached.value);
+  }
+
+  try {
+    const fresh = await fetcher();
+    await upsertRconCache(env.DB, key, fresh);
+    return fresh;
+  } catch (err) {
+    if (cached) {
+      console.error(`withRconCache("${key}") refresh failed, serving ${Math.round(ageMs / 1000)}s-old cache: ${err.message}`);
+      return JSON.parse(cached.value);
+    }
+    throw err;
+  }
 }
 
 /**

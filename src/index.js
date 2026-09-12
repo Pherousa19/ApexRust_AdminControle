@@ -153,6 +153,8 @@ import {
   getAdminUserByUsername,
   createAdminUser,
   setAdminUserEnabled,
+  setAdminUserPassword,
+  setAdminUserRole,
   updateAdminUserLastLogin,
 } from "./db.js";
 import {
@@ -165,7 +167,7 @@ import {
   createBillingPortalSession,
   refundPaymentIntent,
 } from "./stripe.js";
-import { sendRconCommand, fillCommandTemplate, fetchServerInfo, fetchOnlinePlayers } from "./rcon.js";
+import { sendRconCommand, fillCommandTemplate, fetchServerInfo, fetchOnlinePlayers, withRconCache } from "./rcon.js";
 import { fetchSteamBansForOne, fetchSteamProfileFull } from "./steam.js";
 import { sendOrderConfirmationEmail, sendRenewalReceiptEmail, sendPaymentFailedEmail, sendAccessSuspendedEmail, sendNewTicketAlert, sendTicketReplyEmail } from "./email.js";
 
@@ -1324,8 +1326,10 @@ async function getPlayerCardAccount(db, steamid) {
 /** Fetches the case list for the "Give Case" dropdown on /admin/actions. */
 async function fetchCaseCatalog(env) {
   try {
-    const raw = await sendRconCommand(env, "cases.admin.list", { timeoutMs: 6000 });
-    return JSON.parse(raw);
+    return await withRconCache(env, "catalog:cases", 5 * 60 * 1000, async () => {
+      const raw = await sendRconCommand(env, "cases.admin.list", { timeoutMs: 6000 });
+      return JSON.parse(raw);
+    });
   } catch (err) {
     console.error("fetchCaseCatalog failed:", err.message);
     return null;
@@ -1344,23 +1348,30 @@ async function fetchOnlinePlayersForActions(env) {
 
 async function fetchItemCatalog(env) {
   try {
-    const raw = await sendRconCommand(env, "apex.items", { timeoutMs: 6000 });
-    const envelope = JSON.parse(raw);
-    const parsed = envelope?.Message ? JSON.parse(envelope.Message) : envelope;
-    return parsed?.items ?? null;
+    return await withRconCache(env, "catalog:items", 5 * 60 * 1000, async () => {
+      const raw = await sendRconCommand(env, "apex.items", { timeoutMs: 6000 });
+      const envelope = JSON.parse(raw);
+      const parsed = envelope?.Message ? JSON.parse(envelope.Message) : envelope;
+      return parsed?.items ?? null;
+    });
   } catch (err) {
     console.error("fetchItemCatalog failed:", err.message);
     return null;
   }
 }
 
-/** Fetches the player roster through RCON/relay, optionally filtered server-side. */
+/** Fetches the player roster through RCON/relay, optionally filtered server-side.
+ * Only the unfiltered roster is cached — free-text search terms would create
+ * an unbounded number of cache keys for little benefit, so a search always
+ * hits RCON live. */
 async function fetchPlayerRoster(env, search) {
   try {
     const cmd = search ? `apexaudit.roster.json ${rconArg(search)}` : "apexaudit.roster.json";
-    const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
-    const parsed = JSON.parse(raw);
-    return parsed?.players ?? null;
+    const run = async () => {
+      const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
+      return JSON.parse(raw)?.players ?? null;
+    };
+    return search ? await run() : await withRconCache(env, "roster:all", 20 * 1000, run);
   } catch (err) {
     console.error("fetchPlayerRoster failed:", err.message);
     return null;
@@ -1370,10 +1381,12 @@ async function fetchPlayerRoster(env, search) {
 /** Fetches the kit catalog from Kits.cs's plain-text `kit list` command. */
 async function fetchKitCatalog(env) {
   try {
-    const raw = await sendRconCommand(env, "kit list", { timeoutMs: 6000 });
-    const match = raw.match(/Kit List:\s*(.*)/i);
-    if (!match) return [];
-    return match[1].split(",").map((s) => s.trim()).filter(Boolean);
+    return await withRconCache(env, "catalog:kits", 5 * 60 * 1000, async () => {
+      const raw = await sendRconCommand(env, "kit list", { timeoutMs: 6000 });
+      const match = raw.match(/Kit List:\s*(.*)/i);
+      if (!match) return [];
+      return match[1].split(",").map((s) => s.trim()).filter(Boolean);
+    });
   } catch (err) {
     console.error("fetchKitCatalog failed:", err.message);
     return null;
@@ -1383,8 +1396,10 @@ async function fetchKitCatalog(env) {
 /** Fetches WipeBlock's current config/status for Server Actions. */
 async function fetchWipeBlockStatus(env) {
   try {
-    const raw = await sendRconCommand(env, "wipeblock.status.json", { timeoutMs: 6000 });
-    return JSON.parse(raw);
+    return await withRconCache(env, "wipeblock:status", 60 * 1000, async () => {
+      const raw = await sendRconCommand(env, "wipeblock.status.json", { timeoutMs: 6000 });
+      return JSON.parse(raw);
+    });
   } catch (err) {
     console.error("fetchWipeBlockStatus failed:", err.message);
     return null;
@@ -1394,8 +1409,10 @@ async function fetchWipeBlockStatus(env) {
 /** Fetches the JSON evidence report for one player. */
 async function fetchPlayerEvidence(env, steamid) {
   try {
-    const raw = await sendRconCommand(env, `apexaudit.evidence.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
-    return JSON.parse(raw);
+    return await withRconCache(env, `evidence:${steamid}`, 30 * 1000, async () => {
+      const raw = await sendRconCommand(env, `apexaudit.evidence.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
+      return JSON.parse(raw);
+    });
   } catch (err) {
     console.error("fetchPlayerEvidence failed:", err.message);
     return null;
@@ -1416,14 +1433,16 @@ const CHAT_FLAG_RE = new RegExp(`\\b(${CHAT_FLAG_WORDS.join("|")})\\b`, "i");
  * it just highlights the line for a human moderator to look at. */
 async function fetchRecentActivity(env, { eventFilter, count = 50 } = {}) {
   try {
-    const cmd = eventFilter ? `apexaudit.recent.json ${rconArg(eventFilter)} ${count}` : `apexaudit.recent.json ${count}`;
-    const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
-    const parsed = JSON.parse(raw);
-    const entries = (parsed?.entries || []).map((e) => ({
-      ...e,
-      flagged: typeof e.details === "string" && CHAT_FLAG_RE.test(e.details),
-    }));
-    return entries;
+    const cacheKey = `activity:${eventFilter || "all"}:${count}`;
+    return await withRconCache(env, cacheKey, 20 * 1000, async () => {
+      const cmd = eventFilter ? `apexaudit.recent.json ${rconArg(eventFilter)} ${count}` : `apexaudit.recent.json ${count}`;
+      const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
+      const parsed = JSON.parse(raw);
+      return (parsed?.entries || []).map((e) => ({
+        ...e,
+        flagged: typeof e.details === "string" && CHAT_FLAG_RE.test(e.details),
+      }));
+    });
   } catch (err) {
     console.error("fetchRecentActivity failed:", err.message);
     return null;
@@ -1871,28 +1890,17 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   if (adminUserEditMatch && method === "POST") {
     const denied = await requireCapability("users:manage", "/admin/users");
     if (denied) return denied;
-
-    try {
-      const form = await request.formData();
-      const role = ["owner", "admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
-      const password = String(form.get("password") || "").trim();
-      const users = await listAdminUsers(env.DB);
-      const target = users.find((user) => String(user.id) === adminUserEditMatch[1]);
-      if (!target) return redirect(`/admin/users?flash=${encodeURIComponent("Admin account not found.")}`);
-
-      if (String(target.username).toLowerCase() === String((await getSessionUser(request, env))?.username || "").toLowerCase() && role !== target.role) {
-        return redirect(`/admin/users?flash=${encodeURIComponent("You cannot change your own role from this screen. Ask the owner to do it from a separate account.")}`);
-      }
-
-      await setAdminUserRole(env.DB, target.id, role);
-      if (password) {
-        await setAdminUserPassword(env.DB, target.id, await hashPassword(password));
-      }
-      return redirect(`/admin/users?flash=${encodeURIComponent(`Updated account "${target.username}".`)}`);
-    } catch (err) {
-      console.error("Admin user edit failed:", err);
-      return redirect(`/admin/users?flash=${encodeURIComponent("Could not update this admin account. Check the account data and try again.")}`);
+    const form = await request.formData();
+    const role = ["owner", "admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
+    const password = String(form.get("password") || "").trim();
+    const users = await listAdminUsers(env.DB);
+    const target = users.find((user) => String(user.id) === adminUserEditMatch[1]);
+    if (!target) return redirect(`/admin/users?flash=${encodeURIComponent("Admin account not found.")}`);
+    await setAdminUserRole(env.DB, target.id, role);
+    if (password) {
+      await setAdminUserPassword(env.DB, target.id, await hashPassword(password));
     }
+    return redirect(`/admin/users?flash=${encodeURIComponent(`Updated account "${target.username}".`)}`);
   }
 
   if (method === "POST" && !isSameOriginRequest(request)) {
