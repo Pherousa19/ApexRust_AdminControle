@@ -1824,7 +1824,7 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     const form = await request.formData();
     const username = String(form.get("username") || "").trim();
     const password = String(form.get("password") || "");
-    const role = ["admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
+    const role = ["owner", "admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
     if (!username || !password || password.length < 8) {
       return redirect(`/admin/users?flash=${encodeURIComponent("Username and a password of at least 8 characters are required.")}`);
     }

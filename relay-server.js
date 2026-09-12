@@ -29,6 +29,14 @@ if (!RELAY_SECRET) {
 
 const rconPool = new Map();
 
+function createMessageId(pool) {
+  let id;
+  do {
+    id = crypto.randomInt(1, Number.MAX_SAFE_INTEGER);
+  } while (pool.routingMap.has(id));
+  return id;
+}
+
 async function executeQuickQuery(password, command) {
   const pool = rconPool.get(password);
   if (!pool) throw new Error("RCON backend pipeline is offline");
@@ -41,7 +49,7 @@ async function executeQuickQuery(password, command) {
   }
 
   return await new Promise((resolve, reject) => {
-    const id = Math.floor(Math.random() * 100000);
+    const id = createMessageId(pool);
     const timer = setTimeout(() => {
       pool.routingMap.delete(id);
       reject(new Error("Query timed out"));
@@ -152,11 +160,19 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 function verifyConsoleToken(token) {
+  if (typeof token !== "string") return null;
   const [encodedPayload, encodedSignature] = token.split(".");
   if (!encodedPayload || !encodedSignature) return null;
+
   const payload = Buffer.from(encodedPayload, "base64url").toString("utf8");
   const expected = crypto.createHmac("sha256", RELAY_SECRET).update(payload).digest("base64url");
-  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(encodedSignature))) return null;
+  const providedBuffer = Buffer.from(encodedSignature, "base64url");
+  const expectedBuffer = Buffer.from(expected, "base64url");
+
+  if (providedBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(providedBuffer, expectedBuffer)) {
+    return null;
+  }
+
   const separator = payload.indexOf(".");
   const expires = Number(payload.slice(0, separator));
   if (!Number.isFinite(expires) || expires < Math.floor(Date.now() / 1000)) return null;
@@ -193,13 +209,22 @@ function maintainRconConnection(password) {
     console.log("✅ [Pool] Pipeline established.");
     poolEntry.resolveReady?.();
     if (poolEntry.reconnectTimeout) clearTimeout(poolEntry.reconnectTimeout);
-    
+
     clearInterval(poolEntry.pingInterval);
     poolEntry.pingInterval = setInterval(() => {
       if (serverWs.readyState === WebSocket.OPEN) {
-        serverWs.send(JSON.stringify({ Identifier: -1, Message: "ping", Name: "WebRcon" }));
+        try {
+          serverWs.send(JSON.stringify({ Identifier: -1, Message: "ping", Name: "WebRcon" }));
+        } catch (err) {
+          console.warn("[Pool] backend heartbeat failed:", err.message);
+        }
       }
     }, 15000);
+  });
+
+  serverWs.on("error", (err) => {
+    console.warn("[Pool] backend websocket error:", err?.message || err);
+    poolEntry.rejectReady?.(err);
   });
 
   serverWs.on("message", (data, isBinary) => {
@@ -297,7 +322,8 @@ function handleConnection(clientWs, req) {
     }
   });
 
-  clientWs.on("error", () => {
+  clientWs.on("error", (err) => {
+    console.warn("[Relay] client websocket error:", err?.message || err);
     pool.clients.delete(clientWs);
   });
 }

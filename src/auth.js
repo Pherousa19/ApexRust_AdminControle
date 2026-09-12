@@ -12,7 +12,24 @@ const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 const COOKIE_NAME = "apex_admin_session";
 
 export const ADMIN_ROLE_CAPABILITIES = {
-  admin: ["all"],
+  owner: ["all"],
+  admin: [
+    "dashboard:read",
+    "audit:read",
+    "audit:write",
+    "plugins:read",
+    "plugins:manage",
+    "server:read",
+    "server:write",
+    "players:read",
+    "players:moderate",
+    "users:manage",
+    "console:basic",
+    "console:advanced",
+    "delivery:manage",
+    "shop:manage",
+    "tickets:manage",
+  ],
   auditor: ["dashboard:read", "audit:read", "plugins:read", "server:read", "players:read"],
   moderator: ["dashboard:read", "server:read", "players:read", "players:moderate", "console:basic"],
 };
@@ -97,26 +114,33 @@ export async function isValidSession(request, env, requiredRole = "admin") {
     if (!payload || typeof payload.role !== "string" || !payload.username) return false;
 
     const role = String(payload.role || "admin");
+    const validWindow = payload.exp > Date.now();
+    if (!validWindow) return false;
+
     if (requiredRole === "admin") {
-      return payload.exp > Date.now() && role === "admin";
+      return ["owner", "admin"].includes(role);
     }
     if (requiredRole === "auditor") {
-      return payload.exp > Date.now() && (role === "admin" || role === "auditor");
+      return ["owner", "admin", "auditor"].includes(role);
     }
     if (requiredRole === "moderator") {
-      return payload.exp > Date.now() && (role === "admin" || role === "moderator");
+      return ["owner", "admin", "moderator"].includes(role);
+    }
+    if (requiredRole === "owner") {
+      return role === "owner";
     }
     if (Array.isArray(requiredRole)) {
-      return payload.exp > Date.now() && requiredRole.every((cap) => hasAdminPermission(role, cap));
+      return requiredRole.every((cap) => hasAdminPermission(role, cap));
     }
-    return payload.exp > Date.now() && role === String(requiredRole);
+    return role === String(requiredRole) || (role === "owner" && String(requiredRole) === "admin");
   } catch {
     return false;
   }
 }
 
 export function hasAdminPermission(role, capability) {
-  const rolePermissions = ADMIN_ROLE_CAPABILITIES[String(role || "admin")] || [];
+  const normalizedRole = String(role || "admin").toLowerCase();
+  const rolePermissions = ADMIN_ROLE_CAPABILITIES[normalizedRole] || [];
   if (rolePermissions.includes("all")) return true;
   if (!capability) return rolePermissions.length > 0;
   return rolePermissions.includes(capability);
