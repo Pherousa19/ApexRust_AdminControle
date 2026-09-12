@@ -7,9 +7,9 @@
  *   - websocket console path uses a signed token or bearer secret
  */
 
-const http = require("http");
-const crypto = require("crypto");
-const { WebSocket, WebSocketServer } = require("ws");
+import http from "node:http";
+import crypto from "node:crypto";
+import { WebSocket, WebSocketServer } from "ws";
 
 const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
 const RCON_HOST = (process.env.RCON_HOST || "51.254.16.223").trim();
