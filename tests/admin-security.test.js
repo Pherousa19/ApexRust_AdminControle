@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSessionCookie, isValidSession, checkPassword, hashPassword, verifyPassword } from '../src/auth.js';
+import { parsePluginList } from '../src/index.js';
 
 const env = {
   ADMIN_PASSWORD: 'super-secret',
@@ -36,4 +37,21 @@ test('admin passwords can be hashed and verified securely', async () => {
 test('admin password check remains constant-time and exact', () => {
   assert.equal(checkPassword(env, 'super-secret'), true);
   assert.equal(checkPassword(env, 'wrong-password'), false);
+});
+
+test('admin password hashing stays within Cloudflare-compatible PBKDF2 limits', async () => {
+  const hashed = await hashPassword('ComplexPass!2024');
+  const [, iterationsRaw] = String(hashed).split('$');
+  assert.ok(Number(iterationsRaw) <= 100000, `Unsupported PBKDF2 iterations: ${iterationsRaw}`);
+});
+
+test('oxide plugin output numbers are converted into plugin names', () => {
+  const parsed = parsePluginList(`
+    01  Oxide
+    02  AdminRadar v1.3.2
+    03  BetterTC
+    04  NameOfPlugin v2.0.0
+  `);
+
+  assert.deepEqual(parsed.map((plugin) => plugin.name), ['Oxide', 'AdminRadar', 'BetterTC', 'NameOfPlugin']);
 });

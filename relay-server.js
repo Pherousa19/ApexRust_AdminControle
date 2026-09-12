@@ -3,9 +3,9 @@
  * Advanced Multi-plexed Persistent RCON Pipeline
  */
 
-const http = require("http");
-const WebSocket = require("ws");
-const crypto = require("crypto");
+import http from "node:http";
+import crypto from "node:crypto";
+import WebSocket from "ws";
 
 const PORT = process.env.PORT || 3000;
 const RCON_HOST = process.env.RCON_HOST;

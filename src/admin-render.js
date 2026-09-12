@@ -1520,21 +1520,31 @@ const activityPanel = `
 
 
 export function renderAdminUsers({ storeName, users, flash }) {
+  const roleSummary = {
+    admin: "All access: dashboard, players, server controls, plugins, audit, and account management.",
+    auditor: "Read-only access: dashboard, audit, plugins, server state, and player lookup.",
+    moderator: "Operations access: dashboard, player actions, console basics, and moderator tools.",
+  };
+
   const rows = (users || [])
-    .map((user) => `
-      <tr>
-        <td><strong>${esc(user.username)}</strong></td>
-        <td><span class="badge ${user.role === "admin" ? "badge-active" : user.role === "auditor" ? "badge-warning" : "badge-muted"}">${esc(user.role || "admin")}</span></td>
-        <td>${user.enabled ? '<span class="badge badge-active">Enabled</span>' : '<span class="badge badge-muted">Disabled</span>'}</td>
-        <td>${user.last_login_at ? fmtDate(user.last_login_at) : "—"}</td>
-        <td>${fmtDate(user.created_at)}</td>
-        <td class="admin-actions">
-          <form method="POST" action="/admin/users/${user.id}/toggle" style="display:inline;">
-            <button class="link-btn" type="submit">${user.enabled ? "Disable" : "Enable"}</button>
-          </form>
-        </td>
-      </tr>
-    `).join("");
+    .map((user) => {
+      const role = user.role || "admin";
+      const summary = roleSummary[role] || roleSummary.admin;
+      return `
+        <tr>
+          <td><strong>${esc(user.username)}</strong></td>
+          <td><span class="badge ${role === "admin" ? "badge-active" : role === "auditor" ? "badge-warning" : "badge-muted"}">${esc(role)}</span><div class="muted" style="margin-top:6px; font-size:12px; max-width:280px;">${esc(summary)}</div></td>
+          <td>${user.enabled ? '<span class="badge badge-active">Enabled</span>' : '<span class="badge badge-muted">Disabled</span>'}</td>
+          <td>${user.last_login_at ? fmtDate(user.last_login_at) : "—"}</td>
+          <td>${fmtDate(user.created_at)}</td>
+          <td class="admin-actions">
+            <form method="POST" action="/admin/users/${user.id}/toggle" style="display:inline;">
+              <button class="link-btn" type="submit">${user.enabled ? "Disable" : "Enable"}</button>
+            </form>
+          </td>
+        </tr>
+      `;
+    }).join("");
 
   const body = `
     <div class="admin-header-row">
@@ -1542,6 +1552,9 @@ export function renderAdminUsers({ storeName, users, flash }) {
     </div>
     <div class="admin-panel" style="margin-bottom:24px;">
       <h2>Create account</h2>
+      <div class="notice" style="margin-bottom:16px;">
+        Roles are enforced on the website: <strong>Admin</strong> = full access, <strong>Auditor</strong> = read-only oversight, <strong>Moderator</strong> = live moderation and console basics.
+      </div>
       <form method="POST" action="/admin/users" class="admin-form">
         <div class="form-row">
           <div>

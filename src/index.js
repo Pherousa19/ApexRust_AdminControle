@@ -1628,7 +1628,7 @@ async function collectServerTelemetry(env) {
   }
 }
 
-function parsePluginList(raw) {
+export function parsePluginList(raw) {
   const text = String(raw || "").trim();
   if (!text) return [];
 
@@ -1640,8 +1640,8 @@ function parsePluginList(raw) {
     const rows = Array.isArray(parsed) ? parsed : parsed?.plugins;
     if (Array.isArray(rows)) {
       return rows.map((plugin) => ({
-        name: plugin.name || plugin.Name,
-        version: plugin.version || plugin.Version || null,
+        name: plugin.name || plugin.Name || plugin.plugin_name,
+        version: plugin.version || plugin.Version || plugin.versionNumber || null,
         enabled: plugin.enabled !== false,
         status: plugin.status || "online",
       })).filter((plugin) => plugin.name);
@@ -1657,14 +1657,37 @@ function parsePluginList(raw) {
     }
   })();
 
-  return String(plainText)
-    .split(/\r?\n/)
-    .map((line) => line.replace(/^[\s\-|]+/, "").trim())
-    .map((line) => {
-      const match = line.match(/^([^\s(]+)(?:\s+v?([\d.]+))?/);
-      return match ? { name: match[1], version: match[2] || null, status: "online", enabled: true } : null;
-    })
-    .filter((plugin) => plugin && plugin.name && !/^(loaded|plugins|total|name|message|identifier|type|stacktrace)$/i.test(plugin.name));
+  const entries = [];
+  for (const line of String(plainText).split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    let candidate = trimmed.replace(/^[-|\s]+/, "").trim();
+    if (!candidate) continue;
+
+    // Oxide commonly prints numbered rows such as "01  AdminRadar", "1. BetterTC", or "2: Kits v1.2.3".
+    candidate = candidate.replace(/^\d{1,3}[\).:\-\s]+/, "").trim();
+    candidate = candidate.replace(/\s+\[(?:enabled|disabled|loaded|unloaded)\]$/i, "");
+    candidate = candidate.replace(/\s+\((?:enabled|disabled|loaded|unloaded)\)$/i, "");
+    candidate = candidate.replace(/\s+(?:enabled|disabled|loaded|unloaded)$/i, "");
+    candidate = candidate.replace(/[.,;]+$/, "").trim();
+
+    if (!candidate || /^\d+$/.test(candidate)) continue;
+    if (/^(loaded|plugins|total|name|message|identifier|type|stacktrace)$/i.test(candidate)) continue;
+
+    let name = candidate;
+    let version = null;
+    const versionMatch = candidate.match(/^(.*?)(?:\s+v?((?:\d+)(?:\.\d+)*))(?=\s|$)/i);
+    if (versionMatch) {
+      name = versionMatch[1].trim();
+      version = versionMatch[2] || null;
+    }
+
+    if (!name || /^\d+$/.test(name)) continue;
+    entries.push({ name, version, status: "online", enabled: true });
+  }
+
+  return entries.filter((plugin) => plugin && plugin.name && !/^(loaded|plugins|total|name|message|identifier|type|stacktrace)$/i.test(plugin.name));
 }
 
 async function handleConsoleWebSocket(request, env) {

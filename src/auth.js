@@ -11,6 +11,12 @@
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 const COOKIE_NAME = "apex_admin_session";
 
+export const ADMIN_ROLE_CAPABILITIES = {
+  admin: ["all"],
+  auditor: ["dashboard:read", "audit:read", "plugins:read", "server:read", "players:read"],
+  moderator: ["dashboard:read", "server:read", "players:read", "players:moderate", "console:basic"],
+};
+
 async function hmac(secret, message) {
   const key = await crypto.subtle.importKey(
     "raw",
@@ -89,15 +95,36 @@ export async function isValidSession(request, env, requiredRole = "admin") {
   try {
     const payload = JSON.parse(base64UrlToStr(payloadB64));
     if (!payload || typeof payload.role !== "string" || !payload.username) return false;
-    if (requiredRole && payload.role !== requiredRole) return false;
-    return payload.exp > Date.now();
+
+    const role = String(payload.role || "admin");
+    if (requiredRole === "admin") {
+      return payload.exp > Date.now() && role === "admin";
+    }
+    if (requiredRole === "auditor") {
+      return payload.exp > Date.now() && (role === "admin" || role === "auditor");
+    }
+    if (requiredRole === "moderator") {
+      return payload.exp > Date.now() && (role === "admin" || role === "moderator");
+    }
+    if (Array.isArray(requiredRole)) {
+      return payload.exp > Date.now() && requiredRole.every((cap) => hasAdminPermission(role, cap));
+    }
+    return payload.exp > Date.now() && role === String(requiredRole);
   } catch {
     return false;
   }
 }
 
+export function hasAdminPermission(role, capability) {
+  const rolePermissions = ADMIN_ROLE_CAPABILITIES[String(role || "admin")] || [];
+  if (rolePermissions.includes("all")) return true;
+  if (!capability) return rolePermissions.length > 0;
+  return rolePermissions.includes(capability);
+}
+
 export async function hashPassword(password) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iterations = 100000;
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(String(password)),
@@ -106,13 +133,13 @@ export async function hashPassword(password) {
     ["deriveBits"]
   );
   const hashBits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt, iterations: 200000 },
+    { name: "PBKDF2", hash: "SHA-256", salt, iterations },
     key,
     256
   );
   const hash = bufToBase64Url(new Uint8Array(hashBits));
   const saltText = bufToBase64Url(salt);
-  return `pbkdf2_sha256$200000$${saltText}$${hash}`;
+  return `pbkdf2_sha256$${iterations}$${saltText}$${hash}`;
 }
 
 export async function verifyPassword(password, storedHash) {
@@ -126,6 +153,11 @@ export async function verifyPassword(password, storedHash) {
     return false;
   }
 
+  const safeIterations = Number(iterations) || 100000;
+  if (safeIterations > 100000) {
+    return false;
+  }
+
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(String(password)),
@@ -135,7 +167,7 @@ export async function verifyPassword(password, storedHash) {
   );
   const salt = base64UrlToBytes(saltText);
   const hashBits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt, iterations: Number(iterations) || 200000 },
+    { name: "PBKDF2", hash: "SHA-256", salt, iterations: safeIterations },
     key,
     256
   );
