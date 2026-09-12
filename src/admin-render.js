@@ -1,3 +1,5 @@
+import { getEffectiveAdminCapabilities } from "./auth.js";
+
 function money(cents) {
   return "£" + ((cents || 0) / 100).toFixed(2);
 }
@@ -1594,13 +1596,45 @@ const activityPanel = `
 
 export function renderAdminUserForm({ storeName, user, flash }) {
   const role = user?.role || "admin";
+  const capabilityMap = getEffectiveAdminCapabilities(user || { role });
+  const capabilityGroups = {
+    "Dashboard": ["dashboard:read"],
+    "Audit": ["audit:read", "audit:write"],
+    "Plugin": ["plugins:read", "plugins:manage"],
+    "Server": ["server:read", "server:write"],
+    "Players": ["players:read", "players:moderate"],
+    "Staff": ["users:manage"],
+    "Console": ["console:basic", "console:advanced"],
+    "Store": ["delivery:manage", "shop:manage"],
+    "Tickets": ["tickets:manage"],
+  };
+
+  const permissionMatrix = Object.entries(capabilityGroups)
+    .map(([group, capabilities]) => {
+      const rows = capabilities
+        .map((capability) => `
+          <label class="toggle-row">
+            <input type="checkbox" name="capabilities" value="${capability}" ${capabilityMap[capability] ? "checked" : ""}>
+            <span>${capability}</span>
+          </label>
+        `)
+        .join("");
+      return `
+        <div class="admin-subpanel" style="margin-top:16px;">
+          <h3>${group}</h3>
+          <div class="permission-grid">${rows}</div>
+        </div>
+      `;
+    })
+    .join("");
+
   const body = `
     <div class="admin-header-row">
       <h1>Edit Admin Account</h1>
     </div>
     <div class="admin-panel" style="margin-bottom:24px;">
       <div class="notice" style="margin-bottom:16px;">
-        Updating <strong>${esc(user?.username || "this account")}</strong>. Leave the password blank to keep the current password unchanged.
+        Updating <strong>${esc(user?.username || "this account")}</strong>. Leave the password blank to keep the current password unchanged. Unchecking a permission explicitly denies it even when the role normally includes it.
       </div>
       <form method="POST" action="/admin/users/${user?.id || 0}/edit" class="admin-form">
         <div class="form-row">
@@ -1620,6 +1654,7 @@ export function renderAdminUserForm({ storeName, user, flash }) {
             <input type="password" name="password" minlength="8" placeholder="Leave blank to keep current password">
           </div>
         </div>
+        ${permissionMatrix}
         <div class="admin-actions" style="margin-top:14px;">
           <button class="btn" type="submit">Save changes</button>
           <a class="btn secondary" href="/admin/users">Cancel</a>
@@ -1668,7 +1703,7 @@ export function renderAdminUsers({ storeName, users, flash }) {
     <div class="admin-panel" style="margin-bottom:24px;">
       <h2>Create account</h2>
       <div class="notice" style="margin-bottom:16px;">
-        Roles are enforced on the website: <strong>Owner</strong> = root control, <strong>Admin</strong> = operational access, <strong>Auditor</strong> = read-only oversight, <strong>Moderator</strong> = live moderation and console basics.
+        Roles are enforced on the website: <strong>Owner</strong> = root control, <strong>Admin</strong> = operational access, <strong>Auditor</strong> = read-only oversight, <strong>Moderator</strong> = live moderation and console basics. Individual permissions can then be adjusted from the account editor below.
       </div>
       <form method="POST" action="/admin/users" class="admin-form">
         <div class="form-row">

@@ -11,28 +11,70 @@
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 const COOKIE_NAME = "apex_admin_session";
 
+export const ADMIN_CAPABILITY_LIST = [
+  "dashboard:read",
+  "audit:read",
+  "audit:write",
+  "plugins:read",
+  "plugins:manage",
+  "server:read",
+  "server:write",
+  "players:read",
+  "players:moderate",
+  "users:manage",
+  "console:basic",
+  "console:advanced",
+  "delivery:manage",
+  "shop:manage",
+  "tickets:manage",
+];
+
 export const ADMIN_ROLE_CAPABILITIES = {
   owner: ["all"],
-  admin: [
-    "dashboard:read",
-    "audit:read",
-    "audit:write",
-    "plugins:read",
-    "plugins:manage",
-    "server:read",
-    "server:write",
-    "players:read",
-    "players:moderate",
-    "users:manage",
-    "console:basic",
-    "console:advanced",
-    "delivery:manage",
-    "shop:manage",
-    "tickets:manage",
-  ],
+  admin: [...ADMIN_CAPABILITY_LIST],
   auditor: ["dashboard:read", "audit:read", "plugins:read", "server:read", "players:read"],
   moderator: ["dashboard:read", "server:read", "players:read", "players:moderate", "console:basic"],
 };
+
+export function parseAdminPermissionOverrides(rawValue) {
+  if (!rawValue) return {};
+
+  let source = rawValue;
+  if (typeof rawValue === "string") {
+    try {
+      source = JSON.parse(rawValue);
+    } catch {
+      return {};
+    }
+  }
+
+  if (!source || typeof source !== "object" || Array.isArray(source)) {
+    return {};
+  }
+
+  const result = {};
+  for (const [key, value] of Object.entries(source)) {
+    if (ADMIN_CAPABILITY_LIST.includes(key)) {
+      result[key] = Boolean(value);
+    }
+  }
+  return result;
+}
+
+export function getEffectiveAdminCapabilities(account = {}) {
+  const role = String(account.role || "admin").toLowerCase();
+  const baseCapabilities = new Set(ADMIN_ROLE_CAPABILITIES[role] || []);
+  const overrides = parseAdminPermissionOverrides(account.capabilities ?? account.capabilities_json ?? {});
+  const result = {};
+
+  for (const capability of ADMIN_CAPABILITY_LIST) {
+    const hasDefault = baseCapabilities.has("all") || baseCapabilities.has(capability);
+    const override = Object.prototype.hasOwnProperty.call(overrides, capability) ? overrides[capability] : null;
+    result[capability] = override === null ? hasDefault : Boolean(override);
+  }
+
+  return result;
+}
 
 async function hmac(secret, message) {
   const key = await crypto.subtle.importKey(
@@ -112,7 +154,26 @@ export async function getSessionUser(request, env) {
     const payload = JSON.parse(base64UrlToStr(payloadB64));
     if (!payload || typeof payload.role !== "string" || !payload.username) return null;
     if (payload.exp <= Date.now()) return null;
-    return { username: String(payload.username), role: String(payload.role || "admin") };
+
+    const role = String(payload.role || "admin");
+    let capabilities = {};
+    if (env?.DB && payload.username) {
+      try {
+        const dbUser = await env.DB.prepare("SELECT * FROM admin_users WHERE username = ?").bind(String(payload.username)).first();
+        if (dbUser) {
+          capabilities = parseAdminPermissionOverrides(dbUser.capabilities_json || {});
+          return {
+            username: String(payload.username),
+            role: String(dbUser.role || role),
+            capabilities,
+          };
+        }
+      } catch {
+        // fall through to the signed role-only session state when the DB isn't ready yet
+      }
+    }
+
+    return { username: String(payload.username), role, capabilities };
   } catch {
     return null;
   }
@@ -122,7 +183,7 @@ export async function hasSessionCapability(request, env, capabilities) {
   const user = await getSessionUser(request, env);
   if (!user) return false;
   const required = Array.isArray(capabilities) ? capabilities : [capabilities];
-  return required.every((capability) => hasAdminPermission(user.role, capability));
+  return required.every((capability) => hasAdminPermission(user, capability));
 }
 
 export async function isValidSession(request, env, requiredRole = "admin") {
@@ -154,33 +215,49 @@ export async function isValidSession(request, env, requiredRole = "admin") {
     const validWindow = payload.exp > Date.now();
     if (!validWindow) return false;
 
+    let user = { username: String(payload.username), role, capabilities: {} };
+    if (env?.DB) {
+      try {
+        const dbUser = await env.DB.prepare("SELECT * FROM admin_users WHERE username = ?").bind(String(payload.username)).first();
+        if (dbUser) {
+          user = {
+            username: String(dbUser.username),
+            role: String(dbUser.role || role),
+            capabilities: parseAdminPermissionOverrides(dbUser.capabilities_json || {}),
+          };
+        }
+      } catch {
+        // ignore DB lookup failures and fall back to the cookie role
+      }
+    }
+
     if (requiredRole === "admin") {
-      return ["owner", "admin"].includes(role);
+      return ["owner", "admin"].includes(user.role);
     }
     if (requiredRole === "auditor") {
-      return ["owner", "admin", "auditor"].includes(role);
+      return ["owner", "admin", "auditor"].includes(user.role);
     }
     if (requiredRole === "moderator") {
-      return ["owner", "admin", "moderator"].includes(role);
+      return ["owner", "admin", "moderator"].includes(user.role);
     }
     if (requiredRole === "owner") {
-      return role === "owner";
+      return user.role === "owner";
     }
     if (Array.isArray(requiredRole)) {
-      return requiredRole.every((cap) => hasAdminPermission(role, cap));
+      return requiredRole.every((cap) => hasAdminPermission(user, cap));
     }
-    return role === String(requiredRole) || (role === "owner" && String(requiredRole) === "admin");
+    return user.role === String(requiredRole) || (user.role === "owner" && String(requiredRole) === "admin");
   } catch {
     return false;
   }
 }
 
-export function hasAdminPermission(role, capability) {
-  const normalizedRole = String(role || "admin").toLowerCase();
-  const rolePermissions = ADMIN_ROLE_CAPABILITIES[normalizedRole] || [];
-  if (rolePermissions.includes("all")) return true;
-  if (!capability) return rolePermissions.length > 0;
-  return rolePermissions.includes(capability);
+export function hasAdminPermission(roleOrAccount, capability) {
+  const account = typeof roleOrAccount === "object" && roleOrAccount !== null ? roleOrAccount : { role: roleOrAccount || "admin" };
+  const effectiveCapabilities = getEffectiveAdminCapabilities(account);
+
+  if (!capability) return Object.values(effectiveCapabilities).some(Boolean);
+  return Boolean(effectiveCapabilities[capability]);
 }
 
 export async function hashPassword(password) {

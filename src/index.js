@@ -39,7 +39,7 @@ import {
   renderAdminUsers,
   renderAdminUserForm,
 } from "./admin-render.js";
-import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword, verifyPassword, hashPassword, getSessionUser, hasSessionCapability } from "./auth.js";
+import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword, verifyPassword, hashPassword, getSessionUser, hasSessionCapability, ADMIN_CAPABILITY_LIST, getEffectiveAdminCapabilities } from "./auth.js";
 import {
   buildSteamLoginUrl,
   verifySteamCallback,
@@ -157,6 +157,7 @@ import {
   setAdminUserEnabled,
   setAdminUserPassword,
   setAdminUserRole,
+  setAdminUserCapabilities,
   updateAdminUserLastLogin,
 } from "./db.js";
 import {
@@ -2112,7 +2113,12 @@ async function handleAdmin(request, env, url, storeName, ctx) {
       return redirect(`/admin/users?flash=${encodeURIComponent("That username already exists.")}`);
     }
     const passwordHash = await hashPassword(password);
-    await createAdminUser(env.DB, { username, passwordHash, role });
+    await createAdminUser(env.DB, {
+      username,
+      passwordHash,
+      role,
+      capabilities: getEffectiveAdminCapabilities({ role }),
+    });
     return redirect(`/admin/users?flash=${encodeURIComponent(`Created admin account "${username}".`)}`);
   }
 
@@ -2147,7 +2153,15 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     const users = await listAdminUsers(env.DB);
     const target = users.find((user) => String(user.id) === adminUserEditMatch[1]);
     if (!target) return redirect(`/admin/users?flash=${encodeURIComponent("Admin account not found.")}`);
+
+    const selectedCapabilities = new Set(form.getAll("capabilities"));
+    const capabilities = {};
+    for (const capability of ADMIN_CAPABILITY_LIST) {
+      capabilities[capability] = selectedCapabilities.has(capability);
+    }
+
     await setAdminUserRole(env.DB, target.id, role);
+    await setAdminUserCapabilities(env.DB, target.id, capabilities);
     if (password) {
       await setAdminUserPassword(env.DB, target.id, await hashPassword(password));
     }

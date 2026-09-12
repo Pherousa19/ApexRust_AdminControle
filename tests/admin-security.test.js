@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSessionCookie, isValidSession, getSessionUser, hasSessionCapability, checkPassword, hashPassword, verifyPassword, hasAdminPermission } from '../src/auth.js';
+import { createSessionCookie, isValidSession, getSessionUser, hasSessionCapability, checkPassword, hashPassword, verifyPassword, hasAdminPermission, getEffectiveAdminCapabilities, parseAdminPermissionOverrides } from '../src/auth.js';
 import { parsePluginList, resolvePluginCommandCandidates } from '../src/index.js';
 
 const env = {
@@ -52,6 +52,19 @@ test('owner role is recognized as the root admin tier and can satisfy admin requ
   assert.equal(hasAdminPermission('owner', 'users:manage'), true);
 });
 
+test('per-user admin permission overrides are evaluated before role defaults', () => {
+  const capabilities = getEffectiveAdminCapabilities({
+    role: 'moderator',
+    capabilities: { 'console:basic': true, 'users:manage': false, 'server:write': true },
+  });
+
+  assert.equal(capabilities['console:basic'], true);
+  assert.equal(capabilities['users:manage'], false);
+  assert.equal(capabilities['server:write'], true);
+  assert.equal(hasAdminPermission({ role: 'moderator', capabilities: { 'users:manage': true } }, 'users:manage'), true);
+  assert.equal(hasAdminPermission({ role: 'moderator', capabilities: { 'players:read': false } }, 'players:read'), false);
+});
+
 test('admin passwords can be hashed and verified securely', async () => {
   const hashed = await hashPassword('ComplexPass!2024');
   assert.equal(await verifyPassword('ComplexPass!2024', hashed), true);
@@ -85,4 +98,10 @@ test('audit telemetry command aliases fall back across legacy and active plugin 
   assert.ok(candidates.includes('apexaudit.player.json'));
   assert.ok(candidates.includes('apextelemetry.player.json'));
   assert.ok(candidates.includes('telemetry.player.json'));
+});
+
+test('permission override maps are parsed and normalized from JSON strings', () => {
+  const parsed = parseAdminPermissionOverrides('{"dashboard:read":true,"players:moderate":false}');
+  assert.deepEqual(parsed, { 'dashboard:read': true, 'players:moderate': false });
+  assert.deepEqual(parseAdminPermissionOverrides(null), {});
 });

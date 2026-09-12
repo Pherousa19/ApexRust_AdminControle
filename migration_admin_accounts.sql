@@ -8,9 +8,12 @@ CREATE TABLE IF NOT EXISTS admin_users (
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL DEFAULT 'admin' CHECK (role IN ('owner','admin','auditor','moderator')),
   enabled INTEGER NOT NULL DEFAULT 1,
+  capabilities_json TEXT NOT NULL DEFAULT '{}',
   last_login_at TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE INDEX IF NOT EXISTS idx_admin_users_role ON admin_users(role, enabled);
+
+ALTER TABLE admin_users ADD COLUMN capabilities_json TEXT NOT NULL DEFAULT '{}';

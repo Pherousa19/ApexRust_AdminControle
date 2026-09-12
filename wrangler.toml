@@ -15,7 +15,7 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "apex-rust-store-v2"
-database_id = "ef3863d3-4cfc-4f68-98e3-b053161195e7"
+database_id = "3fa6dc0c-114a-44cc-8420-b4f03232c61b"
 
 # Secrets (never put these here — set with `npx wrangler secret put NAME`):
 #   STRIPE_SECRET_KEY       sk_live_... or sk_test_...

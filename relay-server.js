@@ -31,6 +31,18 @@ if (!RELAY_SECRET) {
 }
 
 const rconPool = new Map();
+let nextRconIdentifier = 1000;
+
+function allocateRconIdentifier() {
+  // Rust WebRcon uses an integer Identifier. Never reuse random IDs: the relay
+  // multiplexes one backend socket, so IDs must be unique across every request.
+  if (nextRconIdentifier >= 2147483000) nextRconIdentifier = 1000;
+  return nextRconIdentifier++;
+}
+
+function sameIdentifier(a, b) {
+  return String(a) === String(b);
+}
 
 function normalizeRconFrame(message) {
   if (typeof message === "string") return message;
@@ -60,13 +72,16 @@ async function executeQuickQuery(password, command, timeoutMs = 5000) {
   }
 
   return await new Promise((resolve, reject) => {
-    const id = Math.floor(Math.random() * 100000);
+    const id = allocateRconIdentifier();
     const timer = setTimeout(() => {
       pool.routingMap.delete(id);
       reject(new Error(`Query timed out after ${timeoutMs}ms`));
     }, timeoutMs);
 
     pool.routingMap.set(id, {
+      kind: "quick",
+      command,
+
       readyState: WebSocket.OPEN,
       send: (message) => {
         clearTimeout(timer);
@@ -74,7 +89,14 @@ async function executeQuickQuery(password, command, timeoutMs = 5000) {
       },
     });
 
-    pool.ws.send(JSON.stringify({ Identifier: id, Message: command, Name: "WebRcon" }));
+    try {
+      console.log(`[RCON] -> #${id} ${command.slice(0, 120)}`);
+      pool.ws.send(JSON.stringify({ Identifier: id, Message: command, Name: "WebRcon" }));
+    } catch (err) {
+      clearTimeout(timer);
+      pool.routingMap.delete(id);
+      reject(new Error(`RCON send failed: ${err.message}`));
+    }
   });
 }
 
@@ -106,7 +128,7 @@ function maintainRconConnection(password) {
     }
   }
 
-  const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${password}`;
+  const rconUrl = `ws://${RCON_HOST}:${RCON_PORT}/${encodeURIComponent(password)}`;
   console.log(`🔌 [Pool] Establishing permanent target link to ${RCON_HOST}:${RCON_PORT}`);
 
   const serverWs = new WebSocket(rconUrl);
@@ -150,13 +172,30 @@ function maintainRconConnection(password) {
     try {
       const payload = JSON.parse(data.toString());
       const identifier = payload.Identifier;
-      if (identifier !== undefined && poolEntry.routingMap.has(identifier)) {
-        const targetClient = poolEntry.routingMap.get(identifier);
-        if (targetClient && targetClient.readyState === WebSocket.OPEN) {
-          targetClient.send(data, { binary: isBinary });
+      if (identifier !== undefined) {
+        // RCON implementations have been seen returning Identifier as either a
+        // JSON number or string. Treat them equivalently.
+        let matchedKey = null;
+        for (const key of poolEntry.routingMap.keys()) {
+          if (sameIdentifier(key, identifier)) { matchedKey = key; break; }
         }
-        poolEntry.routingMap.delete(identifier);
-        return;
+        if (matchedKey !== null) {
+          const target = poolEntry.routingMap.get(matchedKey);
+          poolEntry.routingMap.delete(matchedKey);
+          console.log(`[RCON] <- #${identifier} routed (${target?.kind || "unknown"}${target?.command ? `: ${target.command.slice(0, 120)}` : ""})`);
+          if (target?.kind === "quick") {
+            target.send(data, { binary: isBinary });
+          } else if (target?.kind === "client") {
+            const outgoing = JSON.stringify({
+              ...payload,
+              Identifier: target.clientIdentifier,
+            });
+            if (target.client.readyState === WebSocket.OPEN) {
+              target.client.send(outgoing);
+            }
+          }
+          return;
+        }
       }
     } catch (err) {}
 
@@ -254,12 +293,24 @@ function handleConnection(clientWs, req) {
 
   clientWs.on("message", (data) => {
     try {
+      data = Buffer.isBuffer(data) ? data.toString("utf8") : data;
       const payload = JSON.parse(data.toString());
       if (payload.Identifier !== undefined) {
-        pool.routingMap.set(payload.Identifier, clientWs);
-        clientIdentifiers.add(payload.Identifier);
+        const clientIdentifier = payload.Identifier;
+        const backendIdentifier = allocateRconIdentifier();
+        pool.routingMap.set(backendIdentifier, {
+          kind: "client",
+          client: clientWs,
+          clientIdentifier,
+        });
+        clientIdentifiers.add(backendIdentifier);
+        payload.Identifier = backendIdentifier;
+        data = JSON.stringify(payload);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn("[Pool] Invalid client RCON frame:", err.message);
+      return;
+    }
 
     if (pool.ws?.readyState === WebSocket.OPEN && !pendingMessages.length && !flushing) {
       pool.ws.send(data);

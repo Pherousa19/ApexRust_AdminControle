@@ -1279,10 +1279,16 @@ export async function getAdminUserByUsername(db, username) {
   return await db.prepare("SELECT * FROM admin_users WHERE username = ?").bind(String(username || "").trim()).first();
 }
 
-export async function createAdminUser(db, { username, passwordHash, role = "admin", enabled = true }) {
+export async function createAdminUser(db, { username, passwordHash, role = "admin", enabled = true, capabilities = {} }) {
   const { meta } = await db.prepare(
-    "INSERT INTO admin_users (username, password_hash, role, enabled, created_at, updated_at) VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))"
-  ).bind(String(username || "").trim(), String(passwordHash || ""), String(role || "admin"), enabled ? 1 : 0).run();
+    "INSERT INTO admin_users (username, password_hash, role, enabled, capabilities_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(
+    String(username || "").trim(),
+    String(passwordHash || ""),
+    String(role || "admin"),
+    enabled ? 1 : 0,
+    JSON.stringify(capabilities || {})
+  ).run();
   return Number(meta.last_row_id);
 }
 
@@ -1296,6 +1302,10 @@ export async function setAdminUserPassword(db, id, passwordHash) {
 
 export async function setAdminUserRole(db, id, role) {
   await db.prepare("UPDATE admin_users SET role = ?, updated_at = datetime('now') WHERE id = ?").bind(String(role || "admin"), Number(id)).run();
+}
+
+export async function setAdminUserCapabilities(db, id, capabilities = {}) {
+  await db.prepare("UPDATE admin_users SET capabilities_json = ?, updated_at = datetime('now') WHERE id = ?").bind(JSON.stringify(capabilities || {}), Number(id)).run();
 }
 
 export async function updateAdminUserLastLogin(db, id) {
