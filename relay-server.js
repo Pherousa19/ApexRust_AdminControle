@@ -8,11 +8,11 @@ import crypto from "node:crypto";
 import WebSocket from "ws";
 
 const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
-const RCON_HOST = String(process.env.RCON_HOST || "").trim();
-const RCON_PORT = Number.parseInt(String(process.env.RCON_PORT || "").trim(), 10);
-const RELAY_SECRET = String(process.env.RELAY_SECRET || "").trim();
+const RCON_HOST = (process.env.RCON_HOST || "51.254.16.223").trim();
+const RCON_PORT = Number.parseInt((process.env.RCON_PORT || "25676").trim(), 10);
+const RELAY_SECRET = (process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f").trim();
 
-if (!RCON_HOST || !Number.isInteger(RCON_PORT) || RCON_PORT <= 0 || !RELAY_SECRET) {
+if (!Number.isInteger(RCON_PORT) || RCON_PORT <= 0) {
   console.error("Relay env validation failed:", {
     RCON_HOST: RCON_HOST || null,
     RCON_PORT: Number.isInteger(RCON_PORT) ? RCON_PORT : null,
@@ -20,7 +20,11 @@ if (!RCON_HOST || !Number.isInteger(RCON_PORT) || RCON_PORT <= 0 || !RELAY_SECRE
     PORT,
     matchingKeys: Object.keys(process.env).filter((key) => /RCON|RELAY|PORT/i.test(key)).sort(),
   });
-  throw new Error("RCON_HOST, RCON_PORT, and RELAY_SECRET environment variables are required");
+  throw new Error("RCON_PORT is invalid");
+}
+
+if (!RELAY_SECRET) {
+  throw new Error("RELAY_SECRET environment variable is required");
 }
 
 const rconPool = new Map();
