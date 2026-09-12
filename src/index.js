@@ -37,8 +37,9 @@ import {
   renderPlugins,
   renderAudit,
   renderAdminUsers,
+  renderAdminUserForm,
 } from "./admin-render.js";
-import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword, verifyPassword, hashPassword } from "./auth.js";
+import { createSessionCookie, clearSessionCookie, isValidSession, checkPassword, verifyPassword, hashPassword, getSessionUser, hasSessionCapability } from "./auth.js";
 import {
   buildSteamLoginUrl,
   verifySteamCallback,
@@ -1815,12 +1816,21 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     return redirect("/admin/login");
   }
 
+  const requireCapability = async (capability, redirectTarget = "/admin") => {
+    if (await hasSessionCapability(request, env, capability)) return null;
+    return redirect(`${redirectTarget}?flash=${encodeURIComponent("You do not have permission to access that feature.")}`);
+  };
+
   if (pathname === "/admin/users" && method === "GET") {
+    const denied = await requireCapability("users:manage", "/admin");
+    if (denied) return denied;
     const users = await listAdminUsers(env.DB);
     return html(renderAdminUsers({ storeName, users, flash: url.searchParams.get("flash") }));
   }
 
   if (pathname === "/admin/users" && method === "POST") {
+    const denied = await requireCapability("users:manage", "/admin/users");
+    if (denied) return denied;
     const form = await request.formData();
     const username = String(form.get("username") || "").trim();
     const password = String(form.get("password") || "");
@@ -1838,12 +1848,51 @@ async function handleAdmin(request, env, url, storeName, ctx) {
 
   const adminUserToggleMatch = pathname.match(/^\/admin\/users\/(\d+)\/toggle$/);
   if (adminUserToggleMatch && method === "POST") {
+    const denied = await requireCapability("users:manage", "/admin/users");
+    if (denied) return denied;
     const users = await listAdminUsers(env.DB);
     const target = users.find((user) => String(user.id) === adminUserToggleMatch[1]);
     if (target) {
       await setAdminUserEnabled(env.DB, target.id, !target.enabled);
     }
     return redirect(`/admin/users?flash=${encodeURIComponent("Admin account status updated.")}`);
+  }
+
+  const adminUserEditMatch = pathname.match(/^\/admin\/users\/(\d+)\/edit$/);
+  if (adminUserEditMatch && method === "GET") {
+    const denied = await requireCapability("users:manage", "/admin/users");
+    if (denied) return denied;
+    const users = await listAdminUsers(env.DB);
+    const target = users.find((user) => String(user.id) === adminUserEditMatch[1]);
+    if (!target) return redirect(`/admin/users?flash=${encodeURIComponent("Admin account not found.")}`);
+    return html(renderAdminUserForm({ storeName, user: target, flash: url.searchParams.get("flash") }));
+  }
+
+  if (adminUserEditMatch && method === "POST") {
+    const denied = await requireCapability("users:manage", "/admin/users");
+    if (denied) return denied;
+
+    try {
+      const form = await request.formData();
+      const role = ["owner", "admin", "auditor", "moderator"].includes(String(form.get("role") || "admin")) ? String(form.get("role")) : "admin";
+      const password = String(form.get("password") || "").trim();
+      const users = await listAdminUsers(env.DB);
+      const target = users.find((user) => String(user.id) === adminUserEditMatch[1]);
+      if (!target) return redirect(`/admin/users?flash=${encodeURIComponent("Admin account not found.")}`);
+
+      if (String(target.username).toLowerCase() === String((await getSessionUser(request, env))?.username || "").toLowerCase() && role !== target.role) {
+        return redirect(`/admin/users?flash=${encodeURIComponent("You cannot change your own role from this screen. Ask the owner to do it from a separate account.")}`);
+      }
+
+      await setAdminUserRole(env.DB, target.id, role);
+      if (password) {
+        await setAdminUserPassword(env.DB, target.id, await hashPassword(password));
+      }
+      return redirect(`/admin/users?flash=${encodeURIComponent(`Updated account "${target.username}".`)}`);
+    } catch (err) {
+      console.error("Admin user edit failed:", err);
+      return redirect(`/admin/users?flash=${encodeURIComponent("Could not update this admin account. Check the account data and try again.")}`);
+    }
   }
 
   if (method === "POST" && !isSameOriginRequest(request)) {
@@ -1878,6 +1927,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   }
 
   if (pathname === "/admin/products" && method === "GET") {
+    const denied = await requireCapability("shop:manage", "/admin");
+    if (denied) return denied;
     const products = await getAllProducts(env.DB);
     return html(renderProductList({ storeName, products, flash: url.searchParams.get("flash") }));
   }
@@ -2099,6 +2150,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   }
 
   if (pathname === "/admin/deliveries/retry-failed" && method === "POST") {
+    const denied = await requireCapability("delivery:manage", "/admin/deliveries");
+    if (denied) return denied;
     const count = await resetFailedDeliveries(env.DB);
     await recordControlEvents(env.DB, [{ eventType: "ADMIN_DELIVERY_BULK_RETRY", source: "admin", payload: { count } }]);
     await drainDeliveryQueue(env);
@@ -2118,6 +2171,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
 
   const deliveryRetryMatch = pathname.match(/^\/admin\/deliveries\/(\d+)\/retry$/);
   if (deliveryRetryMatch && method === "POST") {
+    const denied = await requireCapability("delivery:manage", "/admin/deliveries");
+    if (denied) return denied;
     await resetDeliveryForRetry(env.DB, Number(deliveryRetryMatch[1]));
     await drainDeliveryQueue(env);
     return redirect("/admin/deliveries");
@@ -2132,7 +2187,16 @@ async function handleAdmin(request, env, url, storeName, ctx) {
     return html(renderPlugins({ storeName, plugins, flash: url.searchParams.get("flash") }));
   }
 
+  if (pathname === "/admin/plugins/refresh" && method === "POST") {
+    const denied = await requireCapability("plugins:read", "/admin/plugins");
+    if (denied) return denied;
+    await collectServerTelemetry(env);
+    return redirect(`/admin/plugins?flash=${encodeURIComponent("Plugin registry refreshed.")}`);
+  }
+
   if (pathname === "/admin/plugins/action" && method === "POST") {
+    const denied = await requireCapability("plugins:manage", "/admin/plugins");
+    if (denied) return denied;
     const form = await request.formData();
     const plugin = String(form.get("plugin") || "").trim();
     const actionType = String(form.get("actionType") || "").trim();
@@ -2217,6 +2281,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   // /admin/deliveries with a retry if the server is briefly unreachable.
   const playerCardActionMatch = pathname.match(/^\/admin\/players\/([^/]+)\/action$/);
   if (playerCardActionMatch && method === "POST") {
+    const denied = await requireCapability("players:moderate", "/admin/players");
+    if (denied) return denied;
     const steamid = decodeURIComponent(playerCardActionMatch[1]);
     if (!/^\d{17}$/.test(steamid)) {
       return redirect(`/admin/players/${encodeURIComponent(steamid)}?flash=${encodeURIComponent("Invalid SteamID64 — can't act on this profile.")}`);
@@ -2420,6 +2486,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
 
   // ---- Mini console ----
   if (pathname === "/admin/console/exec" && method === "POST") {
+    const denied = await requireCapability("console:advanced", "/admin/server");
+    if (denied) return denied;
     const form = await request.formData();
     const command = (form.get("command") || "").trim();
     if (!command) return redirect("/admin/server");
@@ -2437,6 +2505,8 @@ async function handleAdmin(request, env, url, storeName, ctx) {
   }
 
   if (pathname === "/admin/server/action" && method === "POST") {
+    const denied = await requireCapability("server:write", "/admin/server");
+    if (denied) return denied;
     const form = await request.formData();
     const actionType = (form.get("actionType") || "").trim();
     const back = "/admin/server";

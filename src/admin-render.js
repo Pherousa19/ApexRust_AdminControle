@@ -346,19 +346,22 @@ function serverStatusPanel(serverStatus) {
 
 export function renderPlugins({ storeName, plugins, flash }) {
   const rows = (plugins || []).map((p) => {
+    const pluginName = String(p.plugin_name || p.name || p.server_key || "Plugin").trim();
+    const cleanName = pluginName.replace(/^\d{1,3}[\).:\-\s]+/, '').trim();
+    const displayName = cleanName || pluginName || 'Plugin';
     let caps = [];
     try { caps = p.capabilities_json ? JSON.parse(p.capabilities_json) : []; } catch {}
     const status = p.status || 'unknown';
     const badge = status === 'online' ? 'badge-active' : status === 'warning' ? 'badge-warning' : 'badge-muted';
     return `<tr>
-      <td><strong>${esc(p.plugin_name)}</strong><div class="muted">${esc(p.server_key)}</div></td>
+      <td><strong>${esc(displayName)}</strong><div class="muted">${esc(p.server_key || 'primary')}</div></td>
       <td>${esc(p.version || '—')}</td>
       <td><span class="badge ${badge}">${esc(status)}</span></td>
       <td>${caps.length ? caps.map(c => `<span class="status-pill">${esc(c)}</span>`).join(' ') : '<span class="muted">No capabilities reported</span>'}</td>
       <td>${esc(fmtDate(p.last_seen_at))}</td>
       <td class="admin-actions">
-        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(p.plugin_name)}"><input type="hidden" name="actionType" value="load"><button class="link-btn" type="submit">Load</button></form>
-        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(p.plugin_name)}"><input type="hidden" name="actionType" value="unload"><button class="link-btn danger" type="submit">Unload</button></form>
+        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(displayName)}"><input type="hidden" name="actionType" value="load"><button class="link-btn" type="submit">Load</button></form>
+        <form method="POST" action="/admin/plugins/action" style="display:inline;"><input type="hidden" name="plugin" value="${esc(displayName)}"><input type="hidden" name="actionType" value="unload"><button class="link-btn danger" type="submit">Unload</button></form>
       </td>
     </tr>`;
   }).join('');
@@ -367,7 +370,13 @@ export function renderPlugins({ storeName, plugins, flash }) {
   const body = `
     <section class="dash-hero">
       <div><span class="admin-kicker">APEX CONTROL</span><h1>Plugin registry</h1><p>Every Rust integration reports into one control plane instead of maintaining separate dashboards.</p></div>
-      <div class="dash-hero-actions"><a class="btn secondary" href="/admin/audit">Open audit stream</a><a class="btn" href="/admin/server">Server controls</a></div>
+      <div class="dash-hero-actions">
+        <form method="POST" action="/admin/plugins/refresh" style="display:inline;">
+          <button class="btn secondary" type="submit">Refresh registry</button>
+        </form>
+        <a class="btn secondary" href="/admin/audit">Open audit stream</a>
+        <a class="btn" href="/admin/server">Server controls</a>
+      </div>
     </section>
     <section class="kpi-grid">
       <div class="kpi-card kpi-green"><span class="kpi-icon">✓</span><div><small>PLUGINS ONLINE</small><strong>${online}</strong><span>Reporting normally</span></div></div>
@@ -1583,6 +1592,44 @@ const activityPanel = `
 }
 
 
+export function renderAdminUserForm({ storeName, user, flash }) {
+  const role = user?.role || "admin";
+  const body = `
+    <div class="admin-header-row">
+      <h1>Edit Admin Account</h1>
+    </div>
+    <div class="admin-panel" style="margin-bottom:24px;">
+      <div class="notice" style="margin-bottom:16px;">
+        Updating <strong>${esc(user?.username || "this account")}</strong>. Leave the password blank to keep the current password unchanged.
+      </div>
+      <form method="POST" action="/admin/users/${user?.id || 0}/edit" class="admin-form">
+        <div class="form-row">
+          <div>
+            <label>Role</label>
+            <select name="role">
+              <option value="owner" ${role === "owner" ? "selected" : ""}>Owner</option>
+              <option value="admin" ${role === "admin" ? "selected" : ""}>Admin</option>
+              <option value="auditor" ${role === "auditor" ? "selected" : ""}>Auditor</option>
+              <option value="moderator" ${role === "moderator" ? "selected" : ""}>Moderator</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>New password</label>
+            <input type="password" name="password" minlength="8" placeholder="Leave blank to keep current password">
+          </div>
+        </div>
+        <div class="admin-actions" style="margin-top:14px;">
+          <button class="btn" type="submit">Save changes</button>
+          <a class="btn secondary" href="/admin/users">Cancel</a>
+        </div>
+      </form>
+    </div>
+  `;
+  return adminLayout({ storeName, active: "/admin/users", body, flash });
+}
+
 export function renderAdminUsers({ storeName, users, flash }) {
   const roleSummary = {
     owner: "Root owner access: full control of all admin functions, user management, and server operations.",
@@ -1604,13 +1651,15 @@ export function renderAdminUsers({ storeName, users, flash }) {
           <td>${user.last_login_at ? fmtDate(user.last_login_at) : "—"}</td>
           <td>${fmtDate(user.created_at)}</td>
           <td class="admin-actions">
-            <form method="POST" action="/admin/users/${user.id}/toggle" style="display:inline;">
+            <form method="POST" action="/admin/users/${user.id}/toggle" style="display:inline; margin-right:8px;">
               <button class="link-btn" type="submit">${user.enabled ? "Disable" : "Enable"}</button>
             </form>
+            <a class="link-btn" href="/admin/users/${user.id}/edit" style="display:inline-block;">Edit</a>
           </td>
         </tr>
       `;
-    }).join("");
+    })
+    .join("");
 
   const body = `
     <div class="admin-header-row">
@@ -1645,6 +1694,9 @@ export function renderAdminUsers({ storeName, users, flash }) {
         </div>
         <button class="btn" type="submit" style="margin-top:14px;">Create account</button>
       </form>
+    </div>
+    <div class="notice" style="margin:0 0 16px;">
+      Edit a staff member from the table below to change their role or reset their password in one step.
     </div>
     <table class="admin-table">
       <thead><tr><th>Username</th><th>Role</th><th>Status</th><th>Last login</th><th>Created</th><th></th></tr></thead>

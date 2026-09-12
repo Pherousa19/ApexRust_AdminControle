@@ -4,24 +4,47 @@
 /**
  * Send a single RCON command and return the server's response string.
  * Throws on timeout, connection failure, or a non-2xx websocket close.
- * 
+ *
  * Routes through the authenticated relay HTTP command endpoint. The relay
  * then executes the command over its internal Rust RCON WebSocket.
+ *
+ * `timeoutMs` is forwarded to the relay (via x-timeout-ms) so it actually
+ * waits as long as the caller expects for slow commands (audit/roster/
+ * recent-activity style oxide plugin commands can take longer than the
+ * relay's old hardcoded 5s cap). A client-side AbortController with a small
+ * buffer on top is used as a backstop in case the relay itself hangs.
  */
 export async function sendRconCommand(env, command, { timeoutMs = 8000 } = {}) {
   if (!env.RELAY_URL || !env.RELAY_SECRET) {
     throw new Error("RELAY_URL and RELAY_SECRET must be configured");
   }
-  const response = await fetch(`${env.RELAY_URL.trimEnd('/')}/api/command`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RELAY_SECRET}`,
-      "x-rcon-password": env.RCON_PASSWORD,
-      "content-type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ command }),
-  });
+
+  const controller = new AbortController();
+  const abortTimer = setTimeout(() => controller.abort(), timeoutMs + 2000);
+
+  let response;
+  try {
+    response = await fetch(`${env.RELAY_URL.trimEnd('/')}/api/command`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RELAY_SECRET}`,
+        "x-rcon-password": env.RCON_PASSWORD,
+        "x-timeout-ms": String(timeoutMs),
+        "content-type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ command, timeoutMs }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err.name === "AbortError") {
+      throw new Error(`Relay did not respond within ${timeoutMs + 2000}ms running: ${command}`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(abortTimer);
+  }
+
   if (!response.ok) {
     let detail = `HTTP ${response.status}`;
     try { detail += `: ${(await response.json()).error || "relay command failed"}`; } catch {}
@@ -53,7 +76,7 @@ function normalizeCommandOutput(output) {
 
 async function sendRconViaRelay(env, command, timeoutMs) {
   const url = `${env.RELAY_URL.trimEnd('/')}/`;
-  
+
   const resp = await fetch(url, {
     headers: {
       Upgrade: "websocket",
@@ -179,18 +202,39 @@ function unwrapRconJson(raw) {
   return envelope;
 }
 
-async function fetchRelayJson(env, path) {
+/**
+ * `timeoutMs` defaults to 8000 here (rather than the relay's old internal
+ * 5000ms cap) and is forwarded via x-timeout-ms so the relay actually waits
+ * as long as this function is prepared to.
+ */
+async function fetchRelayJson(env, path, { timeoutMs = 8000 } = {}) {
   if (!env.RELAY_URL || !env.RELAY_SECRET) {
     throw new Error("RELAY_URL and RELAY_SECRET must be configured");
   }
 
-  const response = await fetch(`${env.RELAY_URL.trimEnd()}${path}`, {
-    headers: {
-      Authorization: `Bearer ${env.RELAY_SECRET}`,
-      "x-rcon-password": env.RCON_PASSWORD,
-      Accept: "application/json",
-    },
-  });
+  const controller = new AbortController();
+  const abortTimer = setTimeout(() => controller.abort(), timeoutMs + 2000);
+
+  let response;
+  try {
+    response = await fetch(`${env.RELAY_URL.trimEnd('/')}${path}`, {
+      headers: {
+        Authorization: `Bearer ${env.RELAY_SECRET}`,
+        "x-rcon-password": env.RCON_PASSWORD,
+        "x-timeout-ms": String(timeoutMs),
+        Accept: "application/json",
+      },
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err.name === "AbortError") {
+      throw new Error(`Relay did not respond within ${timeoutMs + 2000}ms for ${path}`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(abortTimer);
+  }
+
   if (!response.ok) {
     throw new Error(`Relay request ${path} failed: HTTP ${response.status}`);
   }

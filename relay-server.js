@@ -37,14 +37,26 @@ function createMessageId(pool) {
   return id;
 }
 
-async function executeQuickQuery(password, command) {
+// Bounds on the caller-supplied timeout so nobody can request 0ms or
+// 10 minutes by accident. Default matches the old hardcoded behavior.
+const MIN_QUERY_TIMEOUT_MS = 1000;
+const MAX_QUERY_TIMEOUT_MS = 15000;
+const DEFAULT_QUERY_TIMEOUT_MS = 5000;
+
+function clampTimeoutMs(value) {
+  const n = Number.parseInt(value, 10);
+  if (!Number.isFinite(n)) return DEFAULT_QUERY_TIMEOUT_MS;
+  return Math.min(MAX_QUERY_TIMEOUT_MS, Math.max(MIN_QUERY_TIMEOUT_MS, n));
+}
+
+async function executeQuickQuery(password, command, timeoutMs = DEFAULT_QUERY_TIMEOUT_MS) {
   const pool = rconPool.get(password);
   if (!pool) throw new Error("RCON backend pipeline is offline");
 
   if (!pool.ws || pool.ws.readyState !== WebSocket.OPEN) {
     await Promise.race([
       pool.readyPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), 5000)),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("RCON backend pipeline did not open in time")), timeoutMs)),
     ]);
   }
 
@@ -52,8 +64,8 @@ async function executeQuickQuery(password, command) {
     const id = createMessageId(pool);
     const timer = setTimeout(() => {
       pool.routingMap.delete(id);
-      reject(new Error("Query timed out"));
-    }, 5000);
+      reject(new Error(`Query timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
 
     pool.routingMap.set(id, {
       readyState: WebSocket.OPEN,
@@ -97,12 +109,18 @@ const server = http.createServer(async (req, res) => {
 
   maintainRconConnection(rconPassword);
 
+  // Callers (rcon.js) can ask for a longer wait on commands they know are
+  // slow (audit/roster/recent-activity style oxide plugin commands) by
+  // sending x-timeout-ms. Falls back to the 5s default, clamped 1-15s.
+  const timeoutMs = clampTimeoutMs(req.headers["x-timeout-ms"]);
+
   if (urlObj.pathname === "/api/serverinfo") {
     try {
-      const data = await executeQuickQuery(rconPassword, "serverinfo");
+      const data = await executeQuickQuery(rconPassword, "serverinfo", timeoutMs);
       res.writeHead(200, { "content-type": "application/json" });
       return res.end(data);
     } catch (err) {
+      console.error(`[HTTP] /api/serverinfo failed: ${err.message}`);
       res.writeHead(502, { "content-type": "application/json" });
       return res.end(JSON.stringify({ error: err.message }));
     }
@@ -110,29 +128,34 @@ const server = http.createServer(async (req, res) => {
 
   if (urlObj.pathname === "/api/playerlist") {
     try {
-      const data = await executeQuickQuery(rconPassword, "playerlist");
+      const data = await executeQuickQuery(rconPassword, "playerlist", timeoutMs);
       res.writeHead(200, { "content-type": "application/json" });
       return res.end(data);
     } catch (err) {
+      console.error(`[HTTP] /api/playerlist failed: ${err.message}`);
       res.writeHead(502, { "content-type": "application/json" });
       return res.end(JSON.stringify({ error: err.message }));
     }
   }
 
   if (urlObj.pathname === "/api/command" && req.method === "POST") {
+    let command = "";
     try {
       const chunks = [];
       for await (const chunk of req) chunks.push(chunk);
       const body = JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-      const command = typeof body.command === "string" ? body.command.trim() : "";
+      command = typeof body.command === "string" ? body.command.trim() : "";
       if (!command || command.length > 4000) {
         res.writeHead(400, { "content-type": "application/json" });
         return res.end(JSON.stringify({ error: "A command between 1 and 4000 characters is required" }));
       }
-      const data = await executeQuickQuery(rconPassword, command);
+      // Body can also override the timeout, in case a caller can't set headers.
+      const effectiveTimeoutMs = body.timeoutMs != null ? clampTimeoutMs(body.timeoutMs) : timeoutMs;
+      const data = await executeQuickQuery(rconPassword, command, effectiveTimeoutMs);
       res.writeHead(200, { "content-type": "application/json" });
       return res.end(JSON.stringify({ output: data }));
     } catch (err) {
+      console.error(`[HTTP] /api/command "${command}" failed: ${err.message}`);
       res.writeHead(502, { "content-type": "application/json" });
       return res.end(JSON.stringify({ error: err.message }));
     }

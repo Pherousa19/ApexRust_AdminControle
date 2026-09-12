@@ -88,6 +88,43 @@ export function clearSessionCookie() {
   return `${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
 }
 
+export async function getSessionUser(request, env) {
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${COOKIE_NAME}=([^;]+)`));
+  let token = match ? match[1] : "";
+
+  if (!token) {
+    const directValue = cookieHeader
+      .split(";")
+      .map((part) => part.trim())
+      .find((part) => part && part.includes(".") && !part.includes("="));
+    if (directValue) token = directValue;
+  }
+
+  if (!token) return null;
+  const [payloadB64, sig] = token.split(".");
+  if (!payloadB64 || !sig) return null;
+
+  const expectedSig = await hmac(env.ADMIN_SESSION_SECRET, payloadB64);
+  if (!timingSafeEqual(sig, expectedSig)) return null;
+
+  try {
+    const payload = JSON.parse(base64UrlToStr(payloadB64));
+    if (!payload || typeof payload.role !== "string" || !payload.username) return null;
+    if (payload.exp <= Date.now()) return null;
+    return { username: String(payload.username), role: String(payload.role || "admin") };
+  } catch {
+    return null;
+  }
+}
+
+export async function hasSessionCapability(request, env, capabilities) {
+  const user = await getSessionUser(request, env);
+  if (!user) return false;
+  const required = Array.isArray(capabilities) ? capabilities : [capabilities];
+  return required.every((capability) => hasAdminPermission(user.role, capability));
+}
+
 export async function isValidSession(request, env, requiredRole = "admin") {
   const cookieHeader = request.headers.get("Cookie") || "";
   const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${COOKIE_NAME}=([^;]+)`));
