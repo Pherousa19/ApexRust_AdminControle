@@ -9,12 +9,19 @@
 
 import http from "node:http";
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { WebSocket, WebSocketServer } from "ws";
 
 const PORT = Number.parseInt((process.env.PORT || "3000").trim(), 10) || 3000;
 const RCON_HOST = (process.env.RCON_HOST || "51.254.16.223").trim();
 const RCON_PORT = Number.parseInt((process.env.RCON_PORT || "25676").trim(), 10);
 const RELAY_SECRET = (process.env.RELAY_SECRET || "ae7f3b9c4d8e2a1f").trim();
+const OXIDE_DATA_DIR = (process.env.OXIDE_DATA_DIR || path.resolve(process.cwd(), "plugins/data")).trim();
+const DEFAULT_JSON_SNAPSHOT_FILES = {
+  apexadminaudit: "ApexAdminAudit.json",
+  playerdata: "PlayerData.json",
+};
 
 if (!Number.isInteger(RCON_PORT) || RCON_PORT <= 0) {
   throw new Error("RCON_PORT is invalid");
@@ -170,6 +177,42 @@ function maintainRconConnection(password) {
   return poolEntry;
 }
 
+function resolveSnapshotFileName(fileQuery) {
+  const normalized = String(fileQuery || "").trim();
+  if (!normalized) return null;
+  const lower = normalized.toLowerCase();
+  if (DEFAULT_JSON_SNAPSHOT_FILES[lower]) return DEFAULT_JSON_SNAPSHOT_FILES[lower];
+  return normalized.endsWith(".json") ? normalized : `${normalized}.json`;
+}
+
+function readServerJsonSnapshot(fileQuery) {
+  const fileName = resolveSnapshotFileName(fileQuery);
+  if (!fileName) {
+    throw new Error("No JSON snapshot file was supplied");
+  }
+
+  const fullPath = path.resolve(OXIDE_DATA_DIR, fileName);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`Snapshot file not found: ${fullPath}`);
+  }
+
+  const raw = fs.readFileSync(fullPath, "utf8");
+  let payload = null;
+  try {
+    payload = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Snapshot file is not valid JSON: ${fullPath} (${err.message})`);
+  }
+
+  return {
+    key: fileName,
+    sourceName: fileName,
+    sourcePath: fullPath,
+    valueHash: crypto.createHash("sha256").update(raw).digest("hex"),
+    payload,
+  };
+}
+
 function handleConnection(clientWs, req) {
   let password = req.headers["x-rcon-password"] || req.headers["X-RCON-Password"];
   if (!password) {
@@ -305,6 +348,25 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       console.error("[HTTP] /api/command failed:", err.message);
       res.writeHead(502, { "content-type": "application/json" });
+      return res.end(JSON.stringify({ error: err.message }));
+    }
+  }
+
+  if (urlObj.pathname === "/api/json-snapshot" && req.method === "GET") {
+    try {
+      const fileQuery = urlObj.searchParams.get("file") || urlObj.searchParams.get("kind") || "ApexAdminAudit.json";
+      const snapshot = readServerJsonSnapshot(fileQuery);
+      res.writeHead(200, { "content-type": "application/json" });
+      return res.end(JSON.stringify({
+        ok: true,
+        file: snapshot.sourceName,
+        path: snapshot.sourcePath,
+        hash: snapshot.valueHash,
+        payload: snapshot.payload,
+      }));
+    } catch (err) {
+      console.error("[HTTP] /api/json-snapshot failed:", err.message);
+      res.writeHead(404, { "content-type": "application/json" });
       return res.end(JSON.stringify({ error: err.message }));
     }
   }

@@ -657,6 +657,39 @@ export async function upsertRconCache(db, key, value) {
     .run();
 }
 
+/** Stores a server-side JSON snapshot keyed by its canonical name and only
+ * updates if the content hash changes. This lets the page load from a
+ * known-good cached payload instead of rebuilding from scratch each hit. */
+export async function getJsonSnapshot(db, key) {
+  try {
+    return await db.prepare("SELECT key, source_name, source_path, value_hash, payload_json, updated_at FROM server_json_snapshots WHERE key = ?").bind(key).first();
+  } catch {
+    return null;
+  }
+}
+
+export async function upsertJsonSnapshot(db, key, { sourceName, sourcePath, payload, valueHash }) {
+  await db
+    .prepare(
+      `INSERT INTO server_json_snapshots (key, source_name, source_path, value_hash, payload_json, updated_at)
+       VALUES (?, ?, ?, ?, ?, datetime('now'))
+       ON CONFLICT(key) DO UPDATE SET
+         source_name = excluded.source_name,
+         source_path = excluded.source_path,
+         value_hash = excluded.value_hash,
+         payload_json = excluded.payload_json,
+         updated_at = excluded.updated_at`
+    )
+    .bind(
+      String(key),
+      String(sourceName || "unknown"),
+      sourcePath ? String(sourcePath) : null,
+      valueHash ? String(valueHash) : null,
+      JSON.stringify(payload)
+    )
+    .run();
+}
+
 // ============================================================
 // Gift cards
 // ============================================================

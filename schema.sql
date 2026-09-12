@@ -217,6 +217,16 @@ CREATE TABLE server_status (
 );
 INSERT INTO server_status (id) VALUES (1);
 
+CREATE TABLE server_json_snapshots (
+  key TEXT PRIMARY KEY,
+  source_name TEXT NOT NULL,
+  source_path TEXT,
+  value_hash TEXT,
+  payload_json TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX idx_server_json_snapshots_updated ON server_json_snapshots(updated_at DESC);
+
 CREATE TABLE site_pages (
   slug TEXT PRIMARY KEY,
   title TEXT NOT NULL,

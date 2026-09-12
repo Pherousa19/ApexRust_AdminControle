@@ -96,6 +96,8 @@ import {
   getSubscriptionByIdForSteamId,
   getServerStatus,
   upsertServerStatus,
+  getJsonSnapshot,
+  upsertJsonSnapshot,
   recordControlEvents,
   listControlEvents,
   upsertPluginRegistry,
@@ -1246,6 +1248,135 @@ function rconArg(value) {
   return `"${String(value).replace(/"/g, "")}"`;
 }
 
+const LEGACY_RCON_COMMAND_ALIASES = {
+  "apexaudit.player.json": ["apexaudit.player.json", "apextelemetry.player.json", "telemetry.player.json"],
+  "apexaudit.roster.json": ["apexaudit.roster.json", "apextelemetry.roster.json", "telemetry.roster.json"],
+  "apexaudit.evidence.json": ["apexaudit.evidence.json", "apextelemetry.evidence.json", "telemetry.evidence.json"],
+  "apexaudit.recent.json": ["apexaudit.recent.json", "apextelemetry.recent.json", "telemetry.recent.json"],
+  "apexaudit.permissions.json": ["apexaudit.permissions.json", "apextelemetry.permissions.json", "telemetry.permissions.json"],
+  "apexaudit.report": ["apexaudit.report", "apextelemetry.report", "telemetry.report"],
+  "apexaudit.freeze": ["apexaudit.freeze", "apextelemetry.freeze", "telemetry.freeze"],
+  "apexaudit.spectate": ["apexaudit.spectate", "apextelemetry.spectate", "telemetry.spectate"],
+  "apexaudit.trust": ["apexaudit.trust", "apextelemetry.trust", "telemetry.trust"],
+  "apexaudit.vaccheck": ["apexaudit.vaccheck", "apextelemetry.vaccheck", "telemetry.vaccheck"],
+  "apexaudit.note": ["apexaudit.note", "apextelemetry.note", "telemetry.note"],
+};
+
+export function resolvePluginCommandCandidates(command) {
+  const raw = String(command || "").trim();
+  if (!raw) return [];
+  const direct = LEGACY_RCON_COMMAND_ALIASES[raw] || null;
+  if (direct) return [...direct];
+
+  const candidates = [raw];
+  if (/^apexaudit\./.test(raw)) {
+    candidates.push(raw.replace(/^apexaudit\./, "apextelemetry."));
+    candidates.push(raw.replace(/^apexaudit\./, "telemetry."));
+  }
+  return [...new Set(candidates)];
+}
+
+export function normalizeRosterFromOnlinePlayers(players = []) {
+  const source = Array.isArray(players) ? players : [];
+  return source.map((player) => ({
+    steamid: String(player?.steamid || player?.SteamID || ""),
+    name: String(player?.name || player?.DisplayName || "Unknown"),
+    online: true,
+    lastSeen: Math.floor(Date.now() / 1000),
+  })).filter((player) => player.steamid);
+}
+
+export function normalizeRecentActivityFromEvents(events = []) {
+  const source = Array.isArray(events) ? events : [];
+  return source.map((event) => {
+    const payload = (() => {
+      try {
+        return event?.payload_json ? JSON.parse(event.payload_json) : {};
+      } catch {
+        return {};
+      }
+    })();
+    const details = typeof payload === "string" ? payload : JSON.stringify(payload);
+    const time = new Date(`${event?.created_at || new Date().toISOString()}`.replace(" ", "T")).getTime() / 1000;
+    return {
+      time,
+      event: event?.event_type || event?.event || "ADMIN_EVENT",
+      actor: event?.actor_name || event?.actor_id || "system",
+      target: event?.target_name || event?.target_id || null,
+      details: details || event?.source || "No details",
+      severity: event?.severity || "info",
+      flagged: false,
+    };
+  });
+}
+
+async function fetchServerJsonSnapshot(env, key, fileName) {
+  if (!env.RELAY_URL || !env.RELAY_SECRET) return null;
+
+  const existing = await getJsonSnapshot(env.DB, key);
+  try {
+    const resp = await fetch(`${env.RELAY_URL.trimEnd('/')}/api/json-snapshot?file=${encodeURIComponent(fileName)}`, {
+      headers: {
+        Authorization: `Bearer ${env.RELAY_SECRET}`,
+        "x-rcon-password": env.RCON_PASSWORD || "",
+        Accept: "application/json",
+      },
+    });
+    if (!resp.ok) {
+      if (existing && existing.payload_json) {
+        return JSON.parse(existing.payload_json);
+      }
+      return null;
+    }
+
+    const data = await resp.json();
+    const payload = data?.payload ?? null;
+    if (!payload) {
+      if (existing && existing.payload_json) {
+        return JSON.parse(existing.payload_json);
+      }
+      return null;
+    }
+
+    if (!existing || existing.value_hash !== data.hash) {
+      await upsertJsonSnapshot(env.DB, key, {
+        sourceName: data.file || fileName,
+        sourcePath: data.path || null,
+        valueHash: data.hash || null,
+        payload,
+      });
+    }
+
+    return payload;
+  } catch (err) {
+    console.warn(`fetchServerJsonSnapshot(${key}) failed:`, err.message);
+    if (existing && existing.payload_json) {
+      try {
+        return JSON.parse(existing.payload_json);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+}
+
+async function sendRconCommandWithFallback(env, commandOrCandidates, { timeoutMs = 6000, label = "RCON lookup" } = {}) {
+  const candidates = Array.isArray(commandOrCandidates) ? commandOrCandidates : resolvePluginCommandCandidates(commandOrCandidates);
+  let lastError = null;
+
+  for (const command of candidates) {
+    try {
+      return await sendRconCommand(env, command, { timeoutMs });
+    } catch (err) {
+      lastError = err;
+      console.warn(`${label} fallback failed for ${command}:`, err.message);
+    }
+  }
+
+  throw lastError || new Error(`${label} failed for ${candidates.join(", ")}`);
+}
+
 /** Steam profile for the player card — prefers the full Steam Web API
  * (fetchSteamProfileFull, needs STEAM_API_KEY: real account-created date,
  * Steam level, Rust playtime, live persona state) and falls back to the
@@ -1270,10 +1401,25 @@ async function buildPlayerCard(env, query) {
   let steamid = null;
 
   try {
-    const raw = await sendRconCommand(env, `apexaudit.player.json ${rconArg(query)}`, { timeoutMs: 6000 });
-    audit = JSON.parse(raw);
+    const commandVariants = resolvePluginCommandCandidates("apexaudit.player.json").map((base) => `${base} ${rconArg(query)}`);
+    let lastError = null;
+
+    for (const command of commandVariants) {
+      try {
+        const payload = await sendRconCommand(env, command, { timeoutMs: 6000 });
+        audit = JSON.parse(payload);
+        break;
+      } catch (err) {
+        lastError = err;
+        console.warn("buildPlayerCard fallback failed for:", command, err.message);
+      }
+    }
+
+    if (!audit && lastError) {
+      throw lastError;
+    }
   } catch (err) {
-    console.error("buildPlayerCard: apexaudit lookup failed:", err.message);
+    console.error("buildPlayerCard: audit lookup failed:", err.message);
   }
 
   steamid = audit?.found ? audit.steamid : (/^\d{17}$/.test(query) ? query : null);
@@ -1365,16 +1511,59 @@ async function fetchItemCatalog(env) {
  * an unbounded number of cache keys for little benefit, so a search always
  * hits RCON live. */
 async function fetchPlayerRoster(env, search) {
+  const fallbackRosterFromPlayers = async () => {
+    const onlinePlayers = await fetchOnlinePlayers(env).catch(() => []);
+    const roster = normalizeRosterFromOnlinePlayers(onlinePlayers);
+    if (search) {
+      const q = String(search).trim().toLowerCase();
+      return roster.filter((player) => player.name.toLowerCase().includes(q) || player.steamid.includes(q));
+    }
+    return roster;
+  };
+
+  const fallbackRosterFromSnapshot = async () => {
+    const snapshot = await fetchServerJsonSnapshot(env, "playerdata", "PlayerData.json");
+    if (!snapshot || typeof snapshot !== "object") return await fallbackRosterFromPlayers();
+    const players = snapshot?.players && typeof snapshot.players === "object" ? snapshot.players : {};
+    const roster = Object.entries(players).map(([steamid, data]) => ({
+      steamid: String(steamid),
+      name: data?.name || data?.displayName || data?.steam_name || data?.steamName || "Unknown",
+      kills: Number(data?.kills || 0),
+      deaths: Number(data?.deaths || 0),
+      playtime: Number(data?.playtime || data?.playTime || 0),
+      online: !!data?.online,
+      lastSeen: Number(data?.logintime || data?.lastSeen || Date.now() / 1000),
+    }));
+    if (search) {
+      const q = String(search).trim().toLowerCase();
+      return roster.filter((player) => player.name.toLowerCase().includes(q) || player.steamid.includes(q));
+    }
+    return roster;
+  };
+
   try {
-    const cmd = search ? `apexaudit.roster.json ${rconArg(search)}` : "apexaudit.roster.json";
+    const baseCandidates = resolvePluginCommandCandidates("apexaudit.roster.json");
     const run = async () => {
-      const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
-      return JSON.parse(raw)?.players ?? null;
+      for (const base of baseCandidates) {
+        try {
+          const cmd = search ? `${base} ${rconArg(search)}` : base;
+          const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
+          const parsed = JSON.parse(raw);
+          return parsed?.players ?? null;
+        } catch (err) {
+          console.warn("fetchPlayerRoster failed for command variant:", base, err.message);
+        }
+      }
+      return await fallbackRosterFromSnapshot();
     };
     return search ? await run() : await withRconCache(env, "roster:all", 20 * 1000, run);
   } catch (err) {
     console.error("fetchPlayerRoster failed:", err.message);
-    return null;
+    try {
+      return await fallbackRosterFromSnapshot();
+    } catch {
+      return null;
+    }
   }
 }
 
@@ -1410,8 +1599,15 @@ async function fetchWipeBlockStatus(env) {
 async function fetchPlayerEvidence(env, steamid) {
   try {
     return await withRconCache(env, `evidence:${steamid}`, 30 * 1000, async () => {
-      const raw = await sendRconCommand(env, `apexaudit.evidence.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
-      return JSON.parse(raw);
+      for (const prefix of resolvePluginCommandCandidates("apexaudit.evidence.json")) {
+        try {
+          const raw = await sendRconCommand(env, `${prefix} ${rconArg(steamid)}`, { timeoutMs: 6000 });
+          return JSON.parse(raw);
+        } catch (err) {
+          console.warn("fetchPlayerEvidence fallback failed for:", prefix, err.message);
+        }
+      }
+      throw new Error("No evidence command variants succeeded");
     });
   } catch (err) {
     console.error("fetchPlayerEvidence failed:", err.message);
@@ -1432,20 +1628,68 @@ const CHAT_FLAG_RE = new RegExp(`\\b(${CHAT_FLAG_WORDS.join("|")})\\b`, "i");
  * against CHAT_FLAG_WORDS - this never blocks or auto-punishes anything,
  * it just highlights the line for a human moderator to look at. */
 async function fetchRecentActivity(env, { eventFilter, count = 50 } = {}) {
+  const fallbackRecentActivity = async () => {
+    const events = await listControlEvents(env.DB, { limit: count || 50 });
+    const normalized = normalizeRecentActivityFromEvents(events).map((event) => ({
+      ...event,
+      flagged: typeof event.details === "string" && CHAT_FLAG_RE.test(event.details),
+    }));
+
+    if (!eventFilter) return normalized;
+    const filter = String(eventFilter).toLowerCase();
+    return normalized.filter((event) => String(event.event).toLowerCase().includes(filter) || String(event.details || "").toLowerCase().includes(filter));
+  };
+
+  const fallbackFromSnapshot = async () => {
+    const snapshot = await fetchServerJsonSnapshot(env, "apexadminaudit", "ApexAdminAudit.json");
+    if (!snapshot || typeof snapshot !== "object") return await fallbackRecentActivity();
+
+    const entries = Array.isArray(snapshot.Entries)
+      ? snapshot.Entries
+      : Array.isArray(snapshot.entries)
+        ? snapshot.entries
+        : [];
+
+    const normalized = entries.map((entry) => ({
+      time: Number(entry.UnixTime ?? entry.unixTime ?? entry.Time ?? Date.now() / 1000),
+      event: String(entry.Event ?? entry.event ?? "ADMIN_EVENT"),
+      actor: String(entry.ActorName ?? entry.actorName ?? entry.ActorId ?? "system"),
+      target: entry.TargetName ?? entry.targetName ?? null,
+      details: String(entry.Details ?? entry.details ?? entry.Command ?? "No details"),
+      severity: String(entry.Severity ?? entry.severity ?? "info"),
+      flagged: typeof (entry.Details ?? entry.details ?? "") === "string" && CHAT_FLAG_RE.test(String(entry.Details ?? entry.details ?? "")),
+    }));
+
+    if (!eventFilter) return normalized.slice(0, count || 50);
+    const filter = String(eventFilter).toLowerCase();
+    return normalized.filter((entry) => String(entry.event).toLowerCase().includes(filter) || String(entry.details || "").toLowerCase().includes(filter)).slice(0, count || 50);
+  };
+
   try {
     const cacheKey = `activity:${eventFilter || "all"}:${count}`;
     return await withRconCache(env, cacheKey, 20 * 1000, async () => {
-      const cmd = eventFilter ? `apexaudit.recent.json ${rconArg(eventFilter)} ${count}` : `apexaudit.recent.json ${count}`;
-      const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
-      const parsed = JSON.parse(raw);
-      return (parsed?.entries || []).map((e) => ({
-        ...e,
-        flagged: typeof e.details === "string" && CHAT_FLAG_RE.test(e.details),
-      }));
+      for (const base of resolvePluginCommandCandidates("apexaudit.recent.json")) {
+        try {
+          const cmd = eventFilter ? `${base} ${rconArg(eventFilter)} ${count}` : `${base} ${count}`;
+          const raw = await sendRconCommand(env, cmd, { timeoutMs: 6000 });
+          const parsed = JSON.parse(raw);
+          return (parsed?.entries || []).map((e) => ({
+            ...e,
+            flagged: typeof e.details === "string" && CHAT_FLAG_RE.test(e.details),
+          }));
+        } catch (err) {
+          console.warn("fetchRecentActivity fallback failed for:", base, err.message);
+        }
+      }
+      return await fallbackFromSnapshot();
     });
   } catch (err) {
     console.error("fetchRecentActivity failed:", err.message);
-    return null;
+    try {
+      return await fallbackFromSnapshot();
+    } catch {
+      return null;
+    }
   }
 }
 
@@ -1503,8 +1747,15 @@ async function fetchRustMapImage(env, seed, size) {
 /* Permissions panel uses a live relay-backed RCON request. */
 async function fetchOxidePermissions(env, steamid) {
   try {
-    const raw = await sendRconCommand(env, `apexaudit.permissions.json ${rconArg(steamid)}`, { timeoutMs: 6000 });
-    return JSON.parse(raw);
+    for (const base of resolvePluginCommandCandidates("apexaudit.permissions.json")) {
+      try {
+        const raw = await sendRconCommand(env, `${base} ${rconArg(steamid)}`, { timeoutMs: 6000 });
+        return JSON.parse(raw);
+      } catch (err) {
+        console.warn("fetchOxidePermissions fallback failed for:", base, err.message);
+      }
+    }
+    return null;
   } catch (err) {
     console.error("fetchOxidePermissions failed:", err.message);
     return null;

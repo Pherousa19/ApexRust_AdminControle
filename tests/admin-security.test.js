@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSessionCookie, isValidSession, getSessionUser, hasSessionCapability, checkPassword, hashPassword, verifyPassword, hasAdminPermission } from '../src/auth.js';
-import { parsePluginList } from '../src/index.js';
+import { parsePluginList, resolvePluginCommandCandidates } from '../src/index.js';
 
 const env = {
   ADMIN_PASSWORD: 'super-secret',
@@ -78,4 +78,11 @@ test('oxide plugin output numbers are converted into plugin names', () => {
   `);
 
   assert.deepEqual(parsed.map((plugin) => plugin.name), ['Oxide', 'AdminRadar', 'BetterTC', 'NameOfPlugin']);
+});
+
+test('audit telemetry command aliases fall back across legacy and active plugin names', () => {
+  const candidates = resolvePluginCommandCandidates('apexaudit.player.json');
+  assert.ok(candidates.includes('apexaudit.player.json'));
+  assert.ok(candidates.includes('apextelemetry.player.json'));
+  assert.ok(candidates.includes('telemetry.player.json'));
 });
